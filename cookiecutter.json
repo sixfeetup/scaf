@@ -1,0 +1,20 @@
+{
+  "project_name": "My Awesome Sixie Project",
+  "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "description": "Behold My Awesome Project!",
+  "author_name": "Joe Sixie",
+  "domain_name": "sixfeetup.com",
+  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
+  "version": "0.1.0",
+  "timezone": "US/Eastern",
+  "mail_service": [
+    "Mailgun",
+    "Amazon SES",
+    "Other SMTP"
+  ],
+  "use_drf": "n",
+  "custom_bootstrap_compilation": "n",
+  "use_compressor": "n",
+  "use_celery": "n",
+  "debug": "n"
+}

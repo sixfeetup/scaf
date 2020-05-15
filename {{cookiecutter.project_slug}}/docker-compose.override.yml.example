@@ -1,0 +1,13 @@
+version: '3'
+# below are the default ports, change the first port to avoid local conflicts
+# and rename to docker-compose-override.yml
+services:
+  db:
+    ports:
+      - '5432:5432'
+  django:
+    ports:
+      - '8000:8000'
+  mailhog:
+    ports:
+      - '8025:8025'

@@ -1,0 +1,48 @@
+version: '3'
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+services:
+  db:
+    image: 'postgres:12.2'
+    volumes:
+      - 'local_postgres_data:/var/lib/postgresql/data'
+      - 'local_postgres_data_backups:/backups'
+    env_file:
+      - local/environment
+  django:
+    build:
+      context: .
+      args:
+        DEVEL: 'yes'
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: 'python manage.py runserver_plus 0.0.0.0:8000'
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - migrate
+      - mailhog
+    links:
+      - db
+      - mailhog
+  migrate:
+    build:
+      context: .
+      args:
+        DEVEL: 'yes'
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: python manage.py migrate
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - db
+    links:
+      - db
+  mailhog:
+    image: 'mailhog/mailhog:v1.0.0'
+  redis:
+    image: 'redis:latest'

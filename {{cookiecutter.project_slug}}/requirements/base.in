@@ -1,0 +1,31 @@
+python-slugify
+Pillow
+{%- if cookiecutter.use_compressor == "y" %}
+rcssmin==1.0.6
+{%- endif %}
+argon2-cffi
+redis
+hiredis
+{%- if cookiecutter.use_celery == "y" %}
+celery
+django-celery-beat
+flower
+{% endif %}
+psycopg2==2.8.5
+
+
+# Django
+# ------------------------------------------------------------------------------
+django==3.0.6
+django-environ
+django-model-utils
+django-allauth
+django-crispy-forms
+{%- if cookiecutter.use_compressor == "y" %}
+django-compressor
+{%- endif %}
+django-redis
+{%- if cookiecutter.use_drf == "y" %}
+# Django REST Framework
+djangorestframework
+{%- endif %}

@@ -1,0 +1,14 @@
+# PRECAUTION: avoid production dependencies that aren't in development
+-c base.txt
+
+django-allow-cidr
+Collectfast
+sentry-sdk==0.14.3  # https://github.com/getsentry/sentry-python
+django-storages[boto3]==1.9.1  # https://github.com/jschneier/django-storages
+{%- if cookiecutter.mail_service == 'Mailgun' %}
+django-anymail[mailgun]
+{%- elif cookiecutter.mail_service == 'Amazon SES' %}
+django-anymail[amazon_ses]
+{%- elif cookiecutter.mail_service == 'Other SMTP' %}
+django-anymail
+{%- endif %}
