@@ -1,31 +1,38 @@
-python-slugify
-Pillow
-{%- if cookiecutter.use_compressor == "y" %}
-rcssmin==1.0.6
-{%- endif %}
 argon2-cffi
-redis
-hiredis
-{%- if cookiecutter.use_celery == "y" %}
-celery
+django-allauth
+
+{%- if cookiecutter.use_drf %}
+djangorestframework
+django-filter
+django-rest-knox
+{% endif %}
+
+{%- if cookiecutter.use_celery == 'y' %} 
+celery[redis]
+celery-singleton
 django-celery-beat
+ephem
 flower
 {% endif %}
-psycopg2==2.8.5
 
-
-# Django
-# ------------------------------------------------------------------------------
-django==3.0.6
-django-environ
-django-model-utils
-django-allauth
-django-crispy-forms
-{%- if cookiecutter.use_compressor == "y" %}
+{%- if cookiecutter.use_compressor == 'y' %}
 django-compressor
-{%- endif %}
+{% endif %}
+
+Django
+django-crispy-forms
+django-environ
+django-extensions
+django-fsm
+django-model-utils
 django-redis
-{%- if cookiecutter.use_drf == "y" %}
-# Django REST Framework
-djangorestframework
-{%- endif %}
+hiredis
+
+{%- if cookiecutter.database == 'MySQL' %}
+mysqlclient
+{%- elif cookiecutter.database == 'PostgreSQL' %}
+psycopg2
+{% endif %}
+
+Pillow
+python-slugify
