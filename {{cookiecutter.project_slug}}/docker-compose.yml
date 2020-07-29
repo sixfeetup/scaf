@@ -40,6 +40,8 @@ services:
     links:
       - db
       - mailhog
+    ports:
+      - "8000:8000"
   migrate:
     build:
       context: .
