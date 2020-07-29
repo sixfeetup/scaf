@@ -10,6 +10,7 @@ ARG DEVEL=no
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     build-essential \
+    python3-dev default-libmysqlclient-dev \
     libpq-dev \
     gettext
 
