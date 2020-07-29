@@ -10,14 +10,14 @@ except ImportError:
 
 # Our version ALWAYS matches the version of Django we support
 # If Django has a new release, we branch, tag, then update this setting after the tag.
-version = "3.0.5-01"
+version = "3.0.8"
 
 if sys.argv[-1] == "tag":
     os.system(f'git tag -a {version} -m "version {version}"')
     os.system("git push --tags")
     sys.exit()
 
-with open("README.rst") as readme_file:
+with open("README.md") as readme_file:
     long_description = readme_file.read()
 
 setup(
