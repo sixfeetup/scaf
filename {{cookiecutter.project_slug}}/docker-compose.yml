@@ -1,13 +1,26 @@
 version: '3'
 volumes:
+{%- if cookiecutter.database == "PostgreSQL" %}
   local_postgres_data: {}
   local_postgres_data_backups: {}
+{%- elif cookiecutter.database == "MySQL" %}
+  local_mysql_data: {}
+  local_mysql_data_backups: {}
+{% endif %}
+
 services:
   db:
+{%- if cookiecutter.database == "PostgreSQL" %}
     image: 'postgres:12.2'
     volumes:
       - 'local_postgres_data:/var/lib/postgresql/data'
       - 'local_postgres_data_backups:/backups'
+{%- elif cookiecutter.database == "MySQL" %}
+    image: 'mysql:5.7'
+    volumes:
+      - 'local_mysql_data:/var/lib/mysql'
+      - 'local_mysql_data_backups:/backups'
+{% endif %}
     env_file:
       - local/environment
   django:

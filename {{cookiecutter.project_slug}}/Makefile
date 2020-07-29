@@ -13,11 +13,14 @@ outdated: ## Show outdated packages in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local {{ cookiecutter.project_slug }}_local_django:dev /bin/bash -c \
-		"apt-get update; apt-get install -y libpq-dev; \
-		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
-		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
-	     python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in"
+	@docker run --rm -v $(shell pwd)/requirements:/local python:3.8-slim-buster /bin/bash -c \
+		"apt-get update -y; apt-get install -y libpq-dev default-libmysqlclient-dev; \
+		 pip install --upgrade pip setuptools wheel pip-tools; \
+		 pip-compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
+		 pip-compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
+	     pip-compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in; \
+	     pip-compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/local.txt /local/local.in"
+
 
 destroy-data: ## Remove the database volumes to start fresh
 	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data

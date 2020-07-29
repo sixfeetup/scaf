@@ -25,27 +25,22 @@ ENV PATH="/app/bin:${PATH}"
 
 # Next, we want to update pip, setuptools, and wheel inside of this virtual
 # environment to ensure that we have the latest versions of them.
-RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel
+RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel pip-tools
 
 COPY requirements /tmp/requirements
 
 RUN set -x \
-    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --upgrade pip-tools; fi
-
-RUN set -x \
-    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install -r /tmp/requirements/local.txt; fi
-
-RUN set -x \
-    && pip --no-cache-dir --disable-pip-version-check install \
-        -r /tmp/requirements/production.txt \
-        -r /tmp/requirements/base.txt \
-        $(if [ "$DEVEL" = "yes" ]; then echo '-r /tmp/requirements/tests.txt'; fi)
+    && pip-sync \
+        /tmp/requirements/production.txt \
+        /tmp/requirements/base.txt \
+        $(if [ "$DEVEL" = "yes" ]; then for group in local tests; do echo "/tmp/requirements/${group}.txt"; done; fi)
 
 
 # Now we can build the application image
 FROM python:3.8-slim-buster
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECACHE 1
 ENV PYTHONPATH /app
 ENV PATH="/app/bin:${PATH}"
 ENV BOGUS 1
@@ -63,10 +58,20 @@ RUN set -x \
 RUN apt-get update \
   # psycopg2 dependencies
   && apt-get install --no-install-recommends -y \
-    libpq5 \
+ {%- if cookiecutter.database == 'PostgreSQL' %}
+    libpq-dev \
+ {%- elif cookiecutter.database == 'MySQL' %}
+    default-libmysqlclient-dev \
+ {% endif %}
     gettext \
-    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client'; fi) \
-  # cleaning up unused files
+    $(if [ "$DEVEL" = "yes" ]; then echo 'bash'; \
+ {%- if cookiecutter.database == 'PostgreSQL' %}
+     echo 'postgresql-client' \
+ {%- elif cookiecutter.database == 'MySQL' %}
+    echo 'default-mysql-client' \
+ {% endif %}
+ ; fi) \
+# cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

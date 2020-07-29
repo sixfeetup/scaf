@@ -1,6 +1,5 @@
 # Local development dependencies go here
-
+-c base.txt
 Werkzeug==1.0.1
 django-debug-toolbar==2.2
-pip-tools
 ipdb
