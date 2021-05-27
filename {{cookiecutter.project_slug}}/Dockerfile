@@ -1,18 +1,28 @@
 # Build all of the dependanices then we will build the actual application image
-FROM python:3.8-slim-buster as build
+FROM python:3.9.5-slim-buster as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV BOGUS 1
 
 ARG DEVEL=no
+ARG TEST=no
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     build-essential \
-    python3-dev default-libmysqlclient-dev \
+    ca-certificates \
+    curl \
+    gettext \
+    gnupg \
+  && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
+  && apt-get install --no-install-recommends -y \
     libpq-dev \
-    gettext
+    postgresql-client-13 \
+    postgresql-client-common
+
 
 # We create an /app directory with a virtual environment in it to store our
 # application in.
@@ -25,22 +35,43 @@ ENV PATH="/app/bin:${PATH}"
 
 # Next, we want to update pip, setuptools, and wheel inside of this virtual
 # environment to ensure that we have the latest versions of them.
-RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel pip-tools
+RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel
+
+RUN set -x \
+    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install pydevd-pycharm~=203.5981.165 ; fi
 
 COPY requirements /tmp/requirements
 
 RUN set -x \
-    && pip-sync \
-        /tmp/requirements/production.txt \
-        /tmp/requirements/base.txt \
-        $(if [ "$DEVEL" = "yes" ]; then for group in local tests; do echo "/tmp/requirements/${group}.txt"; done; fi)
+    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --upgrade pip-tools; fi
+
+RUN set -x \
+    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install -r /tmp/requirements/local.txt; fi
+
+RUN set -x \
+    && pip --no-cache-dir --disable-pip-version-check install --no-deps \
+        -r /tmp/requirements/production.txt \
+        -r /tmp/requirements/base.txt
+
+RUN set -x \
+    && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
+        -r /tmp/requirements/tests.txt; fi
+
+# Next build front-end
+FROM node:lts-buster-slim as front-end
+
+WORKDIR /app
+
+COPY front-end /app
+
+RUN npm install
+RUN npm run build
 
 
 # Now we can build the application image
-FROM python:3.8-slim-buster
+FROM python:3.9.5-slim-buster
 
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECACHE 1
 ENV PYTHONPATH /app
 ENV PATH="/app/bin:${PATH}"
 ENV BOGUS 1
@@ -58,24 +89,28 @@ RUN set -x \
 RUN apt-get update \
   # psycopg2 dependencies
   && apt-get install --no-install-recommends -y \
- {%- if cookiecutter.database == 'PostgreSQL' %}
-    libpq-dev \
- {%- elif cookiecutter.database == 'MySQL' %}
-    default-libmysqlclient-dev \
- {% endif %}
+    ca-certificates \
+    curl \
     gettext \
-    $(if [ "$DEVEL" = "yes" ]; then echo 'bash'; \
- {%- if cookiecutter.database == 'PostgreSQL' %}
-     echo 'postgresql-client' \
- {%- elif cookiecutter.database == 'MySQL' %}
-    echo 'default-mysql-client' \
- {% endif %}
- ; fi) \
-# cleaning up unused files
+    gnupg \
+  && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
+  && apt-get install --no-install-recommends -y \
+    libpq5 \
+    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-13'; fi) \
+  # awscli
+  && apt-get install -y \
+    awscli \
+  # cleaning up unused files
+  && apt-get remove -y \
+    curl \
+    gnupg \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=build /app/ /app/
+# COPY --from=front-end /app/build /app/build
 COPY config/ /app/src/config/
 COPY manage.py /app/src/
 COPY {{ cookiecutter.project_slug }}/ /app/src/{{ cookiecutter.project_slug }}/

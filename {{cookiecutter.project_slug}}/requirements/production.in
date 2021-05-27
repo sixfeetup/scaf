@@ -12,3 +12,4 @@ django-anymail[amazon_ses]
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
 django-anymail
 {%- endif %}
+sentry-sdk>=1.1.0

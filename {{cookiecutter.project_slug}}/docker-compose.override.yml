@@ -1,13 +1,14 @@
-version: '3'
+version: '3.7'
 # below are the default ports, change the first port to avoid local conflicts
 # and rename to docker-compose-override.yml
 services:
   db:
     ports:
-      - '5432:5432'
+      - '5433:5432'
   django:
+    command: 'python manage.py runserver 0.0.0.0:8000'
     ports:
-      - '8000:8000'
+      - '8009:8000'
   front-end:
     ports:
       - '3000:3000'

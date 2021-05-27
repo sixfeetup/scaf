@@ -1,0 +1,6 @@
+# Local development dependencies go here
+django-debug-toolbar==3.2.1
+ipdb
+pip-tools
+pipdeptree
+Werkzeug>=2.0

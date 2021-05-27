@@ -1,35 +1,19 @@
-version: '3'
+version: '3.7'
 volumes:
-{%- if cookiecutter.database == "PostgreSQL" %}
   local_postgres_data: {}
   local_postgres_data_backups: {}
-{%- elif cookiecutter.database == "MySQL" %}
-  local_mysql_data: {}
-  local_mysql_data_backups: {}
-{% endif %}
-
 services:
   db:
-{%- if cookiecutter.database == "PostgreSQL" %}
-    image: 'postgres:12.2'
+    image: 'postgres:13'
     volumes:
       - 'local_postgres_data:/var/lib/postgresql/data'
       - 'local_postgres_data_backups:/backups'
-{%- elif cookiecutter.database == "MySQL" %}
-    image: 'mysql:5.7'
-    volumes:
-      - 'local_mysql_data:/var/lib/mysql'
-      - 'local_mysql_data_backups:/backups'
-{% endif %}
     env_file:
       - local/environment
   django:
-    build:
-      context: .
-      args:
-        DEVEL: 'yes'
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: 'python manage.py runserver_plus 0.0.0.0:8000'
+    # command: 'daphne --bind 0.0.0.0 --port 8000 --ping-interval 15 --ping-timeout 5 config.asgi:application'
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -37,11 +21,9 @@ services:
     depends_on:
       - migrate
       - mailhog
-    links:
-      - db
-      - mailhog
-    ports:
-      - "8000:8000"
+      - celerybeat
+      - celeryworker
+      - flower
   migrate:
     build:
       context: .
@@ -55,8 +37,50 @@ services:
       - local/environment
     depends_on:
       - db
-    links:
-      - db
+  celeryworker:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: celery -A {{ cookiecutter.project_slug }} worker -E -l info
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - redis
+  celerybeat:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: celery -A {{ cookiecutter.project_slug }} beat
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - redis
+  flower:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: '/app/bin/flower -A {{ cookiecutter.project_slug }}'
+    env_file:
+      - local/environment
+    depends_on:
+      - redis
+#  front-end:
+#    image: 'node:lts-buster-slim'
+#    user: node
+#    working_dir: /app
+#    environment:
+#      - BROWSER=none
+#    command: npm start
+#    volumes:
+#      - './front-end:/app:z'
+#    depends_on:
+#      - front-end-install
+#    stdin_open: true
+#  front-end-install:
+#    image: 'node:lts-buster-slim'
+#    user: node
+#    working_dir: /app
+#    volumes:
+#      - './front-end:/app:z'
+#    command: npm install
   mailhog:
     image: 'mailhog/mailhog:v1.0.0'
   redis:
