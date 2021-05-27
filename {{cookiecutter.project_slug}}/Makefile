@@ -9,21 +9,21 @@ sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
 build: Dockerfile ## Create the build and runtime images
-	@docker build -t loudswarm_local_django:$(TAG) .
+	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
 
-build-front-end:  ## Build the front-end React app
-	@docker-compose exec front-end npm run build
+#build-front-end:  ## Build the front-end React app
+#	@docker-compose exec front-end npm run build
 
 destroy-data: ## Remove the database volumes to start fresh
 	@docker-compose stop db
 	@docker-compose rm -f db
-	@docker volume rm loudswarm_local_postgres_data
-	@docker volume rm loudswarm_local_postgres_data_backups
+	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
+	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data_backups
 	@docker-compose up -d db
 
 
 clean: ## Remove the latest build
-	@docker rmi -f loudswarm_local_django:$(TAG)
+	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
 
 
 squeaky-clean:  clean  ## Aggressively remove unused images
@@ -33,8 +33,8 @@ squeaky-clean:  clean  ## Aggressively remove unused images
 		echo removing $$image && docker rmi $$image ; done
 
 update: ## Grab latest images for project
-	@docker pull python:3.8-slim-buster
-	@docker pull postgres:12.2
+	@docker pull python:3.9.5-slim-buster
+	@docker pull postgres:13
 	@docker pull mailhog/mailhog:v1.0.0
 
 
@@ -53,12 +53,12 @@ ifeq ($(RELEASE_TAG), unspecified)
 endif
 	@echo "release tag: $(RELEASE_TAG)"
 	@git tag -l | grep $(RELEASE_TAG) | wc -l | awk '$$1 != 1 {print "RELEASE_TAG does not match any git tag"; exit 1 }'
-	@aws --profile=loudswarm-deploy ecr batch-get-image --repository-name loudswarm --image-ids imageTag=$(RELEASE_TAG) \
+	@aws --profile={{ cookiecutter.project_slug }}-deploy ecr batch-get-image --repository-name {{ cookiecutter.project_slug }} --image-ids imageTag=$(RELEASE_TAG) \
 		| jq '.images | length'| awk '$$1 != 1 {print "RELEASE_TAG does not match any ECR images"; exit 1 }'
-	@aws --profile=loudswarm-deploy codepipeline get-pipeline --name loudswarm-staging \
+	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline --name {{ cookiecutter.project_slug }}-staging \
 		| jq 'del(.metadata) | .pipeline.stages[0].actions[0].configuration.ImageTag = "$(RELEASE_TAG)"' \
-		| xargs -0 aws --profile=loudswarm-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
-	@aws --profile=loudswarm-deploy codepipeline start-pipeline-execution --name loudswarm-staging
+		| xargs -0 aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
+	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline start-pipeline-execution --name {{ cookiecutter.project_slug }}-staging
 
 prod-release: ## update pipeline tag and execute
 ifeq ($(RELEASE_TAG), unspecified)
@@ -67,14 +67,14 @@ ifeq ($(RELEASE_TAG), unspecified)
 endif
 	@echo "release tag: $(RELEASE_TAG)"
 	@git tag -l | grep $(RELEASE_TAG) | wc -l | awk '$$1 != 1 {print "RELEASE_TAG does not match any git tag"; exit 1 }'
-	@aws --profile=loudswarm-deploy ecr batch-get-image --repository-name loudswarm --image-ids imageTag=$(RELEASE_TAG) \
+	@aws --profile={{ cookiecutter.project_slug }}-deploy ecr batch-get-image --repository-name {{ cookiecutter.project_slug }} --image-ids imageTag=$(RELEASE_TAG) \
 		| jq '.images | length'| awk '$$1 != 1 {print "RELEASE_TAG does not match any ECR images"; exit 1 }'
-	@aws --profile=loudswarm-deploy codepipeline get-pipeline --name loudswarm-prod \
+	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline --name {{ cookiecutter.project_slug }}-prod \
 		| jq 'del(.metadata) | .pipeline.stages[0].actions[0].configuration.ImageTag = "$(RELEASE_TAG)"' \
-		| xargs -0 aws --profile=loudswarm-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
-	@aws --profile=loudswarm-deploy codepipeline start-pipeline-execution --name loudswarm-prod
+		| xargs -0 aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
+	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline start-pipeline-execution --name {{ cookiecutter.project_slug }}-prod
 
-check-x-release = @aws --profile=loudswarm-deploy codepipeline get-pipeline-state --name loudswarm-$(subst check-,,$(subst -release,,$@))  | jq '.stageStates[0].latestExecution.pipelineExecutionId as $$execId | { Pipeline: .pipelineName, Started: .stageStates[0].actionStates[0].latestExecution.lastStatusChange, Actions: .stageStates | map( .latestExecution.pipelineExecutionId as $$stage_execId | .actionStates | map( { (.actionName): (if $$stage_execId == $$execId then .latestExecution.status else "Pending" end) } ))  | flatten | add }'
+check-x-release = @aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline-state --name {{ cookiecutter.project_slug }}-$(subst check-,,$(subst -release,,$@))  | jq '.stageStates[0].latestExecution.pipelineExecutionId as $$execId | { Pipeline: .pipelineName, Started: .stageStates[0].actionStates[0].latestExecution.lastStatusChange, Actions: .stageStates | map( .latestExecution.pipelineExecutionId as $$stage_execId | .actionStates | map( { (.actionName): (if $$stage_execId == $$execId then .latestExecution.status else "Pending" end) } ))  | flatten | add }'
 
 check-sandbox-release check-staging-release check-prod-release: ## check status of release pipeline
 	$(check-x-release)
@@ -83,16 +83,16 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 build-dev: export DOCKER_BUILDKIT = 1
 build-dev: Dockerfile ## Create the dev build and runtime images
-	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t loudswarm_local_django:dev .
+	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
 
 outdated: ## Show outdated packages in the container
-	@docker run --rm loudswarm_local_django:$(TAG) pip list --outdated
+	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
 pipdeptree: ## Show pipdeptree output
-	@docker run --rm loudswarm_local_django:$(TAG) pipdeptree
+	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local loudswarm_local_django:dev /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/requirements:/local {{ cookiecutter.project_slug }}_local_django:dev /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
 		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
 		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
@@ -100,10 +100,10 @@ compile: requirements/base.in requirements/tests.in ## compile latest requiremen
 
 load-dump: destroy-data ## Fresh load the data file passed in
 	@sleep 5
-	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U loudswarm -W -d loudswarm $(DUMPFILE)
+	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
 
 clean-dev: ## Remove the latest build
-	@docker rmi -f loudswarm_local_django:dev
+	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
 up:
 	## start up the cluster locally
