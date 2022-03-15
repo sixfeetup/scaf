@@ -37,9 +37,11 @@ hiredis==1.1.0            # via -r -
 humanize==2.5.0           # via flower
 idna==2.10                # via requests
 kombu==4.6.11             # via celery
+{%- if cookiecutter.database == 'MySQL' %}
 mysqlclient==2.0.1        # via -r -
+{% endif %}
 oauthlib==3.1.0           # via requests-oauthlib
-pillow==7.2.0             # via -r -
+pillow==8.2.0             # via -r -
 prometheus-client==0.8.0  # via flower
 psycopg2==2.8.5           # via -r -
 pycparser==2.20           # via cffi

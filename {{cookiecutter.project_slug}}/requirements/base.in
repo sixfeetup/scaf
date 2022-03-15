@@ -22,7 +22,7 @@ addict==2.4.0
 channels>=3.0
 channels-redis>=3.2
 daphne>=3.0
-Django>=3.2,<4.0
+Django~=4.0.0
 django-cryptography==1.0
 django-environ==0.4.5
 django_extensions>=3.1
@@ -40,7 +40,7 @@ pytz
 {%- if cookiecutter.database == 'MySQL' %}
 mysqlclient
 {%- elif cookiecutter.database == 'PostgreSQL' %}
-psycopg2==2.8.6
+psycopg2==2.9.3
 {% endif %}
 
 python-slugify
