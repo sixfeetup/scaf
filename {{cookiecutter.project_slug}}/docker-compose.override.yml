@@ -9,9 +9,9 @@ services:
     command: 'python manage.py runserver 0.0.0.0:8000'
     ports:
       - '8009:8000'
-  front-end:
-    ports:
-      - '3000:3000'
+  # front-end:
+  #   ports:
+  #     - '3000:3000'
   mailhog:
     ports:
       - '8025:8025'
