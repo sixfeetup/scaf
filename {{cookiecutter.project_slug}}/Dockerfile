@@ -19,7 +19,9 @@ RUN apt-get update \
   && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
+    libffi-dev \
     libpq-dev \
+    libssl-dev \
     postgresql-client-13 \
     postgresql-client-common
 
