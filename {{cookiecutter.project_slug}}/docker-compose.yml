@@ -21,9 +21,11 @@ services:
     depends_on:
       - migrate
       - mailhog
+      {% if cookiecutter.use_celery == 'y' %}
       - celerybeat
       - celeryworker
       - flower
+      {% endif %}
   migrate:
     build:
       context: .
@@ -37,6 +39,7 @@ services:
       - local/environment
     depends_on:
       - db
+  {% if cookiecutter.use_celery == 'y' %}
   celeryworker:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: celery -A {{ cookiecutter.project_slug }} worker -E -l info
@@ -62,6 +65,7 @@ services:
       - local/environment
     depends_on:
       - redis
+  {% endif %}
 #  front-end:
 #    image: 'node:lts-buster-slim'
 #    user: node
@@ -83,5 +87,7 @@ services:
 #    command: npm install
   mailhog:
     image: 'mailhog/mailhog:v1.0.0'
+  {% if cookiecutter.use_celery == 'y' %}
   redis:
     image: 'redis:latest'
+  {% endif %}
