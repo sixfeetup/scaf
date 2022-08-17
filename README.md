@@ -18,3 +18,10 @@ Creating a new project using this repo:
     $ cookiecutter .
 
 Answer the questions, and you'll have your new project!
+
+# Development on the Cookie Cutter
+
+When making changes to the Cookie Cutter, keep the following in mind:
+
+* update pins in requirements/*.in files
+* update to latest Python supported by Django
