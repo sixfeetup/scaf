@@ -1,5 +1,5 @@
 # Build all of the dependanices then we will build the actual application image
-FROM python:3.9.5-slim-buster as build
+FROM python:3.10.6-slim-buster as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -71,7 +71,7 @@ RUN npm run build
 
 
 # Now we can build the application image
-FROM python:3.9.5-slim-buster
+FROM python:3.10.6-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app

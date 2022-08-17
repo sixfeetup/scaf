@@ -33,7 +33,7 @@ squeaky-clean:  clean  ## Aggressively remove unused images
 		echo removing $$image && docker rmi $$image ; done
 
 update: ## Grab latest images for project
-	@docker pull python:3.9.5-slim-buster
+	@docker pull python:3.10.6-slim-buster
 	@docker pull postgres:13
 	@docker pull mailhog/mailhog:v1.0.0
 
@@ -92,11 +92,13 @@ pipdeptree: ## Show pipdeptree output
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local {{ cookiecutter.project_slug }}_local_django:dev /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10.6-slim-buster /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
-		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
-		 python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
-     python -m piptools compile --upgrade --no-annotate --no-header --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in"
+		 pip install pip-tools; \
+		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
+		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
+		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in; \
+		 python -m piptools compile --upgrade --allow-unsafe --output-file /local/local.txt /local/local.in"
 
 load-dump: destroy-data ## Fresh load the data file passed in
 	@sleep 5
