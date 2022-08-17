@@ -64,7 +64,9 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+{%- if cookiecutter.use_channels == 'y' %}
     "channels",
+{%- endif %}
     "crispy_forms",
     "allauth",
     "allauth.account",
