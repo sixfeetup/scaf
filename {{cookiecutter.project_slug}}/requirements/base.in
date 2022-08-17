@@ -1,10 +1,23 @@
-pytz==2022.1  # https://github.com/stub42/pytz
-python-slugify==6.1.2  # https://github.com/un33k/python-slugify
-Pillow==9.2.0  # https://github.com/python-pillow/Pillow
+
 argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
+astroid==2.12.2
+asttokens==2.0.8
+executing==0.10.0
+Faker==14.0.0
+jsonschema==4.10.0
+Pillow==9.2.0  # https://github.com/python-pillow/Pillow
+pydevd-pycharm==222.3739.43
+Pygments==2.13.0
+python-slugify==6.1.2  # https://github.com/un33k/python-slugify
+pytz==2022.2.1
 {%- if cookiecutter.use_compressor == 'y' %}
-rcssmin==1.1.0  # https://github.com/ndparker/rcssmin
+rcssmin==1.1.0
+rjsmin==1.2.0
 {%- endif %}
+setuptools==65.0.1
+stack-data==0.4.0
+tomlkit==0.11.4
+
 {%- if cookiecutter.use_celery == "y" %}
 redis==4.3.4  # https://github.com/redis/redis-py
 hiredis==2.0.0  # https://github.com/redis/hiredis-py
@@ -15,7 +28,7 @@ flower==1.1.0  # https://github.com/mher/flower
 
 # Django
 # ------------------------------------------------------------------------------
-django==3.2.15  # pyup: < 4.0  # https://www.djangoproject.com/
+django~=4.1.0  # https://www.djangoproject.com/
 django-environ==0.9.0  # https://github.com/joke2k/django-environ
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-allauth==0.51.0  # https://github.com/pennersr/django-allauth
