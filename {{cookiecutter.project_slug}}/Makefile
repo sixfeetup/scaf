@@ -95,6 +95,7 @@ compile: requirements/base.in requirements/tests.in ## compile latest requiremen
 	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10.6-slim-buster /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
 		 pip install pip-tools; \
+		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in; \
