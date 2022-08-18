@@ -2,7 +2,6 @@
 
     $ git clone [repo]
     $ cd {{ cookiecutter.project_slug }}
-    $ make compile
     $ make build-dev
     $ make up
 
@@ -13,7 +12,15 @@ Create a superuser:
     $ make shell
     $ ./manage.py createsuperuser
 
-Update version pins for your project:
+## Initial Project Setup
+
+When creating a new project, you will need to compile the pinned versions:
+
+    $ make compile
+
+This will generate the requirements/*.txt files, and you should check these in to the repo.
+
+If you need to update version pins for your project:
 
 * make or add the change in the appropriate requrements/*.in file
 * run `make compile`
