@@ -1,5 +1,5 @@
-# Build all of the dependanices then we will build the actual application image
-FROM python:3.10.6-slim-buster as build
+# Build all of the dependencies then we will build the actual application image
+FROM python:3.10.6-slim-bullseye as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -22,7 +22,7 @@ RUN apt-get update \
     libffi-dev \
     libpq-dev \
     libssl-dev \
-    postgresql-client-13 \
+    postgresql-client-14 \
     postgresql-client-common
 
 
@@ -71,7 +71,7 @@ RUN npm run build
 
 
 # Now we can build the application image
-FROM python:3.10.6-slim-buster
+FROM python:3.10.6-slim-bullseye
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
@@ -100,7 +100,7 @@ RUN apt-get update \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
     libpq5 \
-    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-13'; fi) \
+    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-14'; fi) \
   # awscli
   && apt-get install -y \
     awscli \
