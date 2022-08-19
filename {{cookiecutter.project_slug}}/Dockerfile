@@ -1,5 +1,5 @@
-# Build all of the dependanices then we will build the actual application image
-FROM python:3.10.6-slim-buster as build
+# Build all of the dependencies then we will build the actual application image
+FROM python:3.10.6-slim-bullseye as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -16,13 +16,13 @@ RUN apt-get update \
     gettext \
     gnupg \
   && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
     libffi-dev \
     libpq-dev \
     libssl-dev \
-    postgresql-client-13 \
+    postgresql-client-14 \
     postgresql-client-common
 
 
@@ -60,7 +60,7 @@ RUN set -x \
         -r /tmp/requirements/tests.txt; fi
 
 # Next build front-end
-FROM node:lts-buster-slim as front-end
+FROM node:lts-bullseye-slim as front-end
 
 WORKDIR /app
 
@@ -71,7 +71,7 @@ RUN npm run build
 
 
 # Now we can build the application image
-FROM python:3.10.6-slim-buster
+FROM python:3.10.6-slim-bullseye
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
@@ -96,11 +96,11 @@ RUN apt-get update \
     gettext \
     gnupg \
   && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
     libpq5 \
-    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-13'; fi) \
+    $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-14'; fi) \
   # awscli
   && apt-get install -y \
     awscli \

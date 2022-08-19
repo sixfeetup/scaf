@@ -22,12 +22,25 @@ tomlkit==0.11.4
 redis==4.3.4  # https://github.com/redis/redis-py
 hiredis==2.0.0  # https://github.com/redis/hiredis-py
 celery==5.2.7  # pyup: < 6.0  # https://github.com/celery/celery
-django-celery-beat==2.3.0  # https://github.com/celery/django-celery-beat
 flower==1.1.0  # https://github.com/mher/flower
+
+# Uncomment the first line below and remove the rest of the lines in that block
+# when a Django 4.1-compatible version of django-celery-beat has been released.
+# Also, don't forget to remove the vendored version in the root directory of
+# the project.
+# (see https://github.com/celery/django-celery-beat/issues/566)
+
+# django-celery-beat>2.3.0  # https://github.com/celery/django-celery-beat
+django-timezone-field>=5.0
+backports.zoneinfo; python_version<"3.9"
+tzdata
+python-crontab>=2.3.4
+
 {%- endif %}
 
 {%- if cookiecutter.use_channels == 'y' %}
-channels==3.0.5  # https://github.com/django/channels
+channels-redis==3.4.1
+channels==3.0.5 # https://github.com/django/channels
 {%- endif %}
 
 # Django

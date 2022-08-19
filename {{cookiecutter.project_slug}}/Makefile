@@ -33,8 +33,8 @@ squeaky-clean:  clean  ## Aggressively remove unused images
 		echo removing $$image && docker rmi $$image ; done
 
 update: ## Grab latest images for project
-	@docker pull python:3.10.6-slim-buster
-	@docker pull postgres:13
+	@docker pull python:3.10.6-slim-bullseye
+	@docker pull postgres:14
 	@docker pull mailhog/mailhog:v1.0.0
 
 
@@ -92,7 +92,7 @@ pipdeptree: ## Show pipdeptree output
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10.6-slim-buster /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10.6-slim-bullseye /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
 		 pip install pip-tools; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
