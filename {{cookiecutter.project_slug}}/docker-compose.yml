@@ -42,7 +42,7 @@ services:
   {% if cookiecutter.use_celery == 'y' %}
   celeryworker:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: /app/bin/celery -A {{ cookiecutter.project_slug }} worker -E -l info
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} worker -E -l info'
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -61,6 +61,8 @@ services:
   flower:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: '/app/bin/celery -A {{ cookiecutter.project_slug }} flower'
+    volumes:
+      - '.:/app/src:z'
     env_file:
       - local/environment
     depends_on:
