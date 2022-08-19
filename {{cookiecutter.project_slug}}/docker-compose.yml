@@ -4,7 +4,7 @@ volumes:
   local_postgres_data_backups: {}
 services:
   db:
-    image: 'postgres:13'
+    image: 'postgres:14'
     volumes:
       - 'local_postgres_data:/var/lib/postgresql/data'
       - 'local_postgres_data_backups:/backups'
@@ -42,7 +42,7 @@ services:
   {% if cookiecutter.use_celery == 'y' %}
   celeryworker:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: celery -A {{ cookiecutter.project_slug }} worker -E -l info
+    command: /app/bin/celery -A {{ cookiecutter.project_slug }} worker -E -l info
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -51,7 +51,7 @@ services:
       - redis
   celerybeat:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: celery -A {{ cookiecutter.project_slug }} beat
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} beat'
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -60,7 +60,7 @@ services:
       - redis
   flower:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: '/app/bin/flower -A {{ cookiecutter.project_slug }}'
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} flower'
     env_file:
       - local/environment
     depends_on:
