@@ -16,7 +16,7 @@ RUN apt-get update \
     gettext \
     gnupg \
   && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
     libffi-dev \
@@ -60,7 +60,7 @@ RUN set -x \
         -r /tmp/requirements/tests.txt; fi
 
 # Next build front-end
-FROM node:lts-buster-slim as front-end
+FROM node:lts-bullseye-slim as front-end
 
 WORKDIR /app
 
@@ -96,7 +96,7 @@ RUN apt-get update \
     gettext \
     gnupg \
   && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update \
   && apt-get install --no-install-recommends -y \
     libpq5 \

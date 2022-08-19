@@ -67,7 +67,7 @@ services:
       - redis
   {% endif %}
 #  front-end:
-#    image: 'node:lts-buster-slim'
+#    image: 'node:lts-bullseye-slim'
 #    user: node
 #    working_dir: /app
 #    environment:
@@ -79,7 +79,7 @@ services:
 #      - front-end-install
 #    stdin_open: true
 #  front-end-install:
-#    image: 'node:lts-buster-slim'
+#    image: 'node:lts-bullseye-slim'
 #    user: node
 #    working_dir: /app
 #    volumes:
