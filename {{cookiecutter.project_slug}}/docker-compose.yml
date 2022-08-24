@@ -12,8 +12,8 @@ services:
       - local/environment
   django:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: 'python manage.py runserver_plus 0.0.0.0:8000'
-    # command: 'daphne --bind 0.0.0.0 --port 8000 --ping-interval 15 --ping-timeout 5 config.asgi:application'
+    #command: 'python manage.py runserver 0.0.0.0:8000'
+    command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - '.:/app/src:z'
     env_file:
