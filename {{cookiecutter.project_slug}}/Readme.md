@@ -14,7 +14,8 @@ Create a superuser:
 
 ## Initial Project Setup
 
-When creating a new project, you will need to compile the pinned versions:
+When creating a new project, you will need to compile the pinned versions
+(*before* running `make build-dev`):
 
     $ make compile
 
