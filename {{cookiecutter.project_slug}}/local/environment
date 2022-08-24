@@ -1,30 +1,23 @@
 USE_DOCKER=yes
 
+CELERY_BROKER_URL=redis://redis:6379/0
+
+FLOWER_BROKER_URL=redis://redis:6379/0
+FLOWER_ADDRESS=0.0.0.0
+FLOWER_PORT=5555
+
 DJANGO_ADMIN_URL=^admin/
 DJANGO_SETTINGS_MODULE=config.settings.local
-DJANGO_SECRET_KEY=!!!SET DJANGO_SECRET_KEY!!!
-DJANGO_ALLOWED_HOSTS=localhost,django
+DJANGO_SECRET_KEY=CHANGEME
+DJANGO_ALLOWED_HOSTS=localhost,django,{{ cookiecutter.project_slug }}
+
+POSTGRES_USER={{ cookiecutter.project_slug }}
+POSTGRES_PASSWORD=CHANGEME
+
+DATABASE_URL=postgres://{{ cookiecutter.project_slug }}:CHANGEME@db:5432/{{ cookiecutter.project_slug }}
+
 DJANGO_SECURE_SSL_REDIRECT=False
 
-# PostgreSQL
-# ------------------------------------------------------------------------------
-POSTGRES_DB={{ cookiecutter.project_slug }}
-POSTGRES_USER=!!!SET POSTGRES_USER!!!
-POSTGRES_PASSWORD=!!!SET POSTGRES_PASSWORD!!!
 
-DATABASE_URL=psql://!!!SET POSTGRES_USER!!!:!!!SET POSTGRES_PASSWORD!!!@db:5432/{{ cookiecutter.project_slug }}
+REDIS_URL=redis://redis:6379/1
 
-
-{%- if cookiecutter.use_celery == 'y' %}
-# Redis
-# ------------------------------------------------------------------------------
-REDIS_URL=redis://redis:6379/0
-
-# Celery
-# ------------------------------------------------------------------------------
-
-# Flower
-CELERY_FLOWER_USER=!!!SET CELERY_FLOWER_USER!!!
-CELERY_FLOWER_PASSWORD=!!!SET CELERY_FLOWER_PASSWORD!!!
-CELERY_BROKER_URL=redis://redis:6379/0
-{% endif %}

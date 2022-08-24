@@ -1,22 +1,19 @@
-version: '3'
+version: '3.7'
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
 services:
   db:
-    image: 'postgres:12.2'
+    image: 'postgres:14'
     volumes:
       - 'local_postgres_data:/var/lib/postgresql/data'
       - 'local_postgres_data_backups:/backups'
     env_file:
       - local/environment
   django:
-    build:
-      context: .
-      args:
-        DEVEL: 'yes'
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    command: 'python manage.py runserver_plus 0.0.0.0:8000'
+    #command: 'python manage.py runserver 0.0.0.0:8000'
+    command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -24,9 +21,11 @@ services:
     depends_on:
       - migrate
       - mailhog
-    links:
-      - db
-      - mailhog
+      {% if cookiecutter.use_celery == 'y' %}
+      - celerybeat
+      - celeryworker
+      - flower
+      {% endif %}
   migrate:
     build:
       context: .
@@ -40,9 +39,60 @@ services:
       - local/environment
     depends_on:
       - db
-    links:
+  {% if cookiecutter.use_celery == 'y' %}
+  celeryworker:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} worker -E -l info'
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
       - db
+      - redis
+  celerybeat:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} beat'
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - db
+      - redis
+  flower:
+    image: '{{ cookiecutter.project_slug }}_local_django:dev'
+    command: '/app/bin/celery -A {{ cookiecutter.project_slug }} flower'
+    volumes:
+      - '.:/app/src:z'
+    env_file:
+      - local/environment
+    depends_on:
+      - db
+      - redis
+  {% endif %}
+#  front-end:
+#    image: 'node:lts-bullseye-slim'
+#    user: node
+#    working_dir: /app
+#    environment:
+#      - BROWSER=none
+#    command: npm start
+#    volumes:
+#      - './front-end:/app:z'
+#    depends_on:
+#      - front-end-install
+#    stdin_open: true
+#  front-end-install:
+#    image: 'node:lts-bullseye-slim'
+#    user: node
+#    working_dir: /app
+#    volumes:
+#      - './front-end:/app:z'
+#    command: npm install
   mailhog:
     image: 'mailhog/mailhog:v1.0.0'
+  {% if cookiecutter.use_celery == 'y' %}
   redis:
     image: 'redis:latest'
+  {% endif %}

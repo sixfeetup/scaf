@@ -1,0 +1,18 @@
+cookiecutter>=1.7.3
+sh
+binaryornot
+
+# Code quality
+# ------------------------------------------------------------------------------
+black==22.1.0
+isort==5.10.1
+flake8
+flake8-isort
+
+# Testing
+# ------------------------------------------------------------------------------
+pytest
+pytest-cookies
+pytest-instafail
+pyyaml
+tox

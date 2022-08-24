@@ -148,3 +148,7 @@ cython_debug/
 *.iml
 out
 gen
+
+
+# other
+.history/

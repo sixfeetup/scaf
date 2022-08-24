@@ -1,14 +1,19 @@
 # PRECAUTION: avoid production dependencies that aren't in development
--c base.txt
 
-django-allow-cidr
-Collectfast
-sentry-sdk==0.14.3  # https://github.com/getsentry/sentry-python
-django-storages[boto3]==1.9.1  # https://github.com/jschneier/django-storages
+-r base.txt
+
+gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
+psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
+uvicorn[standard]
+
+# Django
+# ------------------------------------------------------------------------------
+django-storages[boto3]==1.13.1  # https://github.com/jschneier/django-storages
+
 {%- if cookiecutter.mail_service == 'Mailgun' %}
-django-anymail[mailgun]
+django-anymail[mailgun]==8.6  # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Amazon SES' %}
-django-anymail[amazon_ses]
+django-anymail[amazon_ses]==8.6  # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
-django-anymail
+django-anymail==8.6  # https://github.com/anymail/django-anymail
 {%- endif %}

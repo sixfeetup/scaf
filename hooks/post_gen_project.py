@@ -11,6 +11,7 @@ import os
 import random
 import shutil
 import string
+import zipfile
 
 try:
     # Inspired by
@@ -31,15 +32,19 @@ DEBUG_VALUE = "debug"
 
 def remove_celery_files():
     file_names = [
-        os.path.join("config", "celery_app.py"),
+        os.path.join("{{ cookiecutter.project_slug }}", "celery.py"),
         os.path.join("{{ cookiecutter.project_slug }}", "users", "tasks.py"),
         os.path.join(
             "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
         ),
+        "django_celery_beat.zip",
     ]
     for file_name in file_names:
         os.remove(file_name)
 
+def expand_django_celery_beat():
+    zipfile.ZipFile("django_celery_beat.zip").extractall()
+    os.unlink("django_celery_beat.zip")
 
 def append_to_project_gitignore(path):
     gitignore_file_path = ".gitignore"
@@ -214,6 +219,8 @@ def main():
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
+    else:
+        expand_django_celery_beat()
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()

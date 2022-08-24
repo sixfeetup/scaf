@@ -1,7 +1,0 @@
-# Local development dependencies go here
-
-django-extensions==2.2.9
-Werkzeug==1.0.1
-django-debug-toolbar==2.2
-pip-tools
-ipdb
