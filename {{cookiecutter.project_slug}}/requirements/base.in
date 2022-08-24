@@ -38,10 +38,6 @@ python-crontab>=2.3.4
 
 {%- endif %}
 
-{%- if cookiecutter.use_channels == 'y' %}
-channels-redis==3.4.1
-channels==3.0.5 # https://github.com/django/channels
-{%- endif %}
 
 # Django
 # ------------------------------------------------------------------------------

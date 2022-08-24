@@ -12,14 +12,9 @@
     "Amazon SES",
     "Other SMTP"
   ],
-  "database": [
-    "PostgreSQL",
-    "MySQL"
-  ],
   "use_drf": "n",
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",
-  "use_channels": "n",
   "debug": "n"
 }
