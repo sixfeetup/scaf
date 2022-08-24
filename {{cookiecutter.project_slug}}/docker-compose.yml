@@ -48,6 +48,7 @@ services:
     env_file:
       - local/environment
     depends_on:
+      - db
       - redis
   celerybeat:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
@@ -57,6 +58,7 @@ services:
     env_file:
       - local/environment
     depends_on:
+      - db
       - redis
   flower:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
@@ -66,6 +68,7 @@ services:
     env_file:
       - local/environment
     depends_on:
+      - db
       - redis
   {% endif %}
 #  front-end:

@@ -13,18 +13,6 @@ django-storages[boto3]==1.13.1  # https://github.com/jschneier/django-storages
 django-anymail[mailgun]==8.6  # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Amazon SES' %}
 django-anymail[amazon_ses]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'Mailjet' %}
-django-anymail[mailjet]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'Mandrill' %}
-django-anymail[mandrill]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'Postmark' %}
-django-anymail[postmark]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'Sendgrid' %}
-django-anymail[sendgrid]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'SendinBlue' %}
-django-anymail[sendinblue]==8.6  # https://github.com/anymail/django-anymail
-{%- elif cookiecutter.mail_service == 'SparkPost' %}
-django-anymail[sparkpost]==8.6  # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
 django-anymail==8.6  # https://github.com/anymail/django-anymail
 {%- endif %}
