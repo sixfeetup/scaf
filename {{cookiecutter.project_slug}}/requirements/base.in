@@ -42,7 +42,7 @@ python-crontab>=2.3.4
 # Django
 # ------------------------------------------------------------------------------
 django~=4.1.0  # https://www.djangoproject.com/
-django-environ==0.9.0  # https://github.com/joke2k/django-environ
+django-environ>=0.9.0  # https://github.com/joke2k/django-environ
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
 django-allauth==0.51.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.14.0  # https://github.com/django-crispy-forms/django-crispy-forms

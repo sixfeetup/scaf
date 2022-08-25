@@ -1,17 +1,10 @@
-"""
-NOTE:
-    the below code is to be maintained Python 2.x-compatible
-    as the whole Cookiecutter Django project initialization
-    can potentially be run in Python 2.x environment
-    (at least so we presume in `pre_gen_project.py`).
-"""
-from __future__ import print_function
-
 import os
 import random
 import shutil
 import string
 import zipfile
+import subprocess
+import shlex
 
 try:
     # Inspired by
@@ -224,6 +217,9 @@ def main():
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
+
+    subprocess.run(shlex.split("black ."))
+    subprocess.run(shlex.split("isort --profile=black ."))
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 

@@ -11,11 +11,11 @@ Creating a new project using this repo:
 
     $ git clone git@github.com:sixfeetup/cookiecutter-sixiedjango.git
     $ cd cookiecutter-sixiedjango
-    # checkout a branch if you need to
+    ### checkout a branch if you need to
     $ python3 -m venv
     $ venv/bin/pip install -r requirements.txt
     $ venv/bin/activate
-    $ cookiecutter .
+    $ cookiecutter . -o [path to destination directory]
 
 Answer the questions, and you'll have your new project!
 
@@ -23,5 +23,6 @@ Answer the questions, and you'll have your new project!
 
 When making changes to the Cookie Cutter, keep the following in mind:
 
-* update pins in requirements/*.in files
-* update to latest Python supported by Django
+* update pins in requirements/*.in files but *don't* commit the compiled requirements.txt
+  files to the repo.
+* update to latest Python supported by Django. For Django 4.1 this is 3.8, 3.9, and 3.10.

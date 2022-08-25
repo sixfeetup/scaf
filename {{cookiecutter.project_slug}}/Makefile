@@ -27,15 +27,21 @@ clean: ## Remove the latest build
 
 
 squeaky-clean:  clean  ## Aggressively remove unused images
-	@docker rmi python:3.8-slim
+	@docker rmi python:3.10-slim-bullseye
+	@docker rmi postgres:14
+	@docker rmi mailhog/mailhog:v1.0.0
+	@docker rmi node:16-bullseye-slim
+	@docker rmi redis:6.2
 	@docker system prune -a
 	@for image in `docker images -f "dangling=true" -q`; do \
 		echo removing $$image && docker rmi $$image ; done
 
 update: ## Grab latest images for project
-	@docker pull python:3.10.6-slim-bullseye
+	@docker pull python:3.10-slim-bullseye
 	@docker pull postgres:14
 	@docker pull mailhog/mailhog:v1.0.0
+	@docker pull node:16-bullseye-slim
+	@docker pull redis:6.2
 
 
 
@@ -81,8 +87,8 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 ## Development Targets
 
-build-dev: export DOCKER_BUILDKIT = 1
-build-dev: Dockerfile ## Create the dev build and runtime images
+build-dev: export DOCKER_BUILDKIT = 1  ## Create the dev build and runtime images
+build-dev: Dockerfile
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
 
 outdated: ## Show outdated packages in the container
@@ -92,7 +98,7 @@ pipdeptree: ## Show pipdeptree output
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10.6-slim-bullseye /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
 		 pip install pip-tools; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
@@ -108,13 +114,14 @@ load-dump: destroy-data ## Fresh load the data file passed in
 clean-dev: ## Remove the latest build
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
-up:
-	## start up the cluster locally
+up: ## start up the cluster locally
 	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up
 
-down:
-	## shut down the cluster
-	docker-compose -f ./docker-compose.yml down
+down: ## shut down the cluster
+	@docker-compose -f ./docker-compose.yml down
+
+down-clean:
+	@docker-compose -f ./docker-compose.yml down --remove-orphans
 
 test:  ## Run the PyTests for the Django Application
 	@docker-compose exec django pytest
@@ -122,8 +129,8 @@ test:  ## Run the PyTests for the Django Application
 shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
 
-node:  ## Shell into the running Node container
-	@docker-compose exec front-end /bin/bash
+#node:  ## Shell into the running Node container
+#	@docker-compose exec front-end /bin/bash
 
 help: ## This help.
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \

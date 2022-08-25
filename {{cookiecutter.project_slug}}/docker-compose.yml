@@ -12,8 +12,8 @@ services:
       - local/environment
   django:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
-    #command: 'python manage.py runserver 0.0.0.0:8000'
-    command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
+    command: 'python manage.py runserver 0.0.0.0:8000'
+    # command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - '.:/app/src:z'
     env_file:
@@ -72,7 +72,7 @@ services:
       - redis
   {% endif %}
 #  front-end:
-#    image: 'node:lts-bullseye-slim'
+#    image: 'node:16-bullseye-slim'
 #    user: node
 #    working_dir: /app
 #    environment:
@@ -84,7 +84,7 @@ services:
 #      - front-end-install
 #    stdin_open: true
 #  front-end-install:
-#    image: 'node:lts-bullseye-slim'
+#    image: 'node:16-bullseye-slim'
 #    user: node
 #    working_dir: /app
 #    volumes:
