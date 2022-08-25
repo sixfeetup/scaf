@@ -1,12 +1,3 @@
-"""
-NOTE:
-    the below code is to be maintained Python 2.x-compatible
-    as the whole Cookiecutter Django project initialization
-    can potentially be run in Python 2.x environment.
-
-"""
-from __future__ import print_function
-
 import sys
 
 TERMINATOR = "\x1b[0m"

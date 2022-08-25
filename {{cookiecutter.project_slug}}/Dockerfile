@@ -1,5 +1,5 @@
 # Build all of the dependencies then we will build the actual application image
-FROM python:3.10.6-slim-bullseye as build
+FROM python:3.10-slim-bullseye as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -60,7 +60,7 @@ RUN set -x \
         -r /tmp/requirements/tests.txt; fi
 
 # Next build front-end
-FROM node:lts-bullseye-slim as front-end
+FROM node:16-bullseye-slim as front-end
 
 WORKDIR /app
 
@@ -71,7 +71,7 @@ RUN npm run build
 
 
 # Now we can build the application image
-FROM python:3.10.6-slim-bullseye
+FROM python:3.10-slim-bullseye
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
