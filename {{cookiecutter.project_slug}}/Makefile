@@ -87,8 +87,8 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 ## Development Targets
 
-build-dev: export DOCKER_BUILDKIT = 1  ## Create the dev build and runtime images
-build-dev: Dockerfile
+build-dev: export DOCKER_BUILDKIT = 1  
+build-dev: Dockerfile  ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
 
 outdated: ## Show outdated packages in the container
