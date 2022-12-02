@@ -47,6 +47,9 @@ update: ## Grab latest images for project
 
 ## Release/Deployment Targets
 
+.PHONY: ci
+ci: test secure build  ## Execute the same checks used in CI/CD.
+
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
 	@git tag $(RELEASE_TAG)
@@ -128,6 +131,11 @@ test:  ## Run the PyTests for the Django Application
 
 shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
+
+.PHONY: secure
+secure:  ## Analyze dependencies for security issues.
+	@docker-compose exec django safety check
+	#@docker-compose exec django pip-audit --desc
 
 #node:  ## Shell into the running Node container
 #	@docker-compose exec front-end /bin/bash
