@@ -16,5 +16,6 @@
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",
-  "debug": "n"
+  "debug": "n",
+  "use_react_frontend": "y"
 }

@@ -210,6 +210,9 @@ def main():
     )
     set_flags_in_settings_files()
 
+    if "{{ cookiecutter.use_react_frontend }}".lower() == "n":
+        shutil.rmtree("frontend")
+
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
     else:
