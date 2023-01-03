@@ -1,4 +1,4 @@
-# {{ cookiecutter.project_name }} 
+# {{ cookiecutter.project_name }}
 
 ## Initial Project Setup
 
@@ -12,7 +12,7 @@ This will generate the requirements/*.txt files, and you should check these in t
 
 If you need to update version pins for your project:
 
-* make or add the change in the appropriate requrements/*.in file
+* make or add the change in the appropriate requirements/*.in file
 * run `make compile`
 * if you need to see what packages are out of date, run `make outdated`
 
@@ -42,11 +42,10 @@ It may take a little bit of time for all the services to start up, and it's poss
 the first run to fail because of timing conflicts.  If you do see messages indicating there
 were errors during the first run, stop all the containers using Ctrl-C, and then try it again.
 
-Once all the containers are running, you should be able to 
+Once all the containers are running, you should be able to
 access the site locally at `http://localhost:8009/`
 
 Create a superuser:
 
     $ make shell
     $ ./manage.py createsuperuser
-
