@@ -1,6 +1,5 @@
 version: '3.7'
 # below are the default ports, change the first port to avoid local conflicts
-# and rename to docker-compose-override.yml
 services:
   db:
     ports:
