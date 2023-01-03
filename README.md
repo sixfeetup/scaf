@@ -17,7 +17,28 @@ Creating a new project using this repo:
     $ pip install -r requirements.txt
     $ cookiecutter . -o [path to destination directory]
 
-Answer the questions, and you'll have your new project!
+Answer the prompts with your own desired options and you'll have your new project! For example:
+
+```text
+project_name [My Awesome Sixie Project]: 
+project_slug [my_awesome_sixie_project]: 
+description [Behold My Awesome Project!]: 
+author_name [Joe Sixie]: 
+domain_name [sixfeetup.com]: 
+email [joe-sixie@example.com]: 
+version [0.1.0]: 
+timezone [US/Eastern]: 
+Select mail_service:
+1 - Mailgun
+2 - Amazon SES
+3 - Other SMTP
+Choose from 1, 2, 3 [1]: 
+use_drf [n]: 
+custom_bootstrap_compilation [n]: 
+use_compressor [n]: 
+use_celery [n]: 
+debug [n]: 
+```
 
 # Development on the Cookie Cutter
 
