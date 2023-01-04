@@ -6,8 +6,8 @@ services:
   db:
     image: 'postgres:14'
     volumes:
-      - 'local_postgres_data:/var/lib/postgresql/data'
-      - 'local_postgres_data_backups:/backups'
+      - 'local_postgres_data_{{ cookiecutter.project_slug }}:/var/lib/postgresql/data'
+      - 'local_postgres_data_{{ cookiecutter.project_slug }}backups:/backups'
     env_file:
       - local/environment
   django:

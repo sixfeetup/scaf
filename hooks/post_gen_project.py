@@ -25,10 +25,10 @@ DEBUG_VALUE = "debug"
 
 def remove_celery_files():
     file_names = [
-        os.path.join("{{ cookiecutter.project_slug }}", "celery.py"),
-        os.path.join("{{ cookiecutter.project_slug }}", "users", "tasks.py"),
+        os.path.join("backend", "{{ cookiecutter.project_slug }}", "celery.py"),
+        os.path.join("backend", "{{ cookiecutter.project_slug }}", "users", "tasks.py"),
         os.path.join(
-            "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
+            "backend", "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
         ),
         "django_celery_beat.zip",
     ]
@@ -187,15 +187,15 @@ def set_flags_in_settings_files():
 
 def remove_drf_starter_files():
     os.remove(os.path.join("config", "api_router.py"))
-    shutil.rmtree(os.path.join("{{cookiecutter.project_slug}}", "users", "api"))
+    shutil.rmtree(os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api"))
     os.remove(
         os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
+            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
         )
     )
     os.remove(
         os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
+            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
         )
     )
 
@@ -218,8 +218,8 @@ def main():
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
 
-    subprocess.run(shlex.split("black ."))
-    subprocess.run(shlex.split("isort --profile=black ."))
+    subprocess.run(shlex.split("black ./backend"))
+    subprocess.run(shlex.split("isort --profile=black ./backend"))
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 
