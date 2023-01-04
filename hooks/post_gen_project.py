@@ -167,7 +167,7 @@ def append_to_gitignore_file(s):
 
 
 def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
-    local_env_path = os.path.join("local", "environment")
+    local_env_path = os.path.join("backend", "local", "environment")
 
     set_postgres_user(local_env_path, value=postgres_user)
     set_postgres_password(
@@ -181,12 +181,12 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
 
 
 def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join("config", "settings", "local.py"))
-    set_django_secret_key(os.path.join("config", "settings", "test.py"))
+    set_django_secret_key(os.path.join("backend", "config", "settings", "local.py"))
+    set_django_secret_key(os.path.join("backend", "config", "settings", "test.py"))
 
 
 def remove_drf_starter_files():
-    os.remove(os.path.join("config", "api_router.py"))
+    os.remove(os.path.join("backend", "config", "api_router.py"))
     shutil.rmtree(os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api"))
     os.remove(
         os.path.join(
