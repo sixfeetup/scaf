@@ -8,8 +8,8 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: Dockerfile ## Create the build and runtime images
-	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
+build: ./backend/Dockerfile ## Create the build and runtime images
+	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
@@ -91,8 +91,8 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 ## Development Targets
 
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: Dockerfile  ## Create the dev build and runtime images
-	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
+build-dev: ./backend/Dockerfile  ## Create the dev build and runtime images
+	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
 
 outdated: ## Show outdated packages in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
@@ -100,8 +100,8 @@ outdated: ## Show outdated packages in the container
 pipdeptree: ## Show pipdeptree output
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
-compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
+compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
+	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
 		 pip install pip-tools; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
