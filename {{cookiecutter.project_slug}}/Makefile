@@ -8,13 +8,13 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: Dockerfile ## Create the build and runtime images
+build: Dockerfile ## Create the build and runtime images.
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
 
-destroy-data: ## Remove the database volumes to start fresh
+destroy-data: ## Remove the database volumes and create a fresh database service.
 	@docker-compose stop db
 	@docker-compose rm -f db
 	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
@@ -22,11 +22,11 @@ destroy-data: ## Remove the database volumes to start fresh
 	@docker-compose up -d db
 
 
-clean: ## Remove the latest build
+clean: ## Remove the latest build.
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
 
 
-squeaky-clean:  clean  ## Aggressively remove unused images
+squeaky-clean:  clean  ## Removes the resources not associated with a container. This is a quick way to get rid of old images, containers, volumes, and networks.
 	@docker rmi python:3.10-slim-bullseye
 	@docker rmi postgres:14
 	@docker rmi mailhog/mailhog:v1.0.0
@@ -36,7 +36,7 @@ squeaky-clean:  clean  ## Aggressively remove unused images
 	@for image in `docker images -f "dangling=true" -q`; do \
 		echo removing $$image && docker rmi $$image ; done
 
-update: ## Grab latest images for project
+update: ## Pull the latest image or a repository from a registry
 	@docker pull python:3.10-slim-bullseye
 	@docker pull postgres:14
 	@docker pull mailhog/mailhog:v1.0.0
@@ -91,13 +91,13 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 ## Development Targets
 
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: Dockerfile  ## Create the dev build and runtime images
+build-dev: Dockerfile  ## Create the dev build and runtime images.
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
 
-outdated: ## Show outdated packages in the container
+outdated: ## Show all the outdated packages with their latest versions in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
-pipdeptree: ## Show pipdeptree output
+pipdeptree: ## Show alternatively the dependencies of installed packages as a tree structure.
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
@@ -114,22 +114,22 @@ load-dump: destroy-data ## Fresh load the data file passed in
 	@sleep 5
 	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
 
-clean-dev: ## Remove the latest build
+clean-dev: ## Force removal of the latest image
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
-up: ## start up the cluster locally
+up: ## Builds, (re)creates, starts, and attaches to containers for a service. Unless they are already running, this command also starts any linked services.
 	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up
 
 down: ## shut down the cluster
 	@docker-compose -f ./docker-compose.yml down
 
-down-clean:
+down-clean: ## Remove containers for services not defined in the Compose file.
 	@docker-compose -f ./docker-compose.yml down --remove-orphans
 
-test:  ## Run the PyTests for the Django Application
+test:  ## Execute a PyTest in a running container
 	@docker-compose exec django pytest
 
-shell:  ## Shell into the running Django container
+shell:  ## Run shell into the running Django container
 	@docker-compose exec django /bin/bash
 
 .PHONY: secure
@@ -140,7 +140,7 @@ secure:  ## Analyze dependencies for security issues.
 #node:  ## Shell into the running Node container
 #	@docker-compose exec front-end /bin/bash
 
-help: ## This help.
+help: ## Show the list of all the commands and their help texts.
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
 		/^[a-zA-Z_-]+:.*?##/ { if(target=="")print ""; target=$$1; printf " \033[36m%-10s\033[0m %s\n\n", $$1, $$2 } \
 		/^([a-zA-Z_-]+):/ {if(target=="")print "";match($$0, "(.*):"); target=substr($$0,RSTART,RLENGTH) } \
@@ -151,4 +151,3 @@ help: ## This help.
 .PHONY: help build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
 
 .DEFAULT_GOAL := help
-
