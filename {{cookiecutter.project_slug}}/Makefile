@@ -132,6 +132,14 @@ test:  ## Run the PyTests for the Django Application
 shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
 
+start: ## create virtualenv for the project, install requirements and install pre-commit
+	(	\
+		python3 -m venv ../../venv; \
+		. ../../venv/bin/activate; \
+		pip install -r ../requirements.txt; \
+		pip install pre-commit; \
+	)
+
 .PHONY: secure
 secure:  ## Analyze dependencies for security issues.
 	@docker-compose exec django safety check
@@ -151,4 +159,3 @@ help: ## This help.
 .PHONY: help build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
 
 .DEFAULT_GOAL := help
-
