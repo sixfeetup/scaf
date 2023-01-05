@@ -8,13 +8,13 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: Dockerfile ## Create the build and runtime images.
+build: Dockerfile ## Create the build and runtime images
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
 
-destroy-data: ## Remove the database volumes and create a fresh database service.
+destroy-data: ## Remove the database volumes and create a fresh database service
 	@docker-compose stop db
 	@docker-compose rm -f db
 	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
@@ -22,11 +22,11 @@ destroy-data: ## Remove the database volumes and create a fresh database service
 	@docker-compose up -d db
 
 
-clean: ## Remove the latest build.
+clean: ## Remove the latest build
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
 
 
-squeaky-clean:  clean  ## Removes the resources not associated with a container. This is a quick way to get rid of old images, containers, volumes, and networks.
+squeaky-clean:  clean  ## Removes the resources not associated with a container, this is a quick way to get rid of old images, containers, volumes, and networks
 	@docker rmi python:3.10-slim-bullseye
 	@docker rmi postgres:14
 	@docker rmi mailhog/mailhog:v1.0.0
@@ -36,7 +36,7 @@ squeaky-clean:  clean  ## Removes the resources not associated with a container.
 	@for image in `docker images -f "dangling=true" -q`; do \
 		echo removing $$image && docker rmi $$image ; done
 
-update: ## Pull the latest image or a repository from a registry
+update: ## Pull the latest image from a registry
 	@docker pull python:3.10-slim-bullseye
 	@docker pull postgres:14
 	@docker pull mailhog/mailhog:v1.0.0
@@ -48,7 +48,7 @@ update: ## Pull the latest image or a repository from a registry
 ## Release/Deployment Targets
 
 .PHONY: ci
-ci: test secure build  ## Execute the same checks used in CI/CD.
+ci: test secure build  ## Execute the same checks used in CI/CD
 
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
@@ -91,13 +91,13 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 ## Development Targets
 
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: Dockerfile  ## Create the dev build and runtime images.
+build-dev: Dockerfile  ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
 
 outdated: ## Show all the outdated packages with their latest versions in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
-pipdeptree: ## Show alternatively the dependencies of installed packages as a tree structure.
+pipdeptree: ## Show alternatively the dependencies of installed packages as a tree structure
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
@@ -117,30 +117,30 @@ load-dump: destroy-data ## Fresh load the data file passed in
 clean-dev: ## Force removal of the latest image
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
-up: ## Builds, (re)creates, starts, and attaches to containers for a service. Unless they are already running, this command also starts any linked services.
+up: ## start up the cluster locally
 	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up
 
 down: ## shut down the cluster
 	@docker-compose -f ./docker-compose.yml down
 
-down-clean: ## Remove containers for services not defined in the Compose file.
+down-clean: ## Remove containers for services not defined in the Compose file
 	@docker-compose -f ./docker-compose.yml down --remove-orphans
 
 test:  ## Execute a PyTest in a running container
 	@docker-compose exec django pytest
 
-shell:  ## Run shell into the running Django container
+shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
 
 .PHONY: secure
-secure:  ## Analyze dependencies for security issues.
+secure:  ## Analyze dependencies for security issues
 	@docker-compose exec django safety check
 	#@docker-compose exec django pip-audit --desc
 
 #node:  ## Shell into the running Node container
 #	@docker-compose exec front-end /bin/bash
 
-help: ## Show the list of all the commands and their help texts.
+help: ## Show the list of all the commands and their help text
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
 		/^[a-zA-Z_-]+:.*?##/ { if(target=="")print ""; target=$$1; printf " \033[36m%-10s\033[0m %s\n\n", $$1, $$2 } \
 		/^([a-zA-Z_-]+):/ {if(target=="")print "";match($$0, "(.*):"); target=substr($$0,RSTART,RLENGTH) } \
