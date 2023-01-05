@@ -59,15 +59,15 @@ RUN set -x \
     && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
         -r /tmp/requirements/tests.txt; fi
 
-# Next build front-end
-FROM node:16-bullseye-slim as front-end
-
-WORKDIR /app
-
-COPY front-end /app
-
-RUN npm install
-RUN npm run build
+## Next build front-end
+#FROM node:16-bullseye-slim as front-end
+#
+#WORKDIR /app
+#
+#COPY front-end /app
+#
+#RUN npm install
+#RUN npm run build
 
 
 # Now we can build the application image
