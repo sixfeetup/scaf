@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2beta4
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  # defines where to find the code at build time and where to push the resulting image
+  artifacts:
+    - image: {{ cookiecutter.docker_image }}
+      context: .
+      sync:
+        infer:
+          - "**/*"
+      docker:
+        buildArgs:
+          DEVEL: "yes"
+
+# defines the Kubernetes manifests to deploy on each run
+deploy:
+  kubectl:
+    manifests:
+      - ./k8s/*
+  statusCheckDeadlineSeconds: 60
+
+portForward:
+  - resourceType: service
+    resourceName: django
+    port: 8000
+  - resourceType: service
+    resourceName: mailhog
+    port: 8025

@@ -4,6 +4,7 @@
   "description": "Behold My Awesome Project!",
   "author_name": "Joe Sixie",
   "domain_name": "sixfeetup.com",
+  "docker_image": "sixfeetup/{{ cookiecutter.project_slug }}_local_django",
   "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
   "version": "0.1.0",
   "timezone": "US/Eastern",

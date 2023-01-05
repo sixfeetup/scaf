@@ -30,6 +30,7 @@ def remove_celery_files():
         os.path.join(
             "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
         ),
+        os.path.join("k8s", "celery.yaml"),
         "django_celery_beat.zip",
     ]
     for file_name in file_names:

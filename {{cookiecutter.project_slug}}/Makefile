@@ -9,7 +9,7 @@ sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
 build: Dockerfile ## Create the build and runtime images
-	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
+	@docker build -t {{ cookiecutter.docker_image }}:$(TAG) .
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
@@ -23,7 +23,7 @@ destroy-data: ## Remove the database volumes to start fresh
 
 
 clean: ## Remove the latest build
-	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
+	@docker rmi -f {{ cookiecutter.docker_image }}:$(TAG)
 
 
 squeaky-clean:  clean  ## Aggressively remove unused images
@@ -92,13 +92,13 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 build-dev: export DOCKER_BUILDKIT = 1
 build-dev: Dockerfile  ## Create the dev build and runtime images
-	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
+	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.docker_image }}:dev .
 
 outdated: ## Show outdated packages in the container
-	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
+	@docker run --rm {{ cookiecutter.docker_image }}:$(TAG) pip list --outdated
 
 pipdeptree: ## Show pipdeptree output
-	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
+	@docker run --rm {{ cookiecutter.docker_image }}:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
 	@docker run --rm -v $(shell pwd)/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
@@ -115,7 +115,7 @@ load-dump: destroy-data ## Fresh load the data file passed in
 	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
 
 clean-dev: ## Remove the latest build
-	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
+	@docker rmi -f {{ cookiecutter.docker_image }}:dev
 
 up: ## start up the cluster locally
 	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up
