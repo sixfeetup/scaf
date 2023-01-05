@@ -8,8 +8,8 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: Dockerfile ## Create the build and runtime images
-	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) .
+build: ./backend/Dockerfile backend/requirements/production.txt  ## Create the build and runtime images
+	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
@@ -90,9 +90,13 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 ## Development Targets
 
+backend/requirements/local.txt: compile
+backend/requirements/production.txt: compile
+backend/requirements/tests.txt: compile
+
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: Dockerfile  ## Create the dev build and runtime images
-	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev .
+build-dev: ./backend/Dockerfile backend/requirements/local.txt  ## Create the dev build and runtime images
+	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
 
 outdated: ## Show outdated packages in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
