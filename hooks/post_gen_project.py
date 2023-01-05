@@ -28,16 +28,29 @@ def remove_celery_files():
         os.path.join("backend", "{{ cookiecutter.project_slug }}", "celery.py"),
         os.path.join("backend", "{{ cookiecutter.project_slug }}", "users", "tasks.py"),
         os.path.join(
-            "backend", "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "tests",
+            "test_tasks.py",
         ),
-        "django_celery_beat.zip",
+        os.path.join(
+            "backend",
+            "django_celery_beat.zip",
+        ),
     ]
     for file_name in file_names:
         os.remove(file_name)
 
+
 def expand_django_celery_beat():
-    zipfile.ZipFile("django_celery_beat.zip").extractall()
-    os.unlink("django_celery_beat.zip")
+    django_celery_beat_zipfile = os.path.join(
+        "backend",
+        "django_celery_beat.zip",
+    )
+    zipfile.ZipFile(django_celery_beat_zipfile).extractall("backend")
+    os.unlink(django_celery_beat_zipfile)
+
 
 def append_to_project_gitignore(path):
     gitignore_file_path = ".gitignore"
