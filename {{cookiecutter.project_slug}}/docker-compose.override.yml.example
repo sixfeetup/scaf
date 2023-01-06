@@ -8,9 +8,11 @@ services:
   django:
     ports:
       - '8000:8000'
-  # front-end:
-  #   ports:
-  #     - '3000:3000'
+	{% if cookiecutter.create_frontend == 'y' %}
+  front-end:
+    ports:
+      - '3000:3000'
+	{% endif %}
   mailhog:
     ports:
       - '8025:8025'

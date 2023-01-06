@@ -71,25 +71,19 @@ services:
       - db
       - redis
   {% endif %}
-#  front-end:
-#    image: 'node:16-bullseye-slim'
-#    user: node
-#    working_dir: /app
-#    environment:
-#      - BROWSER=none
-#    command: npm start
-#    volumes:
-#      - './front-end:/app:z'
-#    depends_on:
-#      - front-end-install
-#    stdin_open: true
-#  front-end-install:
-#    image: 'node:16-bullseye-slim'
-#    user: node
-#    working_dir: /app
-#    volumes:
-#      - './front-end:/app:z'
-#    command: npm install
+  {% if cookiecutter.create_frontend == 'y' %}
+  frontend:
+    image: '{{ cookiecutter.project_slug }}_local_frontend:dev'
+    user: node
+    working_dir: /app
+    environment:
+      - BROWSER=none
+    command: npm run dev
+    volumes:
+      - '/app/node_modules'
+      - './frontend:/app:z'
+    stdin_open: true
+  {% endif %}
   mailhog:
     image: 'mailhog/mailhog:v1.0.0'
   {% if cookiecutter.use_celery == 'y' %}

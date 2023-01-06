@@ -8,11 +8,11 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: ./backend/Dockerfile ## Create the build and runtime images
+build: ./backend/Dockerfile ./frontend/Dockerfile ## Create the build and runtime images
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
-
-#build-front-end:  ## Build the front-end React app
-#	@docker-compose exec front-end npm run build
+	{% if cookiecutter.create_frontend == 'y' %}
+	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
+	{% endif %}
 
 destroy-data: ## Remove the database volumes to start fresh
 	@docker-compose stop db
@@ -91,8 +91,11 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 ## Development Targets
 
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: ./backend/Dockerfile  ## Create the dev build and runtime images
+build-dev: ./backend/Dockerfile ./frontend/Dockerfile ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
+	{% if cookiecutter.create_frontend == 'y' %}
+	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
+	{% endif %}
 
 outdated: ## Show outdated packages in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
@@ -137,8 +140,8 @@ secure:  ## Analyze dependencies for security issues.
 	@docker-compose exec django safety check
 	#@docker-compose exec django pip-audit --desc
 
-#node:  ## Shell into the running Node container
-#	@docker-compose exec front-end /bin/bash
+node:  ## Shell into the running Node container
+	@docker-compose exec frontend /bin/bash
 
 help: ## This help.
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
