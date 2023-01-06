@@ -43,6 +43,7 @@ will be installed only if requested when answering the questions in the project 
 - [crispy-bootstrap5](https://pypi.org/project/crispy-bootstrap5/) - Bootstrap5 template pack for django-crispy-forms.
 - [django](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
 - [django-allauth](https://github.com/pennersr/django-allauth) - set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication. It considers that you are using regular Django Templates.
+- [django-anymail](https://pypi.org/project/django-anymail/) - Django email backends for different providers (as Amazon SES, Mailgun, SMTP, etc).
 - [django-celery-beat](https://github.com/celery/django-celery-beat) - Celery Periodic Tasks backed by the Django ORM.
 - [django-compressor](https://github.com/django-compressor/django-compressor) - Compresses linked and inline javascript or CSS into a single cached file.
 - [django-cors-headers](https://github.com/adamchainz/django-cors-headers) - Django app for handling the server headers required for Cross-Origin Resource Sharing (CORS). Needs to be configured for [REST framework](https://www.django-rest-framework.org/topics/ajax-csrf-cors/#cors).
@@ -50,6 +51,7 @@ will be installed only if requested when answering the questions in the project 
 - [django-environ](https://django-environ.readthedocs.io/en/stable/) -  allows you to utilize 12-factor inspired environment variables to configure your Django application. It is being used in all project settings files.
 - [django-model-utils](https://django-model-utils.readthedocs.io/en/stable/) - mixins and utilities for your project. It is not explicitly used in our generated project but available if wanted to be used.
 - [django-redis](https://github.com/jazzband/django-redis) - Full featured redis cache backend for Django.
+- [django-storages](https://pypi.org/project/django-storages/) - Support for many storage backends in Django.
 - [djangorestframework](https://github.com/encode/django-rest-framework) - Django REST framework is a powerful and flexible toolkit for building Web APIs.
 - [drf-spectacular](https://github.com/tfranzel/drf-spectacular) - Sane and flexible OpenAPI 3 schema generation for Django REST framework. Useful when testing and developing APIs.
 - [flower](https://github.com/mher/flower) - Real-time monitor and web admin for Celery distributed task queue.
