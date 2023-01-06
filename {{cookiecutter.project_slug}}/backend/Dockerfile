@@ -104,3 +104,6 @@ COPY --from=build /app/ /app/
 COPY config/ /app/src/config/
 COPY manage.py /app/src/
 COPY {{ cookiecutter.project_slug }}/ /app/src/{{ cookiecutter.project_slug }}/
+
+RUN adduser --system --no-create-home django
+USER django
