@@ -11,7 +11,7 @@ FROM base
 WORKDIR /app
 RUN chown node:node /app
 COPY --from=build --chown=node:node /app/node_modules node_modules
-ADD --chown=node:node . /app
+COPY --chown=node:node . /app
 USER node
 
 CMD ["npm", "run", "dev"]
