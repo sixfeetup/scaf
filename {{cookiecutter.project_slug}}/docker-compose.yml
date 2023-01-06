@@ -81,7 +81,7 @@ services:
     command: npm run dev
     volumes:
       - '/app/node_modules'
-      - './frontend:/app:z'
+      - './frontend:/app'
     stdin_open: true
   {% endif %}
   mailhog:
