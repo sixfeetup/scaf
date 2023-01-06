@@ -59,17 +59,6 @@ RUN set -x \
     && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
         -r /tmp/requirements/tests.txt; fi
 
-## Next build front-end
-#FROM node:16-bullseye-slim as front-end
-#
-#WORKDIR /app
-#
-#COPY front-end /app
-#
-#RUN npm install
-#RUN npm run build
-
-
 # Now we can build the application image
 FROM python:3.10-slim-bullseye
 
@@ -112,7 +101,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=build /app/ /app/
-# COPY --from=front-end /app/build /app/build
 COPY config/ /app/src/config/
 COPY manage.py /app/src/
 COPY {{ cookiecutter.project_slug }}/ /app/src/{{ cookiecutter.project_slug }}/
