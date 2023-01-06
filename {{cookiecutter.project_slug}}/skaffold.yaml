@@ -5,7 +5,7 @@ build:
     sha256: {}
   # defines where to find the code at build time and where to push the resulting image
   artifacts:
-    - image: {{ cookiecutter.docker_image }}
+    - image: {{ cookiecutter.project_slug }}_local_django
       context: .
       sync:
         infer:

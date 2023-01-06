@@ -23,7 +23,7 @@ destroy-data: ## Remove the database volumes to start fresh
 
 
 clean: ## Remove the latest build
-	@docker rmi -f {{ cookiecutter.docker_image }}:$(TAG)
+	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
 
 
 squeaky-clean:  clean  ## Aggressively remove unused images
@@ -98,10 +98,10 @@ build-dev: ./backend/Dockerfile ./frontend/Dockerfile ## Create the dev build an
 	{% endif %}
 
 outdated: ## Show outdated packages in the container
-	@docker run --rm {{ cookiecutter.docker_image }}:$(TAG) pip list --outdated
+	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
 pipdeptree: ## Show pipdeptree output
-	@docker run --rm {{ cookiecutter.docker_image }}:$(TAG) pipdeptree
+	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
 	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
@@ -118,7 +118,7 @@ load-dump: destroy-data ## Fresh load the data file passed in
 	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
 
 clean-dev: ## Remove the latest build
-	@docker rmi -f {{ cookiecutter.docker_image }}:dev
+	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
 up: ## start up the cluster locally
 	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up

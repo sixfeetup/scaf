@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: {{ cookiecutter.docker_image }}:latest
+          image: {{ cookiecutter.project_slug }}_local_django:latest
           command: ["python", "manage.py", "runserver"]
           ports:
             - name: http-server
@@ -63,7 +63,7 @@ spec:
     spec:
       containers:
         - name: django-migration
-          image: {{ cookiecutter.docker_image }}:latest
+          image: {{ cookiecutter.project_slug }}_local_django:latest
           command: ["python", "manage.py", "migrate"]
           envFrom:
             - configMapRef:
