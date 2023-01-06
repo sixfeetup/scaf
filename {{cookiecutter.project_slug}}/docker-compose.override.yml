@@ -9,7 +9,7 @@ services:
     ports:
       - '8009:8000'
 	{% if cookiecutter.create_frontend == 'y' %}
-  front-end:
+  frontend:
     ports:
       - '3000:3000'
 	{% endif %}
