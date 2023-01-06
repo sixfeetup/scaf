@@ -1,23 +1,23 @@
 version: '3.7'
 volumes:
-  local_postgres_data: {}
-  local_postgres_data_backups: {}
+  local_postgres_data_{{ cookiecutter.project_slug }}: {}
+  local_postgres_data_{{ cookiecutter.project_slug }}_backups: {}
 services:
   db:
     image: 'postgres:14'
     volumes:
-      - 'local_postgres_data:/var/lib/postgresql/data'
-      - 'local_postgres_data_backups:/backups'
+      - 'local_postgres_data_{{ cookiecutter.project_slug }}:/var/lib/postgresql/data'
+      - 'local_postgres_data_{{ cookiecutter.project_slug }}_backups:/backups'
     env_file:
-      - local/environment
+      - backend/local/environment
   django:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: 'python manage.py runserver 0.0.0.0:8000'
     # command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
-      - '.:/app/src:z'
+      - './backend:/app/src:z'
     env_file:
-      - local/environment
+      - backend/local/environment
     depends_on:
       - migrate
       - mailhog
@@ -34,9 +34,9 @@ services:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: python manage.py migrate
     volumes:
-      - '.:/app/src:z'
+      - './backend:/app/src:z'
     env_file:
-      - local/environment
+      - backend/local/environment
     depends_on:
       - db
   {% if cookiecutter.use_celery == 'y' %}
@@ -44,9 +44,9 @@ services:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: '/app/bin/celery -A {{ cookiecutter.project_slug }} worker -E -l info'
     volumes:
-      - '.:/app/src:z'
+      - './backend:/app/src:z'
     env_file:
-      - local/environment
+      - backend/local/environment
     depends_on:
       - db
       - redis
@@ -54,9 +54,9 @@ services:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: '/app/bin/celery -A {{ cookiecutter.project_slug }} beat'
     volumes:
-      - '.:/app/src:z'
+      - '.backend:/app/src:z'
     env_file:
-      - local/environment
+      - backend/local/environment
     depends_on:
       - db
       - redis
@@ -64,32 +64,26 @@ services:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: '/app/bin/celery -A {{ cookiecutter.project_slug }} flower'
     volumes:
-      - '.:/app/src:z'
+      - './backend:/app/src:z'
     env_file:
-      - local/environment
+      - backend/local/environment
     depends_on:
       - db
       - redis
   {% endif %}
-#  front-end:
-#    image: 'node:16-bullseye-slim'
-#    user: node
-#    working_dir: /app
-#    environment:
-#      - BROWSER=none
-#    command: npm start
-#    volumes:
-#      - './front-end:/app:z'
-#    depends_on:
-#      - front-end-install
-#    stdin_open: true
-#  front-end-install:
-#    image: 'node:16-bullseye-slim'
-#    user: node
-#    working_dir: /app
-#    volumes:
-#      - './front-end:/app:z'
-#    command: npm install
+  {% if cookiecutter.create_frontend == 'y' %}
+  frontend:
+    image: '{{ cookiecutter.project_slug }}_local_frontend:dev'
+    user: node
+    working_dir: /app
+    environment:
+      - BROWSER=none
+    command: npm run dev
+    volumes:
+      - '/app/node_modules'
+      - './frontend:/app'
+    stdin_open: true
+  {% endif %}
   mailhog:
     image: 'mailhog/mailhog:v1.0.0'
   {% if cookiecutter.use_celery == 'y' %}

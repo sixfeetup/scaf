@@ -15,7 +15,12 @@ Creating a new project using this repo:
     $ python3 -m venv .venv
     $ source .venv/bin/activate
     $ pip install -r requirements.txt
-    $ cookiecutter . -o [path to destination directory]
+    $ cookiecutter . -o [path to destination folder]
+    $ cd [path to destination folder]/[project slug]
+    $ git init .
+    $ make compile
+    $ make build-dev
+    $ make up
 
 Answer the questions, and you'll have your new project!
 
