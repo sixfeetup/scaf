@@ -3,6 +3,9 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"//scripts": {
+		"prepare": "Use this version of prepare command while working on cookiecutter itself cd ../../ && husky install ./{{cookiecutter.project_slug}}/frontend/.husky"
+	},
 	"scripts": {
 		"dev": "vite",
 		"test": "NODE_ENV=test jest",
@@ -11,7 +14,7 @@
 		"lint": "eslint . --ext .ts,.tsx",
 		"lint-staged-fix": "eslint . --ext .ts,.tsx --fix",
 		"format-staged": "prettier --write",
-		"prepare": "cd ../../ && husky install ./{{cookiecutter.project_slug}}/frontend/.husky"
+		"prepare": "cd ../ && husky install ./frontend/.husky"
 	},
 	"lint-staged": {
 		"*.{json,css,md}": "npm run format-staged",
