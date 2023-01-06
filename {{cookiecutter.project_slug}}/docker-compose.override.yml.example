@@ -8,7 +8,7 @@ services:
   django:
     ports:
       - '8000:8000'
-	{% if cookiecutter.create_frontend == 'y' %}
+	{% if cookiecutter.create_react_frontend == 'y' %}
   frontend:
     ports:
       - '3000:3000'

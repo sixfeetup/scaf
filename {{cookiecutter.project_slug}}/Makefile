@@ -10,7 +10,7 @@ sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 build: export DOCKER_BUILDKIT = 1
 build: ./backend/Dockerfile ./frontend/Dockerfile ## Create the build and runtime images
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
-	{% if cookiecutter.create_frontend == 'y' %}
+	{% if cookiecutter.create_react_frontend == 'y' %}
 	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
 	{% endif %}
 
@@ -93,7 +93,7 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 build-dev: export DOCKER_BUILDKIT = 1
 build-dev: ./backend/Dockerfile ./frontend/Dockerfile ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
-	{% if cookiecutter.create_frontend == 'y' %}
+	{% if cookiecutter.create_react_frontend == 'y' %}
 	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
 	{% endif %}
 

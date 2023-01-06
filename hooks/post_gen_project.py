@@ -22,9 +22,10 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_frontend = '{{cookiecutter.create_frontend}}' == 'y'
-if not create_frontend:
+create_react_frontend = '{{cookiecutter.create_react_frontend}}' == 'y'
+if not create_react_frontend:
     shutil.rmtree("frontend")
+
 
 def remove_celery_files():
     file_names = [
