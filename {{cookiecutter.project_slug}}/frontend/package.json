@@ -14,7 +14,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint-staged-fix": "eslint . --ext .ts,.tsx --fix",
     "format-staged": "prettier --write",
-    "prepare": "cd ../../ && husky install ./{{cookiecutter.project_slug}}/frontend/.husky"
+    "prepare": "cd ../ && husky install ./frontend/.husky"
   },
   "lint-staged": {
     "*.{json,css,md}": "npm run format-staged",
