@@ -6,16 +6,16 @@ const NotFound = lazy(() => import('pages/NotFound'))
 const Home = lazy(async () => import('pages/Home'))
 
 const Routes = () => {
-	return (
-		<BrowserRouter>
-			<Suspense fallback={<SuspenseFallback />}>
-				<RRDRoutes>
-					<Route path='/' element={<Home />} />
-					<Route path='*' element={<NotFound />} />
-				</RRDRoutes>
-			</Suspense>
-		</BrowserRouter>
-	)
+  return (
+    <BrowserRouter>
+      <Suspense fallback={<SuspenseFallback />}>
+        <RRDRoutes>
+          <Route path='/' element={<Home />} />
+          <Route path='*' element={<NotFound />} />
+        </RRDRoutes>
+      </Suspense>
+    </BrowserRouter>
+  )
 }
 
 export default Routes

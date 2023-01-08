@@ -4,15 +4,15 @@ import path from 'path'
 import camelcase from 'camelcase'
 
 export default {
-	process(src, filename) {
-		const assetFilename = JSON.stringify(path.basename(filename))
+  process(src, filename) {
+    const assetFilename = JSON.stringify(path.basename(filename))
 
-		if (filename.match(/\.svg$/)) {
-			const pascalCaseFilename = camelcase(path.parse(filename).name, {
-				pascalCase: true
-			})
-			const componentName = `Svg${pascalCaseFilename}`
-			return `const React = require('react');
+    if (filename.match(/\.svg$/)) {
+      const pascalCaseFilename = camelcase(path.parse(filename).name, {
+        pascalCase: true
+      })
+      const componentName = `Svg${pascalCaseFilename}`
+      return `const React = require('react');
       module.exports = {
         __esModule: true,
         default: ${assetFilename},
@@ -28,8 +28,8 @@ export default {
           };
         }),
       };`
-		}
+    }
 
-		return `module.exports = ${assetFilename};`
-	}
+    return `module.exports = ${assetFilename};`
+  }
 }
