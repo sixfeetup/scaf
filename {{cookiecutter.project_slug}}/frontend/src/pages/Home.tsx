@@ -5,7 +5,7 @@ import Card from 'components/card/Card'
 import styles from './Home.module.css'
 import { fetchMe } from './Home.queries'
 const Home = () => {
-  const { data, isLoading, error } = useQuery(['you'], fetchMe)
+  const { data, isLoading, error } = useQuery(['me'], fetchMe)
   console.log(isLoading, data, error)
   return (
     <div className={styles.Home}>
