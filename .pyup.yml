@@ -16,7 +16,7 @@ label_prs: update
 requirements:
   - "requirements.txt"
   - "requirements.in"
-  - "{{cookiecutter.project_slug}}/requirements/base.in"
-  - "{{cookiecutter.project_slug}}/requirements/local.in"
-  - "{{cookiecutter.project_slug}}/requirements/production.in"
-  - "{{cookiecutter.project_slug}}/requirements/tests.in"
+  - "{{cookiecutter.project_slug}}/backend/requirements/base.in"
+  - "{{cookiecutter.project_slug}}/backend/requirements/local.in"
+  - "{{cookiecutter.project_slug}}/backend/requirements/production.in"
+  - "{{cookiecutter.project_slug}}/backend/requirements/tests.in"
