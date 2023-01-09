@@ -100,9 +100,11 @@ For Mac using Docker and Homebrew, it would be the following:
     🎉 After some time you cluster should be deployed in your local Kubernetes. In the terminal output you will also find the information about the **forwarded ports**:
     ```
     Deployments stabilized in 16.132 seconds
-    Port forwarding service/frontend in namespace default, remote port 80 -> http://127.0.0.1:4503
     Port forwarding service/django in namespace default, remote port 8000 -> http://127.0.0.1:8000
-    Port forwarding service/mailhog in namespace default, remote port 8025 -> http://127.0.0.1:8025
+    Port forwarding service/mailhog in namespace default, remote port 8025 -> http://127.0.0.1:8026
+    Port forwarding service/frontend in namespace default, remote port 3000 -> http://127.0.0.1:3000
+    Port forwarding service/redis in namespace default, remote port 6379 -> http://127.0.0.1:6380
+    Port forwarding service/postgres in namespace default, remote port 5432 -> http://127.0.0.1:5432
     Press Ctrl+C to exit
     Watching for changes...
     ```
