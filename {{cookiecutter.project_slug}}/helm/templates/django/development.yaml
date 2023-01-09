@@ -20,6 +20,7 @@ spec:
       containers:
         - name: {{ .Values.django.name }}
           image: {{ .Values.django.image }}
+          command: ["python", "manage.py", "runserver"]
           ports:
             - name: {{ .Values.django.ports.name }}
               containerPort: {{ .Values.django.ports.port }}

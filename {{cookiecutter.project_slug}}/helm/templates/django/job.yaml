@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.django.name }}-migrations-job
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      containers:
+        - name: {{ .Values.django.name }}-migration
+          image: {{ .Values.django.image }}
+          command: ["python", "manage.py", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.appName }}-config
+      initContainers:
+        - name: check-db-ready
+          image: {{ .Values.postgres.image }}
+          command: [
+              "sh",
+              "-c",
+              "until pg_isready -h {{ .Values.postgres.name }} -p {{ .Values.postgres.ports.port }};
+              do echo waiting for postgres; sleep 2; done;",
+            ]
+      restartPolicy: Never
