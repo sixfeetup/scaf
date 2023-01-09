@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.django.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.django.selector.tier }}
+spec:
+  type: {{ .Values.mailhog.service.type }}
+  ports:
+    - name: {{ .Values.django.ports.name }}
+      port: {{ .Values.django.ports.port }}
+      targetPort: {{ .Values.django.ports.name }}
+      protocol: TCP
+  selector:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.django.selector.tier }}

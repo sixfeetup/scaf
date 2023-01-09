@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier:  {{ .Values.mailhog.selector.tier }}
+spec:
+  serviceName: {{ .Values.postgres.name }}
+  replicas: {{ .Values.mailhog.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      tier:  {{ .Values.mailhog.selector.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        tier:  {{ .Values.mailhog.selector.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.postgres.name }}
+          image: {{ .Values.postgres.image }}
+          ports:
+            - containerPort: {{ .Values.postgres.ports.port }}
+          envFrom:
+          - configMapRef:
+              name: {{ .Values.appName }}-config
+          volumeMounts:
+            - name: {{ .Values.postgres.name }}-volume-mount
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: {{ .Values.postgres.name }}-volume-mount
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgres.name }}-pvc

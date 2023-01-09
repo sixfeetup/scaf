@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.django.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.django.selector.tier }}
+spec:
+  replicas: {{ .Values.django.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      tier: {{ .Values.django.selector.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        tier: {{ .Values.django.selector.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.django.name }}
+          image: {{ .Values.django.image }}
+          ports:
+            - name: {{ .Values.django.ports.name }}
+              containerPort: {{ .Values.django.ports.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.appName }}-config
+      initContainers:
+        - name: check-db-ready
+          image: {{ .Values.postgres.image }}
+          command: [
+              "sh",
+              "-c",
+              "until pg_isready -h {{ .Values.postgres.name }} -p {{ .Values.postgres.ports.port }};
+              do echo waiting for postgres; sleep 2; done;",
+            ]

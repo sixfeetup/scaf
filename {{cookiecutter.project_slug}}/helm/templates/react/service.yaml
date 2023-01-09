@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.react.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.react.selector.tier }}
+spec:
+  type: {{ .Values.mailhog.service.type }}
+  ports:
+    - name: {{ .Values.react.ports.name }}
+      port: {{ .Values.react.ports.port }}
+      targetPort: {{ .Values.react.ports.name }}
+      protocol: TCP
+  selector:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.react.selector.tier }}

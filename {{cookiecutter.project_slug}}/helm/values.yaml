@@ -1,0 +1,61 @@
+appName: {{ cookiecutter.project_slug }}
+
+mailhog:
+  name: mailhog
+  image: mailhog/mailhog:v1.0.0
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+  selector:
+    tier: smtp
+  ports:
+    - port: 1025
+      name: "port-1025"
+    - port: 8025
+      name: "port-8025"
+
+redis:
+  name: redis
+  image: redis:6.0.5
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+  selector:
+    tier: caching
+  ports:
+    - port: 6379
+      name: "port-6379"
+
+postgres:
+  name: postgres
+  image: postgres:12.7
+  replicaCount: 1
+  selector:
+    tier: db
+  ports:
+    port: 5432
+    name: "port-5432"
+
+react:
+  name: react
+  image: {{ cookiecutter.project_slug }}_local_frontend:latest
+  replicaCount: 1
+  service:
+    type: NodePort
+  selector:
+    tier: frontend
+  ports:
+    port: 3000
+    name: "port-3000"
+
+django:
+  name: django
+  image: {{ cookiecutter.project_slug }}_local_django:latest
+  replicaCount: 1
+  service:
+    type: NodePort
+  selector:
+    tier: backend
+  ports:
+    port: 8000
+    name: "port-8000"

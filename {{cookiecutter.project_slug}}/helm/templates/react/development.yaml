@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.react.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.react.selector.tier }}
+spec:
+  replicas: {{ .Values.react.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      tier: {{ .Values.react.selector.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        tier: {{ .Values.react.selector.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.react.name }}
+          image: {{ .Values.react.image }}
+          ports:
+            - name: {{ .Values.react.ports.name }}
+              containerPort: {{ .Values.react.ports.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.react.ports.port }}"
+            - name: DJANGO_ADDRESS
+              value: django:8000

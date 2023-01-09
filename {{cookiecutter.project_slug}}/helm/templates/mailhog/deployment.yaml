@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mailhog.name }}
+  labels:
+    app: {{ .Values.appName }}
+    tier: {{ .Values.mailhog.selector.tier }}
+spec:
+  replicas: {{ .Values.mailhog.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      tier: {{ .Values.mailhog.selector.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        tier: {{ .Values.mailhog.selector.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.mailhog.name }}
+          image: {{ .Values.mailhog.image }}
+          ports:
+            {{- range .Values.mailhog.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+            {{ end }}
