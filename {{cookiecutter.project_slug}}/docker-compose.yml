@@ -27,10 +27,6 @@ services:
       - flower
       {% endif %}
   migrate:
-    build:
-      context: .
-      args:
-        DEVEL: 'yes'
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: python manage.py migrate
     volumes:
