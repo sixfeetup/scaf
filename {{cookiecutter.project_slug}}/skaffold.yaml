@@ -26,7 +26,7 @@ deploy:
       - ./k8s/*
 #  helm:
 #    releases:
-#      - name: awesome-release
+#      - name: {{ cookiecutter.project_slug }}-release
 #        chartPath: helm
   statusCheckDeadlineSeconds: 60
 
