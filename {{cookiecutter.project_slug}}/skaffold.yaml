@@ -24,6 +24,10 @@ deploy:
   kubectl:
     manifests:
       - ./k8s/*
+#  helm:
+#    releases:
+#      - name: awesome-release
+#        chartPath: helm
   statusCheckDeadlineSeconds: 60
 
 portForward:
