@@ -17,5 +17,8 @@
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",
-  "debug": "n"
+  "debug": "n",
+  "_copy_without_render": [
+    "helm/templates"
+  ]
 }
