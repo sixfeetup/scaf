@@ -12,7 +12,7 @@ This will generate the requirements/*.txt files, and you should check these in t
 
 If you need to update version pins for your project:
 
-* make or add the change in the appropriate requirements/*.in file
+* make changes in the appropriate requirements/*.in file
 * run `make compile`
 * if you need to see what packages are out of date, run `make outdated`
 

@@ -1,11 +1,7 @@
 # The Sixie Opinionated Django Cookiecutter
 
-This is a work in progress project for jumpstarting production-ready Django projects. It is heavily inspired by the work
-of [cookiecutter-django](https://github.com/pydanny/cookiecutter-django)
-and Daniel Roy Greenfeld. It also borrows heavily from the ideas in the
-PyPA [warehouse](https://github.com/pypa/warehouse) as I feel they have 
-made an amazing developer onboarding experience for a very complicated
-project.
+This project enables jumpstarting production-ready Django projects. The work of [cookiecutter-django](https://github.com/pydanny/cookiecutter-django)
+and Daniel Roy Greenfeld heavily inspires it. It also borrows ideas from PyPA [warehouse](https://github.com/pypa/warehouse) since it provides a fantastic developer onboarding experience on a complex project.
 
 Creating a new project using this repo:
 
@@ -17,7 +13,7 @@ Creating a new project using this repo:
     $ pip install -r requirements.txt
     $ cookiecutter . -o [path to destination directory]
 
-Answer the prompts with your own desired options and you'll have your new project!
+Answer the prompts with your own desired options, and you'll have your new project!
 
 # Development on the Cookie Cutter
 
