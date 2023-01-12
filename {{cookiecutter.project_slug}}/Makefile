@@ -123,7 +123,7 @@ up: ## start up the cluster locally
 down: ## shut down the cluster
 	@docker-compose -f ./docker-compose.yml down
 
-down-clean: ## Remove containers for services not defined in the Compose file
+down-clean: ## Remove containers for services not defined in the docker-compose.yml file
 	@docker-compose -f ./docker-compose.yml down --remove-orphans
 
 test:  ## Execute a PyTest in a running container
