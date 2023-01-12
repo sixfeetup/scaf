@@ -14,7 +14,7 @@ build: Dockerfile ## Create the build and runtime images
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
 
-destroy-data: ## Remove the database volumes and create a fresh database service
+destroy-data: ## Remove the database volumes and start with a clean database
 	@docker-compose stop db
 	@docker-compose rm -f db
 	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
