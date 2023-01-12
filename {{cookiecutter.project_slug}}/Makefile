@@ -97,7 +97,7 @@ build-dev: Dockerfile  ## Create the dev build and runtime images
 outdated: ## Show all the outdated packages with their latest versions in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
-pipdeptree: ## Show alternatively the dependencies of installed packages as a tree structure
+pipdeptree: ## Show the dependencies of installed packages as a tree structure
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: requirements/base.in requirements/tests.in ## compile latest requirements to be built into the docker image
