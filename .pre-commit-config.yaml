@@ -5,6 +5,9 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+    -   id: no-commit-to-branch
+        args: ['--pattern', '^(?!([a-zA-Z]+/[0-9]+-.*)$).*']
+
 
 -   repo: https://github.com/psf/black
     rev: 22.8.0
