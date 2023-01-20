@@ -22,22 +22,26 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
+create_frontend = '{{cookiecutter.create_frontend}}' == 'y'
+if not create_frontend:
+    shutil.rmtree("frontend")
 
 def remove_celery_files():
     file_names = [
-        os.path.join("{{ cookiecutter.project_slug }}", "celery.py"),
-        os.path.join("{{ cookiecutter.project_slug }}", "users", "tasks.py"),
+        os.path.join("backend", "{{ cookiecutter.project_slug }}", "celery.py"),
+        os.path.join("backend", "{{ cookiecutter.project_slug }}", "users", "tasks.py"),
         os.path.join(
-            "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "tests",
+            "test_tasks.py",
         ),
-        "django_celery_beat.zip",
+        os.path.join("k8s", "celery.yaml"),
     ]
     for file_name in file_names:
         os.remove(file_name)
 
-def expand_django_celery_beat():
-    zipfile.ZipFile("django_celery_beat.zip").extractall()
-    os.unlink("django_celery_beat.zip")
 
 def append_to_project_gitignore(path):
     gitignore_file_path = ".gitignore"
@@ -167,7 +171,7 @@ def append_to_gitignore_file(s):
 
 
 def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
-    local_env_path = os.path.join("local", "environment")
+    local_env_path = os.path.join("backend", "local", "environment")
 
     set_postgres_user(local_env_path, value=postgres_user)
     set_postgres_password(
@@ -181,21 +185,21 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
 
 
 def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join("config", "settings", "local.py"))
-    set_django_secret_key(os.path.join("config", "settings", "test.py"))
+    set_django_secret_key(os.path.join("backend", "config", "settings", "local.py"))
+    set_django_secret_key(os.path.join("backend", "config", "settings", "test.py"))
 
 
 def remove_drf_starter_files():
-    os.remove(os.path.join("config", "api_router.py"))
-    shutil.rmtree(os.path.join("{{cookiecutter.project_slug}}", "users", "api"))
+    os.remove(os.path.join("backend", "config", "api_router.py"))
+    shutil.rmtree(os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api"))
     os.remove(
         os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
+            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
         )
     )
     os.remove(
         os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
+            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
         )
     )
 
@@ -212,14 +216,12 @@ def main():
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
-    else:
-        expand_django_celery_beat()
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
 
-    subprocess.run(shlex.split("black ."))
-    subprocess.run(shlex.split("isort --profile=black ."))
+    subprocess.run(shlex.split("black ./backend"))
+    subprocess.run(shlex.split("isort --profile=black ./backend"))
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 

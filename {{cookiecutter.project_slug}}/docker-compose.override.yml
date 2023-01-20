@@ -6,15 +6,13 @@ services:
       - '5433:5432'
   django:
     ports:
-      - '8009:8000'
-  # front-end:
-  #   ports:
-  #     - '3000:3000'
+      - '8009:8000'{% if cookiecutter.create_frontend == 'y' %}
+  frontend:
+    ports:
+      - '3000:3000'{% endif %}
   mailhog:
     ports:
-      - '8025:8025'
-  {% if cookiecutter.use_celery == 'y' %}
+      - '8025:8025'{% if cookiecutter.use_celery == 'y' %}
   flower:
     ports:
-      - '5555:5555'
-  {% endif %}
+      - '5555:5555'{% endif %}
