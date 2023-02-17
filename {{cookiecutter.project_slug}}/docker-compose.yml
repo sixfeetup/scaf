@@ -50,7 +50,7 @@ services:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: '/app/bin/celery -A {{ cookiecutter.project_slug }} beat'
     volumes:
-      - '.backend:/app/src:z'
+      - './backend:/app/src:z'
     env_file:
       - backend/local/environment
     depends_on:
