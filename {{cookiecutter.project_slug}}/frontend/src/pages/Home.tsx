@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import Card from 'components/card/Card'
+import { ReactComponent as RocketIcon } from 'assets/rocket.svg'
 
 import styles from './Home.module.css'
 import { fetchMe } from './Home.queries'
@@ -14,7 +15,11 @@ const Home = () => {
       ) : (
         <Card
           heading='Cookie Cutter'
-          body='🚀 Vite + React + Typescript 🤘 & Eslint 🔥+ Prettier'
+          body={
+            <>
+              <RocketIcon /> Vite + React + Typescript 🤘 & Eslint 🔥+ Prettier
+            </>
+          }
           footer='This is cookie cutter template'
         />
       )}
