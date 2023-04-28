@@ -100,10 +100,10 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY --from=build /app/ /app/
-COPY config/ /app/src/config/
-COPY manage.py /app/src/
-COPY {{ cookiecutter.project_slug }}/ /app/src/{{ cookiecutter.project_slug }}/
-
 RUN adduser --system --no-create-home django
+COPY --chown=django:django --from=build /app/ /app/
+COPY --chown=django:django config/ /app/src/config/
+COPY --chown=django:django manage.py /app/src/
+COPY --chown=django:django {{ cookiecutter.project_slug }}/ /app/src/{{ cookiecutter.project_slug }}/
+
 USER django
