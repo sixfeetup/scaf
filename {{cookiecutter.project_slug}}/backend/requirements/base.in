@@ -1,61 +1,26 @@
+argon2-cffi==21.3.0
+crispy-bootstrap5==0.7
+django~=4.1.0
+django-allauth==0.52.0
+django-crispy-forms==1.14.0
+django-environ==0.9.0
+django-model-utils==4.3.1
+django-redis==5.2.0
+Pillow==9.4.0
 
-argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
-astroid==2.12.2
-asttokens==2.0.8
-executing==0.10.0
-Faker==14.0.0
-jsonschema==4.10.0
-Pillow==9.2.0  # https://github.com/python-pillow/Pillow
-pydevd-pycharm==222.3739.43
-Pygments==2.13.0
-python-slugify==6.1.2  # https://github.com/un33k/python-slugify
-pytz==2022.2.1
-{%- if cookiecutter.use_compressor == 'y' %}
-rcssmin==1.1.0
-rjsmin==1.2.0
+{%- if cookiecutter.use_compressor == "y" %}
+django-compressor==4.1
 {%- endif %}
-safety
-setuptools==65.0.1
-stack-data==0.4.0
-tomlkit==0.11.4
 
 {%- if cookiecutter.use_celery == "y" %}
-redis==4.3.4  # https://github.com/redis/redis-py
-hiredis==2.0.0  # https://github.com/redis/hiredis-py
-celery==5.2.7  # pyup: < 6.0  # https://github.com/celery/celery
-flower==1.1.0  # https://github.com/mher/flower
-
-# Uncomment the first line below and remove the rest of the lines in that block
-# when a Django 4.1-compatible version of django-celery-beat has been released.
-# Also, don't forget to remove the vendored version in the root directory of
-# the project.
-# (see https://github.com/celery/django-celery-beat/issues/566)
-
-# django-celery-beat>2.3.0  # https://github.com/celery/django-celery-beat
-django-timezone-field>=5.0
-backports.zoneinfo; python_version<"3.9"
-tzdata
-python-crontab>=2.3.4
-
+celery~=5.2.0
+django-celery-beat==2.4.0
+flower==1.2.0
+redis~=4.4.0
 {%- endif %}
 
-
-# Django
-# ------------------------------------------------------------------------------
-django~=4.1.0  # https://www.djangoproject.com/
-django-environ>=0.9.0  # https://github.com/joke2k/django-environ
-django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
-django-allauth==0.51.0  # https://github.com/pennersr/django-allauth
-django-crispy-forms==1.14.0  # https://github.com/django-crispy-forms/django-crispy-forms
-crispy-bootstrap5==0.6  # https://github.com/django-crispy-forms/crispy-bootstrap5
-{%- if cookiecutter.use_compressor == 'y' %}
-django-compressor==4.1  # https://github.com/django-compressor/django-compressor
-{%- endif %}
-django-redis==5.2.0  # https://github.com/jazzband/django-redis
-{%- if cookiecutter.use_drf == 'y' %}
-# Django REST Framework
-djangorestframework==3.13.1  # https://github.com/encode/django-rest-framework
-django-cors-headers==3.13.0 # https://github.com/adamchainz/django-cors-headers
-# DRF-spectacular for api documentation
-drf-spectacular==0.23.1  # https://github.com/tfranzel/drf-spectacular
+{%- if cookiecutter.use_drf == "y" %}
+django-cors-headers==3.13.0
+djangorestframework~=3.14.0
+drf-spectacular==0.25.1
 {%- endif %}

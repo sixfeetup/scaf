@@ -38,22 +38,10 @@ def remove_celery_files():
             "tests",
             "test_tasks.py",
         ),
-        os.path.join(
-            "backend",
-            "django_celery_beat.zip",
-        ),
+        os.path.join("k8s", "celery.yaml"),
     ]
     for file_name in file_names:
         os.remove(file_name)
-
-
-def expand_django_celery_beat():
-    django_celery_beat_zipfile = os.path.join(
-        "backend",
-        "django_celery_beat.zip",
-    )
-    zipfile.ZipFile(django_celery_beat_zipfile).extractall("backend")
-    os.unlink(django_celery_beat_zipfile)
 
 
 def append_to_project_gitignore(path):
@@ -229,8 +217,6 @@ def main():
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
-    else:
-        expand_django_celery_beat()
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()

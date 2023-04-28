@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery
+  labels:
+    app: {{ cookiecutter.project_slug }}
+    tier: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ cookiecutter.project_slug }}
+      tier: celery
+  template:
+    metadata:
+      labels:
+        app: {{ cookiecutter.project_slug }}
+        tier: celery
+    spec:
+      containers:
+        - name: celeryworker
+          image: {{ cookiecutter.project_slug }}_local_django:latest
+          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "worker", "-E", "-l", "info"]
+          envFrom:
+            - configMapRef:
+                name: django-config
+        - name: celerybeat
+          image: {{ cookiecutter.project_slug }}_local_django:latest
+          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "beat"]
+          envFrom:
+            - configMapRef:
+                name: django-config
+        - name: flower
+          image: {{ cookiecutter.project_slug }}_local_django:latest
+          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "flower"]
+          envFrom:
+            - configMapRef:
+                name: django-config

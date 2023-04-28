@@ -8,13 +8,16 @@ sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_D
 sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 
 build: export DOCKER_BUILDKIT = 1
-build: ./backend/Dockerfile ./frontend/Dockerfile ## Create the build and runtime images
+build: ./backend/Dockerfile backend/requirements/production.txt ./frontend/Dockerfile ## Create the build and runtime images
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
 	{% if cookiecutter.create_react_frontend == 'y' %}
 	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
 	{% endif %}
 
-destroy-data: ## Remove the database volumes to start fresh
+#build-front-end:  ## Build the front-end React app
+#	@docker-compose exec front-end npm run build
+
+destroy-data: ## Remove the database volumes and start with a clean database
 	@docker-compose stop db
 	@docker-compose rm -f db
 	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
@@ -26,7 +29,7 @@ clean: ## Remove the latest build
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
 
 
-squeaky-clean:  clean  ## Aggressively remove unused images
+squeaky-clean:  clean  ## Removes the resources not associated with a container, this is a quick way to get rid of old images, containers, volumes, and networks
 	@docker rmi python:3.10-slim-bullseye
 	@docker rmi postgres:14
 	@docker rmi mailhog/mailhog:v1.0.0
@@ -36,7 +39,7 @@ squeaky-clean:  clean  ## Aggressively remove unused images
 	@for image in `docker images -f "dangling=true" -q`; do \
 		echo removing $$image && docker rmi $$image ; done
 
-update: ## Grab latest images for project
+update: ## Pull the latest image from a registry
 	@docker pull python:3.10-slim-bullseye
 	@docker pull postgres:14
 	@docker pull mailhog/mailhog:v1.0.0
@@ -48,7 +51,7 @@ update: ## Grab latest images for project
 ## Release/Deployment Targets
 
 .PHONY: ci
-ci: test secure build  ## Execute the same checks used in CI/CD.
+ci: test secure build  ## Execute the same checks used in CI/CD
 
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
@@ -90,17 +93,21 @@ check-sandbox-release check-staging-release check-prod-release: ## check status 
 
 ## Development Targets
 
+backend/requirements/local.txt: compile
+backend/requirements/production.txt: compile
+backend/requirements/tests.txt: compile
+
 build-dev: export DOCKER_BUILDKIT = 1
-build-dev: ./backend/Dockerfile ./frontend/Dockerfile ## Create the dev build and runtime images
+build-dev: ./backend/Dockerfile backend/requirements/local.txt ./frontend/Dockerfile ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
 	{% if cookiecutter.create_react_frontend == 'y' %}
 	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
 	{% endif %}
 
-outdated: ## Show outdated packages in the container
+outdated: ## Show all the outdated packages with their latest versions in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
 
-pipdeptree: ## Show pipdeptree output
+pipdeptree: ## Show the dependencies of installed packages as a tree structure
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
@@ -117,7 +124,7 @@ load-dump: destroy-data ## Fresh load the data file passed in
 	@sleep 5
 	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
 
-clean-dev: ## Remove the latest build
+clean-dev: ## Force removal of the latest image
 	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
 
 up: ## start up the cluster locally
@@ -126,24 +133,24 @@ up: ## start up the cluster locally
 down: ## shut down the cluster
 	@docker-compose -f ./docker-compose.yml down
 
-down-clean:
+down-clean: ## Remove containers for services not defined in the docker-compose.yml file
 	@docker-compose -f ./docker-compose.yml down --remove-orphans
 
-test:  ## Run the PyTests for the Django Application
+test:  ## Run unit tests with PyTest in a running container
 	@docker-compose exec django pytest
 
 shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
 
 .PHONY: secure
-secure:  ## Analyze dependencies for security issues.
+secure:  ## Analyze dependencies for security issues
 	@docker-compose exec django safety check
 	#@docker-compose exec django pip-audit --desc
 
 node:  ## Shell into the running Node container
 	@docker-compose exec frontend /bin/bash
 
-help: ## This help.
+help: ## Show the list of all the commands and their help text
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
 		/^[a-zA-Z_-]+:.*?##/ { if(target=="")print ""; target=$$1; printf " \033[36m%-10s\033[0m %s\n\n", $$1, $$2 } \
 		/^([a-zA-Z_-]+):/ {if(target=="")print "";match($$0, "(.*):"); target=substr($$0,RSTART,RLENGTH) } \
@@ -154,4 +161,3 @@ help: ## This help.
 .PHONY: help build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
 
 .DEFAULT_GOAL := help
-
