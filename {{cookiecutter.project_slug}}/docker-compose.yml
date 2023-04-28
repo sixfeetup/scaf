@@ -67,7 +67,7 @@ services:
       - db
       - redis
   {% endif %}
-  {% if cookiecutter.create_frontend == 'y' %}
+  {% if cookiecutter.create_react_frontend == 'y' %}
   frontend:
     image: '{{ cookiecutter.project_slug }}_local_frontend:dev'
     user: node
