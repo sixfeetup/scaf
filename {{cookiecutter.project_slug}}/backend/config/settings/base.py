@@ -69,7 +69,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-{%- if cookiecutter.use_celery == 'y' %}
+{%- if cookiecutter.use_celery == "y" %}
     "django_celery_beat",
 {%- endif %}
 {%- if cookiecutter.use_drf == "y" %}
@@ -256,7 +256,7 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-{% if cookiecutter.use_celery == 'y' -%}
+{% if cookiecutter.use_celery == "y" -%}
 # Celery
 # ------------------------------------------------------------------------------
 if USE_TZ:
@@ -295,7 +295,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.SocialAccountAdapter"
-{% if cookiecutter.use_compressor == 'y' -%}
+{% if cookiecutter.use_compressor == "y" -%}
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
@@ -315,7 +315,7 @@ REST_FRAMEWORK = {
 }
 {%- endif %}
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
