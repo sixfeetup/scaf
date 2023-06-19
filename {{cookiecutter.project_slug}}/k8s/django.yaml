@@ -52,32 +52,12 @@ spec:
               "until pg_isready -h postgres -p 5432;
               do echo waiting for postgres; sleep 2; done;",
             ]
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: django-migrations-job
-spec:
-  backoffLimit: 10
-  template:
-    spec:
-      containers:
         - name: django-migration
           image: {{ cookiecutter.project_slug }}_local_django:latest
           command: ["python", "manage.py", "migrate"]
           envFrom:
             - configMapRef:
                 name: django-config
-      initContainers:
-        - name: check-db-ready
-          image: postgres:12.7
-          command: [
-              "sh",
-              "-c",
-              "until pg_isready -h postgres -p 5432;
-              do echo waiting for postgres; sleep 2; done;",
-            ]
-      restartPolicy: Never
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

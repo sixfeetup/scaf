@@ -1,13 +1,12 @@
 version: '3.7'
 # below are the default ports, change the first port to avoid local conflicts
-# and rename to docker-compose-override.yml
 services:
   db:
     ports:
       - '5433:5432'
   django:
     ports:
-      - '8009:8000'{% if cookiecutter.create_frontend == 'y' %}
+      - '8009:8000'{% if cookiecutter.create_react_frontend == 'y' %}
   frontend:
     ports:
       - '3000:3000'{% endif %}
