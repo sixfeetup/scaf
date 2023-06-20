@@ -28,6 +28,9 @@ deploy:
 #    releases:
 #      - name: {{ cookiecutter.project_slug }}-release
 #        chartPath: helm
+#        namespace: {{ cookiecutter.project_slug }}
+#    flags:
+#      install: ["--create-namespace"]
   statusCheckDeadlineSeconds: 60
 
 portForward:
@@ -40,3 +43,6 @@ portForward:
   - resourceType: service
     resourceName: frontend
     port: 3000
+  - resourceType: service
+    resourceName: postgres
+    port: 5432

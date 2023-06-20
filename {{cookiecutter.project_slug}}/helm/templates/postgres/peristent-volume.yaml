@@ -6,10 +6,10 @@ metadata:
     type: local
     environment: dev
 spec:
-  storageClassName: manual
+  storageClassName: default
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/{{ .Values.appName }}-{{ .Values.postgres.name }}-data
+    path: /tmp/{{ .Values.postgres.name }}-data

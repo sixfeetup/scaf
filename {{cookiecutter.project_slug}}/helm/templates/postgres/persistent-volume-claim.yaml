@@ -4,11 +4,12 @@ metadata:
   name: {{ .Values.postgres.name }}-pvc
   labels:
     type: local
+    environment: dev
 spec:
-  storageClassName: manual
+  storageClassName: default
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
   volumeName: {{ .Values.postgres.name }}-pv

@@ -5,6 +5,7 @@ metadata:
   labels:
     app: {{ .Values.appName }}
     tier: {{ .Values.postgres.selector.tier }}
+    environment: dev
 spec:
   ports:
     - name: {{ .Values.postgres.ports.name }}

@@ -4,32 +4,34 @@ metadata:
   name: {{ .Values.postgres.name }}
   labels:
     app: {{ .Values.appName }}
-    tier:  {{ .Values.mailhog.selector.tier }}
+    tier:  {{ .Values.postgres.selector.tier }}
+    environment: dev
 spec:
   serviceName: {{ .Values.postgres.name }}
-  replicas: {{ .Values.mailhog.replicaCount }}
+  replicas: {{ .Values.postgres.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.appName }}
-      tier:  {{ .Values.mailhog.selector.tier }}
+      tier:  {{ .Values.postgres.selector.tier }}
   template:
     metadata:
       labels:
         app: {{ .Values.appName }}
-        tier:  {{ .Values.mailhog.selector.tier }}
+        tier:  {{ .Values.postgres.selector.tier }}
     spec:
       containers:
         - name: {{ .Values.postgres.name }}
           image: {{ .Values.postgres.image }}
           ports:
             - containerPort: {{ .Values.postgres.ports.port }}
+              name: {{ .Values.postgres.ports.name }}
           envFrom:
           - configMapRef:
               name: {{ .Values.appName }}-config
           volumeMounts:
-            - name: {{ .Values.postgres.name }}-volume-mount
+            - name: {{ .Values.postgres.name }}-db
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: {{ .Values.postgres.name }}-volume-mount
+        - name: {{ .Values.postgres.name }}-db
           persistentVolumeClaim:
             claimName: {{ .Values.postgres.name }}-pvc
