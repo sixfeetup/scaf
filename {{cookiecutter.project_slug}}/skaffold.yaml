@@ -26,9 +26,9 @@ deploy:
       - ./k8s/*
 #  helm:
 #    releases:
-#      - name: {{ cookiecutter.project_slug }}-release
+#      - name: {{ cookiecutter.project_slug_dash }}-release
 #        chartPath: helm
-#        namespace: {{ cookiecutter.project_slug }}
+#        namespace: {{ cookiecutter.project_slug_dash }}
 #    flags:
 #      install: ["--create-namespace"]
   statusCheckDeadlineSeconds: 60
@@ -41,7 +41,7 @@ portForward:
     resourceName: mailhog
     port: 8025
   - resourceType: service
-    resourceName: frontend
+    resourceName: react
     port: 3000
   - resourceType: service
     resourceName: postgres

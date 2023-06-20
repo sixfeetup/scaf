@@ -6,7 +6,7 @@ metadata:
     app: {{ .Values.appName }}
     tier: {{ .Values.react.selector.tier }}
 spec:
-  type: {{ .Values.mailhog.service.type }}
+  type: {{ .Values.react.service.type }}
   ports:
     - name: {{ .Values.react.ports.name }}
       port: {{ .Values.react.ports.port }}

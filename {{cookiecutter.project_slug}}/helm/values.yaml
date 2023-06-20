@@ -1,4 +1,4 @@
-appName: {{ cookiecutter.project_slug }}
+appName: {{ cookiecutter.project_slug_dash }}
 
 mailhog:
   name: mailhog

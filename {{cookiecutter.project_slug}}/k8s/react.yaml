@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: react
   labels:
     app: {{ cookiecutter.project_slug }}
     tier: frontend
@@ -18,7 +18,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: react
   labels:
     app: {{ cookiecutter.project_slug }}
     tier: frontend
@@ -36,7 +36,7 @@ spec:
         tier: frontend
     spec:
       containers:
-        - name: frontend
+        - name: react
           image: {{ cookiecutter.project_slug }}_local_frontend:latest
           ports:
             - name: http-server
@@ -50,7 +50,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-frontend
+  name: ingress-react
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
@@ -63,6 +63,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: react
                 port:
                   number: 80
