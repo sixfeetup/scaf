@@ -52,10 +52,5 @@ syncback(
     rsync_path='/app/rsync.tilt',
 )
 
-local_resource(
-    name="django-8000", serve_cmd="kubectl port-forward deployment/django 8000:8000"
-)
-
-local_resource(
-    name="react-3000", serve_cmd="kubectl port-forward deployment/frontend 3000:3000"
-)
+k8s_resource(workload='django', port_forwards=8000)
+k8s_resource(workload='mailhog', port_forwards=8025)
