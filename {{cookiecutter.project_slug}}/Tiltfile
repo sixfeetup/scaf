@@ -1,0 +1,56 @@
+print(
+    """
+-----------------------------------------------------------------
+✨ Hello Tilt! This appears in the (Tiltfile) pane whenever Tilt
+   evaluates this file.
+-----------------------------------------------------------------
+""".strip()
+)
+
+load("ext://syncback", "syncback")
+
+docker_build(
+    "{{ cookiecutter.project_slug }}_local_django",
+    context="backend",
+    build_args={"DEVEL": "yes"},
+    live_update=[
+        sync("./backend/{{ cookiecutter.project_slug }}", "/app/src/{{ cookiecutter.project_slug }}"),
+    ],
+)
+
+docker_build(
+    "{{ cookiecutter.project_slug }}_local_frontend",
+    context="frontend",
+    live_update=[
+        sync("./frontend", "/app"),
+    ],
+)
+
+k8s_yaml(
+    [
+        "k8s/django.configmap.yaml",
+        "k8s/django.yaml",
+        "k8s/mailhog.yaml",
+        "k8s/postgres.yaml",
+        "k8s/react.yaml",
+        "k8s/redis.yaml",
+    ]
+)
+
+syncback(
+    "backend-sync",
+    "deploy/django",
+    "/app/src/{{ cookiecutter.project_slug }}/",
+    target_dir="./backend/{{ cookiecutter.project_slug }}",
+    rsync_path='/app/bin/rsync.tilt',
+)
+syncback(
+    "frontend-sync",
+    "deploy/frontend",
+    "/app/",
+    target_dir="./frontend",
+    rsync_path='/app/rsync.tilt',
+)
+
+k8s_resource(workload='django', port_forwards=8000)
+k8s_resource(workload='mailhog', port_forwards=8025)
