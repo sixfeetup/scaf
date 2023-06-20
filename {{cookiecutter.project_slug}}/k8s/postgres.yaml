@@ -8,8 +8,10 @@ metadata:
     environment: dev
 spec:
   ports:
-    - port: 5432
+    - name: "port-5432"
+      port: 5432
       targetPort: 5432
+      protocol: TCP
   selector:
     app: {{ cookiecutter.project_slug }}
     tier: db
@@ -40,11 +42,12 @@ spec:
           image: postgres:12.7
           ports:
             - containerPort: 5432
+              name: "port-5432"
           envFrom:
           - configMapRef:
               name: django-config
           volumeMounts:
-            - name: postgres-volume-mount
+            - name: postgres-db
               mountPath: /var/lib/postgresql/data
           # readinessProbe:
           #   exec:
@@ -63,7 +66,7 @@ spec:
           #   initialDelaySeconds: 15
           #   timeoutSeconds: 2
       volumes:
-        - name: postgres-volume-mount
+        - name: postgres-db
           persistentVolumeClaim:
             claimName: postgres-pvc
 ---
@@ -75,13 +78,13 @@ metadata:
     type: local
     environment: dev
 spec:
-  storageClassName: manual
+  storageClassName: default
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/postgres-data
+    path: /tmp/postgres-data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -91,10 +94,10 @@ metadata:
     type: local
     environment: dev
 spec:
-  storageClassName: manual
+  storageClassName: default
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 500Mi
+      storage: 2Mi
   volumeName: postgres-pv
