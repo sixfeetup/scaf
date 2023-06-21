@@ -1,5 +1,15 @@
 # {{ cookiecutter.project_name }} 
 
+## Requirements
+
+We recommend you install `kind` or `minikube` to run a local Kubernetes cluster.
+
+The installation of `kubectl,` `kind,` and `minikube` is described in the
+[Kubernetes Tools installation docs](https://kubernetes.io/docs/tasks/tools/).
+
+Additionally, you need to install [Tilt](https://tilt.dev) to rebuild container
+images and perform live updates while developing.
+
 ## Initial Project Setup
 
 For the initial setup once the project has been generated, you will need to
@@ -24,11 +34,7 @@ Then you are ready to build the project for the first time. The following comman
 will build the project so you will be ready to start developing. First execution
 of this command may take a few minutes to finish:
 
-    $ make build-dev
-
-After finishing the build, you can start the project using:
-
-    $ make up
+    $ tilt up
 
 It may take a little bit of time for all the services to start up, and it's possible for
 the first run to fail because of timing conflicts. If you do see messages indicating there
