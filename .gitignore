@@ -365,3 +365,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json

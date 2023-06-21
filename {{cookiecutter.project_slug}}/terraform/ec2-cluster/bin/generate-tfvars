@@ -1,0 +1,5 @@
+#!/bin/bash
+
+MY_IP=$(./bin/get-my-global-ip)
+
+cat terraform.tfvars.template | sed s/{admin_ip}/$MY_IP/ > terraform.tfvars

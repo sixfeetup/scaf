@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./bin/command kubectl get svc | grep $1 | awk '{print $5}' | grep -o '3[0-9]*'

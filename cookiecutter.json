@@ -7,6 +7,8 @@
   "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
   "version": "0.1.0",
   "timezone": "US/Eastern",
+  "aws_region": "us-east-1",
+  "aws_account_id": "793239214116",
   "create_react_frontend": "y",
   "mail_service": [
     "Mailgun",
