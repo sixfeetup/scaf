@@ -29,7 +29,7 @@ resource "aws_security_group" "admin" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = var.admin_ip
+    cidr_blocks = [var.admin_ip]
   }
 
   ingress {
@@ -43,7 +43,7 @@ resource "aws_security_group" "admin" {
     from_port   = 30000
     to_port     = 40000
     protocol    = "tcp"
-    cidr_blocks = var.admin_ip
+    cidr_blocks = [var.admin_ip]
   }
 
   egress {

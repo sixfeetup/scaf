@@ -1,16 +1,16 @@
 resource "aws_s3_bucket" "cloudnative_pg" {
   bucket_prefix = "${module.global_variables.application}-cloudnative-pg-"
-  tags          = var.tags
+  tags          = local.common_tags
 }
 
-resource "aws_s3_bucket_versioning" "versioning" {
+resource "aws_s3_bucket_versioning" "cnpg_versioning" {
   bucket = aws_s3_bucket.cloudnative_pg.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "cnpg_encryption" {
   bucket = aws_s3_bucket.cloudnative_pg.id
 
   rule {
@@ -20,15 +20,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   }
 }
 
-resource "aws_s3_bucket_ownership_controls" "controls" {
+resource "aws_s3_bucket_ownership_controls" "cnpg_controls" {
   bucket = aws_s3_bucket.cloudnative_pg.id
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
 }
 
-resource "aws_s3_bucket_acl" "acl" {
-  depends_on = [aws_s3_bucket_ownership_controls.controls]
+resource "aws_s3_bucket_acl" "cnpg_acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.cnpg_controls]
 
   bucket = aws_s3_bucket.cloudnative_pg.id
   acl    = "private"

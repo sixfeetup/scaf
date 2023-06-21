@@ -32,7 +32,7 @@ resource "aws_s3_bucket_ownership_controls" "tf_state_controls" {
   }
 }
 
-resource "aws_s3_bucket_acl" "acl" {
+resource "aws_s3_bucket_acl" "tf_state_acl" {
   depends_on = [aws_s3_bucket_ownership_controls.tf_state_controls]
 
   bucket = aws_s3_bucket.terraform_state.id
@@ -52,6 +52,8 @@ resource "aws_dynamodb_table" "terraform_state" {
     "Name" = "DynamoDB Terraform State Lock Table"
   }
 }
+
+#################################################
 
 provider "aws" {
   region = module.global_variables.aws_region

@@ -5,10 +5,10 @@ variable "admin_ip" {
 variable "ami_id" {
   type        = string
   description = "AMI id to use in the EC2 instance, warning - will update when AMI updates"
-  default     = data.aws_ami.latest_ubuntu.id
+  default     = "ami-053b0d53c279acc90"
 }
 
-# will fetch the latest ubuntu ami
+# will fetch the latest ubuntu ami and store in terraform.tfvars
 # change ami_id to be constant if you dont want it to change on the next release
 data "aws_ami" "latest_ubuntu" {
   most_recent = true
