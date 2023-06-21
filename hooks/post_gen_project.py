@@ -38,7 +38,7 @@ def remove_celery_files():
             "tests",
             "test_tasks.py",
         ),
-        os.path.join("k8s", "celery.yaml"),
+        os.path.join("k8s", "base", "celery.yaml"),
     ]
     for file_name in file_names:
         os.remove(file_name)
