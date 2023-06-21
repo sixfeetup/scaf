@@ -36,3 +36,6 @@ portForward:
   - resourceType: service
     resourceName: frontend
     port: 3000
+  - resourceType: service
+    resourceName: postgres
+    port: 5432
