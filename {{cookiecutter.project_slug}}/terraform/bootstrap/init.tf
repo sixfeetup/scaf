@@ -1,9 +1,13 @@
-# this needs to be run first 
+# this needs to be run first
 # in order to create the remote state for terraform
+module "global_variables" {
+  source = "../modules/global_variables"
+}
+
 provider "aws" {
   region = module.global_variables.aws_region
   assume_role {
-    role_arn = "arn:aws:iam::{{cookiecutter.aws_region}}:role/OrganizationAccountAccessRole"
+    role_arn = "arn:aws:iam::${module.global_variables.account_id}:role/OrganizationAccountAccessRole"
   }
 }
 
