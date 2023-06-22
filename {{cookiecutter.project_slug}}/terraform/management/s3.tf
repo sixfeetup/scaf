@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "cloudnative_pg" {
-  bucket_prefix = "${module.global_variables.application}-cloudnative-pg"
+  bucket_prefix = "${module.global_variables.application}-cloudnative-pg-"
   tags          = local.common_tags
 }
 

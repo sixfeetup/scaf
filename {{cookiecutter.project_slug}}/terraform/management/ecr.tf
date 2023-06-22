@@ -2,9 +2,9 @@ module "ecr_backend" {
   source  = "terraform-aws-modules/ecr/aws"
   version = "1.6.0"
 
-  repository_name = "backend"
+  repository_name = "${module.global_variables.application}-backend"
 
-  repository_read_write_access_arns = [aws_iam_user.bitbucket_user.arn]
+  repository_read_write_access_arns = [aws_iam_user.cicd_user.arn]
   repository_lifecycle_policy = jsonencode({
     rules = [
       {
@@ -30,9 +30,9 @@ module "ecr_frontend" {
   source  = "terraform-aws-modules/ecr/aws"
   version = "1.6.0"
 
-  repository_name = "frontend"
+  repository_name = "${module.global_variables.application}-frontend"
 
-  repository_read_write_access_arns = [aws_iam_user.bitbucket_user.arn]
+  repository_read_write_access_arns = [aws_iam_user.cicd_user.arn]
   repository_lifecycle_policy = jsonencode({
     rules = [
       {

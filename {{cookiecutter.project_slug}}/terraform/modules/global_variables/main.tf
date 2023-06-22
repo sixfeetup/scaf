@@ -20,3 +20,7 @@ output "aws_profile" {
 output "account_id" {
   value = "{{cookiecutter.aws_account_id}}"
 }
+
+output "domain_name" {
+  value = "{{cookiecutter.domain_name}}"
+}
