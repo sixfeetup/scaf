@@ -1,11 +1,10 @@
-
 output "app_name" {
   description = "App Name"
   value       = "{{cookiecutter.project_name}}"
 }
 
 output "application" {
-  value = "{{cookiecutter.project_slug}}"
+  value = "{{cookiecutter.project_dash}}"
 }
 
 output "aws_region" {
@@ -15,7 +14,7 @@ output "aws_region" {
 
 output "aws_profile" {
   description = "AWS Profile for CLI"
-  value       = "{{cookiecutter.project_slug}}"
+  value       = "{{cookiecutter.project_dash}}"
 }
 
 output "account_id" {

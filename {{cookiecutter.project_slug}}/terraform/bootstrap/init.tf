@@ -21,7 +21,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "{{cookiecutter.project_slug}}-state-backend"
+  bucket = "${module.global_variables.application}-state-backend"
   tags = {
     Name = "S3 Remote Terraform State Store"
   }
@@ -35,7 +35,7 @@ resource "aws_s3_bucket_versioning" "tf_state_versioning" {
 }
 
 resource "aws_dynamodb_table" "terraform_state" {
-  name           = "{{cookiecutter.project_slug}}-terraform-state"
+  name           = "${module.global_variables.application}-terraform-state"
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "LockID"
