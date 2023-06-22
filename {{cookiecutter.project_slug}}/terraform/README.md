@@ -27,4 +27,4 @@ Sets up route53 for prod and sandbox respectively.
 ### After terraform has initialised the deployment process will need to be updated with its outputs:
 * update CI/CD with the AWS access keys of the IAM `cicd_user`.
 * update kubernetes manifests and any CI/CD making calls to the ECR images with the ECR url.
-* update CloudNativePG manifest to set the backup with S3 cloudnative_pg` bucket url.
+* update CloudNativePG manifest to set the backup with S3 `cloudnative_pg` bucket url.
