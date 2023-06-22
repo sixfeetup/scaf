@@ -8,7 +8,7 @@
   "version": "0.1.0",
   "timezone": "US/Eastern",
   "aws_region": "us-east-1",
-  "aws_account_id": "00000000",
+  "aws_account_id": "000000000000",
   "create_react_frontend": "y",
   "mail_service": [
     "Mailgun",
