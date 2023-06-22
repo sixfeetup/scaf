@@ -21,7 +21,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${module.global_variables.application}-state-backend"
+  bucket = "${module.global_variables.application}-terraform-state"
   tags = {
     Name = "S3 Remote Terraform State Store"
   }
