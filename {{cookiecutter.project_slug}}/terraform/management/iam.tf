@@ -1,14 +1,14 @@
-resource "aws_iam_user" "bitbucket_user" {
-  name = "bitbucket_user"
+resource "aws_iam_user" "cicd_user" {
+  name = "cicd_user"
 }
 
-resource "aws_iam_access_key" "bitbucket_user" {
-  user = aws_iam_user.bitbucket_user.name
+resource "aws_iam_access_key" "cicd_user" {
+  user = aws_iam_user.cicd_user.name
 }
 
-resource "aws_iam_user_policy" "bitbucket_user" {
-  name = "bitbucket_user"
-  user = aws_iam_user.bitbucket_user.name
+resource "aws_iam_user_policy" "cicd_user" {
+  name = "cicd_user_policy"
+  user = aws_iam_user.cicd_user.name
 
   policy = <<EOF
 {
@@ -42,7 +42,7 @@ resource "aws_iam_user_policy" "bitbucket_user" {
           "s3:*"
       ],
       "Effect": "Allow",
-      "Resource": "${data.aws_s3_bucket.cloudnative_pg.arn}/*"
+      "Resource": "${aws_s3_bucket.cloudnative_pg.arn}/*"
     },
     {
       "Effect": "Allow",

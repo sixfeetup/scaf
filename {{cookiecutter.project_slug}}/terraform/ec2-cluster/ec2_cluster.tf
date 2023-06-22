@@ -1,3 +1,8 @@
+resource "aws_key_pair" "default_key" {
+  key_name   = "default_key"
+  public_key = file(var.path_to_public_key)
+}
+
 resource "aws_eip" "k8s-ip" {
   instance = aws_instance.k8s.id
   domain   = "vpc"

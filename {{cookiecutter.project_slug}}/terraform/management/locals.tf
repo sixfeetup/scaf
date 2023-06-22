@@ -3,6 +3,5 @@ locals {
     automation          = "terraform"
     "automation.config" = "{{cookiecutter.project_slug}}"
     application         = module.global_variables.application
-    environment         = var.environment
   }
 }
