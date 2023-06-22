@@ -3,8 +3,9 @@ kind: ConfigMap
 metadata:
   name: django-config
 data:
+  DJANGO_DEBUG: "False"
   USE_DOCKER: "yes"
-  DJANGO_ADMIN_URL: "^admin/"
+  DJANGO_ADMIN_URL: "admin/"
   DJANGO_SETTINGS_MODULE: "config.settings.local"
   DJANGO_SECRET_KEY: "CHANGEME"
   DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,django,{{ cookiecutter.domain_name }}"

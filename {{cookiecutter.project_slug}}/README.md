@@ -10,6 +10,12 @@ The installation of `kubectl,` `kind,` and `minikube` is described in the
 Additionally, you need to install [Tilt](https://tilt.dev) to rebuild container
 images and perform live updates while developing.
 
+If you plan to run cnpg, you need to install also cloudnative-pg to your k8s cluster:
+
+    $ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.18/releases/cnpg-1.18.5.yaml
+
+See documentation for more details: https://cloudnative-pg.io/documentation/1.18/installation_upgrade/#installation-on-kubernetes
+
 ## Initial Project Setup
 
 For the initial setup once the project has been generated, you will need to
