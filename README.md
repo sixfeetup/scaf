@@ -41,6 +41,13 @@ Answer all the questions, and you'll have your new project!
 Inside `[project_destination_directory]/[project_slug]/README.md` you will have more
 documentation explaining how to use and configure your newly created project.
 
+## Terraform and AWS
+
+In order to deploy your project using terraform and AWS you can follow the instructions in `terraform/README.md`.  
+Note that you will need:
+- an AWS account where you have access to the `OrganizationAccountAccessRole`
+- terraform and aws cli installed and configured 
+
 ## Development on the Cookie Cutter
 
 When making changes to the Cookie Cutter, keep the following in mind:
