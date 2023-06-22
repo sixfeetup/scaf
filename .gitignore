@@ -235,6 +235,9 @@ fabric.properties
 # Project Default settings
 .idea/inspectionProfiles/Project_Default.xml
 
+# VcsDirectoryMappings
+.idea/vcs.xml
+
 ### Node.js
 
 # Logs
