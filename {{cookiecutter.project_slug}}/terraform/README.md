@@ -11,6 +11,7 @@ The terraform directory handles all infrastructure provisioning using terraform.
 ### First step:
 * `./bootstrap`  
 Run apply in the bootstrap directory first to set up the terraform remote state used in all other manifests.
+* If your account is not an organisation account you will need to remove or adjust the assume_role block in the bootstrap/init.tf file.
 
 ### Next steps:
 * `./management`  

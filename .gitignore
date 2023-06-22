@@ -232,6 +232,9 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
+# Project Default settings
+.idea/inspectionProfiles/Project_Default.xml
+
 ### Node.js
 
 # Logs
