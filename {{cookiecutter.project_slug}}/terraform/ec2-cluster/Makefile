@@ -20,8 +20,8 @@ config:
 	ssh -oStrictHostKeyChecking=no -i ~/.ssh/{{cookiecutter.project_slug}}_default_key \
 		ubuntu@$(INSTANCE_IP) cat /etc/rancher/k3s/k3s.yaml \
 		> ~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	sed -i 's/127.0.0.1/$(INSTANCE_IP)/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	sed -i 's/default/{{cookiecutter.project_slug}}-ec2-cluster/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
+	sed -ie 's/127.0.0.1/$(INSTANCE_IP)/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
+	sed -ie 's/default/{{cookiecutter.project_slug}}-ec2-cluster/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
 	export KUBECONFIG=~/.kube/{{cookiecutter.project_slug}}.ec2.config
 	kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
 	# do not apply cloudconfig in sandbox
