@@ -1,4 +1,5 @@
 generate-tfvars:
+	terraform apply -refresh-only -auto-approve
 	bin/generate-tfvars
 
 key-pair:
