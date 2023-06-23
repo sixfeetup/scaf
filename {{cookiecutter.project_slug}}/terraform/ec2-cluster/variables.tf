@@ -45,8 +45,8 @@ variable "tags" {
 
   default = {
     automation          = "terraform"
-    "automation.config" = "{{cookiecutter.project_slug}}"
-    application         = "{{cookiecutter.project_slug}}"
+    "automation.config" = "{{cookiecutter.project_dash}}"
+    application         = "{{cookiecutter.project_dash}}"
   }
 }
 

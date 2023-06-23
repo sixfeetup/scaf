@@ -2,7 +2,7 @@ generate-tfvars:
 	bin/generate-tfvars
 
 key-pair:
-	ssh-keygen -t ED25519 -f ~/.ssh/_default_key -N ""
+	ssh-keygen -t ED25519 -f ~/.ssh/{{cookiecutter.project_slug}}_default_key -N ""
 
 plan:
 	terraform plan
