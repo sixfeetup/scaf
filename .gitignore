@@ -232,6 +232,12 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
+# Project Default settings
+.idea/inspectionProfiles/Project_Default.xml
+
+# VcsDirectoryMappings
+.idea/vcs.xml
+
 ### Node.js
 
 # Logs
@@ -365,3 +371,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json

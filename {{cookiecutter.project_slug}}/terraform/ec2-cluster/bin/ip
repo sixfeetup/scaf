@@ -1,0 +1,3 @@
+#!/bin/bash
+
+terraform output -raw instance_ip | tail -n1

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{cookciecutter.project_dash}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prepapp
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+valuesContent: |-
+  additionalArguments:
+  - "--log.level=DEBUG"
+  - "--certificatesresolvers.letsencrypt.acme.email={{cookciecutter.email}}"
+  - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"

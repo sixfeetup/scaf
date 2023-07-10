@@ -56,3 +56,10 @@ env
 # vs code
 .vscode/
 .history/
+
+# terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
