@@ -1,5 +1,5 @@
 variable "admin_ip" {
-  type = string
+  type    = string
   default = "admin_id"
 }
 
