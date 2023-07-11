@@ -1,14 +1,21 @@
 resource "aws_s3_bucket" "static_storage" {
   bucket_prefix = "${module.global_variables.application}-${var.environment}-"
+  tags = local.common_tags
+}
 
-  acl = "private"
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+resource "aws_s3_bucket_server_side_encryption_configuration" "static_storage" {
+  bucket = aws_s3_bucket.static_storage.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
+}
+
+resource "aws_s3_bucket_cors_configuration" "static_storage" {
+  bucket = aws_s3_bucket.static_storage.id
+
   cors_rule {
     allowed_headers = ["Authorization", "Content-Length"]
     allowed_methods = [
@@ -20,12 +27,27 @@ resource "aws_s3_bucket" "static_storage" {
     ]
     allowed_origins = ["*"]
   }
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "static_storage" {
+  bucket = aws_s3_bucket.static_storage.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
-  tags = local.common_tags
+resource "aws_s3_bucket_ownership_controls" "static_storage" {
+  bucket = aws_s3_bucket.static_storage.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "static_storage" {
+  depends_on = [aws_s3_bucket_ownership_controls.static_storage]
+
+  bucket = aws_s3_bucket.static_storage.id
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "static_storage" {
