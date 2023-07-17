@@ -39,7 +39,7 @@ resource "aws_s3_bucket_versioning" "static_storage" {
 resource "aws_s3_bucket_ownership_controls" "static_storage" {
   bucket = aws_s3_bucket.static_storage.id
   rule {
-    object_ownership = "BucketOwnerPreferred"
+    object_ownership = "ObjectWriter"
   }
 }
 
@@ -67,6 +67,13 @@ resource "aws_s3_bucket_policy" "static_storage" {
                 "AWS": "${aws_cloudfront_origin_access_identity.static_storage.iam_arn}"
             },
             "Resource": "${aws_s3_bucket.static_storage.arn}/*"
+        },
+        {
+            "Action" : ["s3:GetObject"],
+            "Effect" : "Allow",
+            "Principal": "*",
+            "Resource": "${aws_s3_bucket.static_storage.arn}/*",
+            "Sid": "AddPerm"
         }
     ]
 }
