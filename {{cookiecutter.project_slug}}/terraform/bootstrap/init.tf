@@ -21,7 +21,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${module.global_variables.application}-terraform-state"
+  bucket_prefix = "${module.global_variables.application}-terraform-state"
   tags = {
     Name = "S3 Remote Terraform State Store"
   }
@@ -46,4 +46,9 @@ resource "aws_dynamodb_table" "terraform_state" {
   tags = {
     "Name" = "DynamoDB Terraform State Lock Table"
   }
+}
+
+output "terraform_state_bucket" {
+  description = "Terraform state bucket to be used in backends"
+  value       = aws_s3_bucket.terraform_state.id
 }
