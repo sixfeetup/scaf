@@ -1,4 +1,4 @@
-resource "aws_iam_policy" "{{cookiecutter.project_slug}}" {
+resource "aws_iam_policy" "{{cookiecutter.project_slug}}_user_policy" {
   name   = "task-${module.global_variables.application}-${var.environment}"
   policy = <<EOF
 {
@@ -52,7 +52,7 @@ resource "aws_iam_access_key" "{{cookiecutter.project_slug}}_user_key" {
   user = aws_iam_user.{{cookiecutter.project_slug}}_user.name
 }
 
-resource "aws_iam_user_policy_attachment" "{{cookiecutter.project_slug}}_user_policy" {
+resource "aws_iam_user_policy_attachment" "{{cookiecutter.project_slug}}_user_policy_attachment" {
   user       = aws_iam_user.{{cookiecutter.project_slug}}_user.name
-  policy_arn = aws_iam_policy.{{cookiecutter.project_slug}}.arn
+  policy_arn = aws_iam_policy.{{cookiecutter.project_slug}}_user_policy.arn
 }
