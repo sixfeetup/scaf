@@ -7,5 +7,14 @@ output "ec2_cluster_public_dns" {
 }
 
 output "static_storage_domain" {
-  value = aws_s3_bucket.static_storage.bucket_domain_name
+  value = module.application.static_storage_bucket
+}
+
+output "application_user_access_key" {
+  value = module.application.application_user_access_key
+}
+
+output "application_user_secret_key" {
+  sensitive = true
+  value     = module.application.application_user_secret_key
 }
