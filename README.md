@@ -22,11 +22,13 @@ To verify if your install worked, you can use the following command (the version
 different for you):
 
   $ cookiecutter --version
+  
   Cookiecutter 2.1.1 from /home/user/.local/lib/python3.10/site-packages (Python 3.10.6 (main, Nov 14 2022, 16:10:14) [GCC 11.3.0])
 
 You will also need [black](https://pypi.org/project/black/) and [isort](https://pypi.org/project/isort/). You can install them using the commands:
 
   $ python3 -m pip install --user black
+  
   $ python3 -m pip install --user isort
 
 ## Creating a new project using this repo
