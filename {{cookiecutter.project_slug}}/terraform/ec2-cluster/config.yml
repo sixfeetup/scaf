@@ -17,6 +17,6 @@ spec:
 valuesContent: |-
   additionalArguments:
   - "--log.level=DEBUG"
-  - "--certificatesresolvers.letsencrypt.acme.email={{cookciecutter.email}}"
+  - "--certificatesresolvers.letsencrypt.acme.email={{cookiecutter.email}}"
   - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
   - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
