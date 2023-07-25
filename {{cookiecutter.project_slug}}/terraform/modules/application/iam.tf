@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "{{cookiecutter.project_slug}}_user_policy" {
-  name   = "task-${module.global_variables.application}-${var.environment}"
+  name   = "task-${var.application}-${var.environment}"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -44,15 +44,17 @@ resource "aws_iam_policy" "{{cookiecutter.project_slug}}_user_policy" {
 EOF
 }
 
-resource "aws_iam_user" "{{cookiecutter.project_slug}}_user" {
-  name = "${module.global_variables.application}-user-${var.environment}"
+resource "aws_iam_user" "application_user" {
+  name = "${var.application}-user-${var.environment}"
+
+  tags = local.common_tags
 }
 
-resource "aws_iam_access_key" "{{cookiecutter.project_slug}}_user_key" {
-  user = aws_iam_user.{{cookiecutter.project_slug}}_user.name
+resource "aws_iam_access_key" "application_user_key" {
+  user = aws_iam_user.application_user.name
 }
 
-resource "aws_iam_user_policy_attachment" "{{cookiecutter.project_slug}}_user_policy_attachment" {
-  user       = aws_iam_user.{{cookiecutter.project_slug}}_user.name
-  policy_arn = aws_iam_policy.{{cookiecutter.project_slug}}_user_policy.arn
+resource "aws_iam_user_policy_attachment" "application_user_policy_attachment" {
+  user       = aws_iam_user.application_user.name
+  policy_arn = aws_iam_policy.application_user_policy.arn
 }
