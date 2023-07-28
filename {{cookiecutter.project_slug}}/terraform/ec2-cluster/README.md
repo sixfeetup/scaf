@@ -103,8 +103,8 @@ Finally, you need to add credentials to the kubernetes cluster so that it can pu
 kubectl create secret docker-registry regcred \
   --docker-server={{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com \
   --docker-username=AWS \
-  --docker-password=$(aws ecr get-login-password)
-  --namespace {{cookiecutter.project_slug}}-sandbox
+  --docker-password=$(aws ecr get-login-password) \
+  --namespace {{cookiecutter.project_dash}}-sandbox
 ```
 
 NB: AWS credentials will expire after 4 hours. If you are unable to push or pull images to ECR, you will need to reauthenticate.
