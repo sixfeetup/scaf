@@ -1,5 +1,5 @@
 variable "application" {
-  default = "{{cookiecutter.project_slug}}"
+  default = "{{cookiecutter.project_dash}}"
 }
 
 variable "environment" {
