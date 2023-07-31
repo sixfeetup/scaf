@@ -10,12 +10,24 @@ variable "domain_zone" {
   default = "{{ cookiecutter.domain_name }}"
 }
 
-variable "domain_urls" {
-  type    = list(string)
-  default = ["{{ cookiecutter.domain_name }}"]
+variable "api_domain" {
+  type    = string
+  default = "api.{{ cookiecutter.domain_name }}"
+}
+
+variable "cluster_domain" {
+  default = "k8s.{{ cookiecutter.domain_name }}"
 }
 
 variable "cluster_public_id" {
+  default = ""
+}
+
+variable "cluster_id" {
+  default = ""
+}
+
+variable "cluster_arn" {
   default = ""
 }
 
