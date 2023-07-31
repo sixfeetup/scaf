@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: postgres
   labels:
-    app: my_second_sixie_project
+    app: {{ cookiecutter.project_slug }}
     tier: db
     environment: dev
 spec:
