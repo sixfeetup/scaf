@@ -43,6 +43,46 @@ Answer all the questions, and you'll have your new project!
 Inside `[project_destination_directory]/[project_slug]/README.md` you will have more
 documentation explaining how to use and configure your newly created project.
 
+## Architecture
+
+Here is what a cookiecutter deployment looks like in practice:
+
+```mermaid
+flowchart LR
+    PR["PR Merge"] --> CIDCD["CI/CD Pipeline"]
+    CIDCD -->|Build & Push Images| AWSECR["AWS ECR Repo"]
+    CIDCD -->|Update Image Tags| Kustomize
+    CIDCD -->|Build & Push Static Content| S3
+    Kustomize --> ArgoCD
+    Cloudfront
+    S3
+    subgraph ControlPlaneCluster["Control Plane Cluster"]
+        Loki["Grafana Loki"]
+        Prometheus
+        ArgoCD
+    end
+    subgraph K8sCluster["Kubernetes Cluster"]
+        Django
+        NextJS
+        CloudNativePG
+        Redis
+        Celery
+        Mailhog
+    end
+    ArgoCD -->|Deploy| K8sCluster
+    Sentry
+    Django -->|Sends Error Logs| Sentry
+    NextJS -->|Sends Error Logs| Sentry
+    K8sCluster -->|Sends Logs| Loki
+    K8sCluster -->|Sends Metrics| Prometheus
+    Cloudfront -->|Requests for API and Frontend Views| K8sCluster
+    Cloudfront -->|Requests for Static Content and Media| S3
+
+    style K8sCluster fill:#FFC107, stroke:#FFFFFF, stroke-width:1px
+    style ControlPlaneCluster fill:#ff6361, stroke:#FFFFFF, stroke-width:1px
+
+```
+
 ## Terraform and AWS
 
 In order to deploy your project using terraform and AWS you can follow the instructions in `terraform/README.md`.  
