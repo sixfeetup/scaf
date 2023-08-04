@@ -9,4 +9,4 @@ spec:
     kind: ClusterIssuer
   dnsNames:
   - "k8s.sandbox.{{ cookiecutter.domain_name }}"
-  - "sandbox.api.{{ cookiecutter.domain_name }}"
+  - "api.sandbox.{{ cookiecutter.domain_name }}"
