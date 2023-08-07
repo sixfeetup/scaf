@@ -82,9 +82,9 @@ kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
 The frontend and backend ECR repo's are defined in hosting-terraform.
 
 In order for skaffold to push images and kubernetes to pull images, we need
-to authenticate against the Prepapp ECR repository.
+to authenticate against the ECR repository.
 
-Switch to the Prepapp profile and log in:
+Switch to the AWS profile and log in:
 
 ```
 export AWS_PROFILE={{cookiecutter.project_slug}}

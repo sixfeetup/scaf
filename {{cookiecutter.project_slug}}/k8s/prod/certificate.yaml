@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-cert
+spec:
+  secretName: cluster-cert-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - "k8s.{{ cookiecutter.domain_name }}"
+  - "api.{{ cookiecutter.domain_name }}"

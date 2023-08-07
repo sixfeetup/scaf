@@ -26,7 +26,7 @@ config:
 	kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
 	# do not apply cloudconfig in sandbox
 	# kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.20/releases/cnpg-1.20.0.yaml
-	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.yaml
 	kubectl apply -f config.yml
 
 ssh:
