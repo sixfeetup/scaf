@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: cluster-sandbox-cert-tls
   issuerRef:
-    name: letsencrypt-prod
+    name: letsencrypt-staging
     kind: ClusterIssuer
   dnsNames:
   - "k8s.sandbox.{{ cookiecutter.domain_name }}"
