@@ -1,4 +1,4 @@
-resource "aws_iam_policy" "{{cookiecutter.project_slug}}_user_policy" {
+resource "aws_iam_policy" "application_user_policy" {
   name   = "task-${var.application}-${var.environment}"
   policy = <<EOF
 {
