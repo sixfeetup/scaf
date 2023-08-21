@@ -72,3 +72,15 @@ To create a superuser use the following commands:
 If React frontend was selected during the project creation
 (using our [cookiecutter](https://github.com/sixfeetup/cookiecutter-sixiedjango)), you
 can access it at [http://localhost:3000/](http://localhost:3000/).
+
+## Infrastructure provisioning
+
+Terraform can be used to provision AWS resources for your project deployment.
+terraform/ec2-cluster will create an EC2 instance running a kubernetes cluster for your project.
+Check `terraform/ec2-cluster/README.md` for more information and steps for provisioning resources.
+
+## Project deployment
+
+ArgoCD and kubernetes can be used to automate the deployment of your project to your infrastructure.
+ArgoCD will watch for changes in your repository and apply the kubernetes manifests.
+Check `k8s/argocd/README.md`` for more information.
