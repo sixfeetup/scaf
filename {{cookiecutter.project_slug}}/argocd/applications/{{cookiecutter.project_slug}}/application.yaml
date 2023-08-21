@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{cookiecutter.project_dash}}-sandbox
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: PROJECT_REPOSITORY
+    targetRevision: HEAD
+    path: k8s/sandbox
+  destination:
+    server: https://CLUSTER_IP:6443
+    namespace: {{cookiecutter.project_dash}}-sandbox
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{cookiecutter.project_dash}}-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: PROJECT_REPOSITORY
+    targetRevision: HEAD
+    path: k8s/prod
+  destination:
+    server: https://CLUSTER_IP:6443
+    namespace: {{cookiecutter.project_dash}}
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true

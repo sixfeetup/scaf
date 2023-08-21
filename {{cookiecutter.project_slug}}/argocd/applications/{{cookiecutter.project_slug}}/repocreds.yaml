@@ -1,0 +1,14 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: {{cookiecutter.project_dash}}-deploy-key
+  namespace: argocd
+spec:
+  encryptedData:
+    sshPrivateKey: ENCRYPTED_PRIVATE_KEY
+  template:
+    metadata:
+      labels:
+        argocd.argoproj.io/secret-type: repository
+      name: {{cookiecutter.project_dash}}-deploy-key
+      namespace: argocd
