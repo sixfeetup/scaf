@@ -77,9 +77,9 @@ Switch to the `{{cookiecutter.project_slug}}-ec2-cluster`:
 kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
 ```
 
-## Credentials
+## ECR Credentials
 
-The frontend and backend ECR repo's are defined in hosting-terraform.
+The frontend and backend ECR repo's are defined in ./terraform/management
 
 In order for skaffold to push images and kubernetes to pull images, we need
 to authenticate against the ECR repository.
@@ -91,7 +91,7 @@ export AWS_PROFILE={{cookiecutter.project_slug}}
 aws sso login
 ```
 
-You need to pipe a log in password to docker to allow skaffold to push images to ECR:
+You need to pipe a login password to docker to allow skaffold to push images to ECR:
 
 ```
 aws ecr get-login-password --region {{cookiecutter.aws_region}} | docker login --username AWS --password-stdin {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com
@@ -110,3 +110,12 @@ kubectl create secret docker-registry regcred \
 NB: AWS credentials will expire after 4 hours. If you are unable to push or pull images to ECR, you will need to reauthenticate.
 
 To simplify this, you can run `AWS_PROFILE={{cookiecutter.project_slug}} make kubecreds`
+
+# Controlplane
+
+ArgoCD and SealedSecrets are configured on the SFU controlplane.
+If you are not using the SFU controlplane you can set up your own controlplane on the EC2 instance using the makefile command
+
+```
+make controlplane_config
+```

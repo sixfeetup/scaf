@@ -72,3 +72,18 @@ To create a superuser use the following commands:
 If React frontend was selected during the project creation
 (using our [cookiecutter](https://github.com/sixfeetup/cookiecutter-sixiedjango)), you
 can access it at [http://localhost:3000/](http://localhost:3000/).
+
+## SealedSecrets for passwords and sensitive values
+
+SealedSecrets can be used to encode passwords in order for the values to be safely checked in.
+To create a new secret encrypt the original values using kubeseal
+
+```
+cat plaintext-secret.yaml | kubeseal \
+    --controller-namespace kube-system \
+    --controller-name sealed-secrets \
+    --format yaml \
+    > sealed-secret.yaml
+```
+
+Then update the `encryptedData` in `k8s/sandbox/secrets.yaml` with your new encrypted secret value.
