@@ -30,15 +30,6 @@ config:
 	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.yaml
 	kubectl apply -f config.yml
 
-controlplane_config:
-	export KUBECONFIG=~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
-	kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.23.0/controller.yaml
-	kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	kubectl apply -f controlplane_config.yml
-	kubectl -n argocd rollout restart deployment argocd-server
-
 ssh:
 	./bin/ssh
 

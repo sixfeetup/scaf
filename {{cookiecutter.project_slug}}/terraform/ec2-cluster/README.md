@@ -114,8 +114,4 @@ To simplify this, you can run `AWS_PROFILE={{cookiecutter.project_slug}} make ku
 # Controlplane
 
 ArgoCD and SealedSecrets are configured on the SFU controlplane.
-If you are not using the SFU controlplane you can set up your own controlplane on the EC2 instance using the makefile command
-
-```
-make controlplane_config
-```
+If you are not using the SFU controlplane you can set up your own controlplane on the EC2 instance in terraform/control_plane
