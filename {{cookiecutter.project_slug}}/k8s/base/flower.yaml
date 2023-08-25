@@ -1,32 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: celery
+  name: flower
   labels:
     app: {{ cookiecutter.project_slug }}
-    tier: celery
+    tier: flower
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ cookiecutter.project_slug }}
-      tier: celery
+      tier: flower
   template:
     metadata:
       labels:
         app: {{ cookiecutter.project_slug }}
-        tier: celery
+        tier: flower
     spec:
       containers:
-        - name: celeryworker
+        - name: flower
           image: {{ cookiecutter.project_slug }}_local_django:latest
-          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "worker", "-E", "-l", "info"]
+          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "flower"]
           envFrom:
             - configMapRef:
                 name: django-config
-        - name: celerybeat
+      initContainers:
+        - name: celery-check-workers-ready
           image: {{ cookiecutter.project_slug }}_local_django:latest
-          command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "beat"]
+          command:
+            ['sh', '-c', 'until celery -A {{ cookiecutter.project_slug }} inspect ping; do echo Waiting for Celery workers to be ready; sleep 5; done']
           envFrom:
             - configMapRef:
                 name: django-config

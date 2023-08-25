@@ -231,6 +231,7 @@ Refer to https://kind.sigs.k8s.io/docs/user/quick-start/#installation for instal
    NAME                                      READY   STATUS      RESTARTS      AGE
    pod/celeryworker-858c455c67-6m7tv         3/3     Running     2 (32m ago)   33m
    pod/django-9f776557-d797p                 1/1     Running     0             33m
+   pod/flower-4gh9928k-wn7k9                 1/1     Running     0             33m
    pod/django-migrations-job-f9lj5           0/1     Completed   0             33m
    pod/loudswarm-frontend-77947689d9-pg46t   1/1     Running     0             33m
    pod/mailhog-7f76b678d6-nvwqw              1/1     Running     0             33m
@@ -251,6 +252,7 @@ Refer to https://kind.sigs.k8s.io/docs/user/quick-start/#installation for instal
    deployment.apps/loudswarm-frontend   1/1     1            1           33m
    deployment.apps/mailhog              1/1     1            1           33m
    deployment.apps/redis                1/1     1            1           33m
+   deployment.apps/flower               1/1     1            1           33m
 
    NAME                                            DESIRED   CURRENT   READY   AGE
    replicaset.apps/celeryworker-858c455c67         1         1         1       33m
@@ -258,6 +260,7 @@ Refer to https://kind.sigs.k8s.io/docs/user/quick-start/#installation for instal
    replicaset.apps/loudswarm-frontend-77947689d9   1         1         1       33m
    replicaset.apps/mailhog-7f76b678d6              1         1         1       33m
    replicaset.apps/redis-565b6b69cd                1         1         1       33m
+   replicaset.apps/flower-4gh9928k                 1         1         1       33m
 
    NAME                        READY   AGE
    statefulset.apps/postgres   1/1     33m
