@@ -75,15 +75,41 @@ can access it at [http://localhost:3000/](http://localhost:3000/).
 
 ## SealedSecrets for passwords and sensitive values
 
-SealedSecrets can be used to encode passwords in order for the values to be safely checked in.
-To create a new secret encrypt the original values using kubeseal
+SealedSecrets can be used to encrypt passwords for the values to be safely checked in.
+To create a new secret encrypt the encoded secrets using kubeseal:
 
 ```
-cat plaintext-secret.yaml | kubeseal \
-    --controller-namespace kube-system \
-    --controller-name sealed-secrets \
-    --format yaml \
-    > sealed-secret.yaml
+**unsealed_secrets.yaml**
+apiVersion: v1
+data:
+  SECRET_NAME: BASE64_ENCODED_SECRET
+kind: Secret
+metadata:
+  name: secrets-config
+  namespace: {{cookiecutter.project_dash}}
+type: Opaque
 ```
 
-Then update the `encryptedData` in `k8s/sandbox/secrets.yaml` with your new encrypted secret value.
+[Install kubeseal](https://github.com/bitnami-labs/sealed-secrets#kubeseal)
+Configure kubernetes to use your project config and context
+Output the encrypted secrets to your kubernetes manifest
+
+$ export KUBECONFIG=~/.kube/config:~/.kube/{{cookiecutter.project_slug}}.ec2.config
+$ kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster 
+$ kubeseal --format=yaml < unsealed_secrets.yaml > k8s/prod/secrets.yaml
+
+Add the SealedSecrets annotation to your encrypted `secrets.yaml` file
+
+```
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  ...
+  annotations:
+    sealedsecrets.bitnami.com/managed: "true"
+```
+
+The `secrets.yaml` file can now be safely checked in. The passwords will be unencrypted by SealedSecrets in the cluster.
+The base64 encoded values can be retrieved running:
+
+$ kubectl get secret secrets-config -n {{cookiecutter.project_dash}} -o yaml > unsealed_secrets.yaml
