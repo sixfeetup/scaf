@@ -72,3 +72,65 @@ To create a superuser use the following commands:
 If React frontend was selected during the project creation
 (using our [cookiecutter](https://github.com/sixfeetup/cookiecutter-sixiedjango)), you
 can access it at [http://localhost:3000/](http://localhost:3000/).
+
+## Install Loki for log aggregation and the Kube Prometheus Stack with Grafana Dashboards
+
+Add a node to your cluster that you want to use for monitoring and run `kubectl
+get nodes` for a list of nodes. You should see output similar to the following:
+
+```
+$ kubectl get nodes
+NAME               STATUS   ROLES    AGE   VERSION
+pool-fc410-bivim   Ready    <none>   48d   v1.26.3
+pool-fc410-lziru   Ready    <none>   48d   v1.26.3
+pool-fc410-qdznj   Ready    <none>   15d   v1.26.4
+```
+
+Pick the node that you want to use for monitoring and add the
+"nodetype=monitoring" label to it:
+
+```
+kubectl label nodes pool-fc410-qdznj nodetype=monitoring
+```
+
+Now install the loki-stack and kube-prometheus-stack helm charts:
+
+```
+make monitoring-up
+```
+
+### Connect to Grafana dashboard
+
+Connect to Grafana through local port forwarding, which is the only way to connect currently (since the service Grafana dashboard does not have an ingress entry on it's own)
+
+```
+make monitoring-forward
+```
+
+And open http://localhost:8080 on your browser
+
+Login with admin / prom-operator that are the default values. To see these values, run
+
+```
+make monitoring-login
+```
+
+Login to Grafana and select Connections. This shows the big list of Data Sources that Grafana supports. Search Loki, select it and then hit `Create a Loki data source`
+
+The only thing needed here with the current setup is to specify the URL, as http://loki:3100. Click `Save and test`. After a few seconds, it should show the message
+
+```
+Data source connected and labels found.
+```
+Anything else indicates a problem with the connection!
+
+Hit the `Explore` button and this gets you to the place with existing data sources. Select the newly added Loki data source.
+
+By default, you are on the code view, and you can hit the 'label browser' option on the left side and make a selection based on a number of items - eg select namespace and the namespace that interests you. Hit the `Live` mode on the right side of the screen to see logs in real time - a good check that things are setup as expected!
+
+
+### Next steps for Loki
+
+1. Enable persistency in Grafana, so that data sources connections (and dashboards?) are not lost on restarts
+2. Add a Loki powered dashboard, set thresholds, create alerts, monitor for messages
+3. Set up ingress for Grafana and Loki
