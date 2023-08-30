@@ -76,40 +76,25 @@ can access it at [http://localhost:3000/](http://localhost:3000/).
 ## SealedSecrets for passwords and sensitive values
 
 SealedSecrets can be used to encrypt passwords for the values to be safely checked in.
-To create a new secret encrypt the base64 encoded secrets using [kubeseal](https://github.com/bitnami-labs/sealed-secrets#kubeseal), for example:  
-**unsealed_secrets.yaml**
-```
-apiVersion: v1
-data:
-  SECRET_NAME: BASE64_ENCODED_SECRET
-kind: Secret
-metadata:
-  name: secrets-config
-  namespace: {{cookiecutter.project_dash}}
-type: Opaque
-```
+To create a new secret encrypt the base64 encoded secrets using [kubeseal](https://github.com/bitnami-labs/sealed-secrets#kubeseal).  
 
-Configure kubernetes to use your project config and context
+Configure kubernetes to your current project config and context, making sure you are in the correct prod/sandbox environment
 
     $ export KUBECONFIG=~/.kube/config:~/.kube/{{cookiecutter.project_slug}}.ec2.config
     $ kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster 
 
-Output the encrypted secrets to your kubernetes manifest  
+You can store the secrets in 1Password and read the sensitive values to set it as enviroment variables:
+(The 1Password path in .envrc must match the path in the vault)
 
-    $ kubeseal --format=yaml < unsealed_secrets.yaml > k8s/prod/secrets.yaml
+    $ make read-op-secrets
 
-Add the SealedSecrets annotation to your encrypted `secrets.yaml` file
+Add the secrets to your manifest using the secrets template file, and run kubeseal on the unencrypted values
 
-```
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  ...
-  annotations:
-    sealedsecrets.bitnami.com/managed: "true"
-```
+    $ make prod-secrets
 
-The `secrets.yaml` file can now be safely checked in. The passwords will be unencrypted by SealedSecrets in the cluster.
+The `k8s/*/secrets.yaml` file can now be safely checked in. The passwords will be unencrypted by SealedSecrets in the cluster.  
+When a secret is added/remove update the k8s/templates files, update the environment variables in .envrc and rerun the make commands.
+
 The base64 encoded values can be retrieved running:
 
     $ kubectl get secret secrets-config -n {{cookiecutter.project_dash}} -o yaml > unsealed_secrets.yaml

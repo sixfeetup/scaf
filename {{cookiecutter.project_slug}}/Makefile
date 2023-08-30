@@ -150,6 +150,21 @@ secure:  ## Analyze dependencies for security issues
 node:  ## Shell into the running Node container
 	@docker-compose exec frontend /bin/bash
 
+read-op-secrets: ## Read the secrets from 1Password and set to enviroment variables
+	/bin/bash -c "source .envrc" && echo "Environment variables set from 1Password"
+
+sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
+	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
+	envsubst < k8s/templates/sandbox.secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
+	# append the sealedsecrets annotation to the generated secrets manifest
+	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/sandbox/secrets.yaml
+
+prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
+	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
+	envsubst < k8s/templates/prod.secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
+	# append the sealedsecrets annotation to the generated secrets manifest
+	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/prod/secrets.yaml
+
 help: ## Show the list of all the commands and their help text
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
 		/^[a-zA-Z_-]+:.*?##/ { if(target=="")print ""; target=$$1; printf " \033[36m%-10s\033[0m %s\n\n", $$1, $$2 } \
