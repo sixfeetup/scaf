@@ -72,3 +72,18 @@ To create a superuser use the following commands:
 If React frontend was selected during the project creation
 (using our [cookiecutter](https://github.com/sixfeetup/cookiecutter-sixiedjango)), you
 can access it at [http://localhost:3000/](http://localhost:3000/).
+
+## Adding Sentry to Projects
+
+Sentry can be used for error reporting at the application level. The packages and SENTRY_DSN configuration 
+are available in the project, but the project will still need to be manually added to Sentry.
+
+Basic steps:
+
+1. Create the project in [Sentry](https://sixfeetup.sentry.io/projects/)
+2. Configure Slack notifications
+3. Add team members in Sentry
+4. Add code to project
+5. Update `django.configmap.yaml` SENTRY_DSN with the DSN provided in the Sentry project for this environment
+
+For more detailed steps view the [SFU Paper page](https://paper.dropbox.com/doc/Adding-Sentry-to-Projects--B_BGoXS6w~Q8FbkaVOlRooaXAg-7sXkQxTexTtV6qT367VGJ)
