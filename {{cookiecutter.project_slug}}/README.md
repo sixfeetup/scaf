@@ -84,16 +84,17 @@ Configure kubernetes to your current project config and context, making sure you
     $ kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster 
 
 You can store the secrets in 1Password and read the sensitive values to set it as enviroment variables:
-(The 1Password path in .envrc must match the path in the vault)
+(The 1Password path in .envrc MUST match the path in the vault)
 
     $ make read-op-secrets
 
+You can also manually export the variables to your environment, but kubeseal needs the variables to be base64 encoded.
 Add the secrets to your manifest using the secrets template file, and run kubeseal on the unencrypted values
 
     $ make prod-secrets
 
 The `k8s/*/secrets.yaml` file can now be safely checked in. The passwords will be unencrypted by SealedSecrets in the cluster.  
-When a secret is added/remove update the k8s/templates files, update the environment variables in .envrc and rerun the make commands.
+When a secret is added/removed update the `k8s/templates` files, update the environment variables in .envrc and rerun the make commands.
 
 The base64 encoded values can be retrieved running:
 
