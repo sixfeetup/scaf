@@ -115,16 +115,7 @@ Login with admin / prom-operator that are the default values. To see these value
 make monitoring-login
 ```
 
-Login to Grafana and select Connections. This shows the big list of Data Sources that Grafana supports. Search Loki, select it and then hit `Create a Loki data source`
-
-The only thing needed here with the current setup is to specify the URL, as http://loki:3100. Click `Save and test`. After a few seconds, it should show the message
-
-```
-Data source connected and labels found.
-```
-Anything else indicates a problem with the connection!
-
-Hit the `Explore` button and this gets you to the place with existing data sources. Select the newly added Loki data source.
+Login to Grafana. Hit the `Explore` button and this gets you to the place with existing data sources. Select the newly added Loki data source.
 
 By default, you are on the code view, and you can hit the 'label browser' option on the left side and make a selection based on a number of items - eg select namespace and the namespace that interests you. Hit the `Live` mode on the right side of the screen to see logs in real time - a good check that things are setup as expected!
 

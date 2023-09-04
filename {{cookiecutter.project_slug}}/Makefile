@@ -156,6 +156,7 @@ kube-prometheus-up:  ## Install kube-prometheus
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo update
 	helm install kube-prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+	helm install kube-prometheus prometheus-community/kube-prometheus-stack --set-json 'grafana.additionalDataSources=[{"name":"Loki","type":"loki","access":"proxy","url":"http://loki:3100","jsonData":{"maxLines":1000}}]' --namespace monitoring --create-namespace
 
 loki-up:  ## Install loki
 	helm repo add grafana https://grafana.github.io/helm-charts
