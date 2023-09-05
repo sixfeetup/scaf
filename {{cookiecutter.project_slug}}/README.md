@@ -104,7 +104,7 @@ make monitoring-up
 Connect to Grafana through local port forwarding, which is the only way to connect currently (since the service Grafana dashboard does not have an ingress entry on it's own)
 
 ```
-make monitoring-forward
+make monitoring-port-forward
 ```
 
 And open http://localhost:8080 on your browser
