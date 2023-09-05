@@ -14,7 +14,6 @@
 2. Click on Projects on the secondary sidebar that is revealed
 3. Click on the Project created in the previous section
 4. Click on Alerts on the new secondary sidebar
-
 6. Edit the existing rule or Add a new rule if there is not one already
 7. Use “Send a notification for new issues” for the Rule Name
 8. Choose “An issue is first seen” for the Conditions
