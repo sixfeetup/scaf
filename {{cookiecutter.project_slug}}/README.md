@@ -93,6 +93,23 @@ Pick the node that you want to use for monitoring and add the
 kubectl label nodes pool-fc410-qdznj nodetype=monitoring
 ```
 
+### Setup AWS credentials
+
+First export the credentials to your environment variables. Change the values accordingly:
+
+```
+export AWS_ACCESS_KEY_ID='ABC123456'
+export AWS_SECRET_ACCESS_KEY='ABC123456'
+```
+
+Then create a secret in the monitoring namespace:
+
+```
+kubectl create secret generic iam-loki-s3 --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -n monitoring
+```
+
+### Install monitoring
+
 Now install the loki-stack and kube-prometheus-stack helm charts:
 
 ```
