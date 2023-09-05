@@ -155,7 +155,7 @@ node:  ## Shell into the running Node container
 kube-prometheus-up:  ## Install kube-prometheus
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo update
-	helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false --namespace monitoring --create-namespace
+	helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true --namespace monitoring --create-namespace
 
 loki-up:  ## Install loki
 	helm repo add grafana https://grafana.github.io/helm-charts
