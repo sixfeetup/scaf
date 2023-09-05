@@ -75,15 +75,13 @@ can access it at [http://localhost:3000/](http://localhost:3000/).
 
 ## Adding Sentry to Projects
 
-Sentry can be used for error reporting at the application level. The packages and SENTRY_DSN configuration 
-are available in the project, but the project will still need to be manually added to Sentry.
+Sentry can be used for error reporting at the application level. Sentry is included as a dependency in the project requirements, and the SENTRY_DSN configuration variable is included in the Django config map.
+Next, one needs to add the project to Sentry by following the steps below:
 
-Basic steps:
-
-1. Create the project in [Sentry](https://sixfeetup.sentry.io/projects/)
+1. Create the project in your organisation's Sentry instance, e.g. https://sixfeetup.sentry.io/projects/
 2. Configure Slack notifications
 3. Add team members in Sentry
-4. Add code to project
+4. Install `sentry-sdk` from the requirements file
 5. Update `django.configmap.yaml` SENTRY_DSN with the DSN provided in the Sentry project for this environment
 
-For more detailed steps view the [SFU Paper page](https://paper.dropbox.com/doc/Adding-Sentry-to-Projects--B_BGoXS6w~Q8FbkaVOlRooaXAg-7sXkQxTexTtV6qT367VGJ)
+For more detailed steps view `./docs/sentry.md`
