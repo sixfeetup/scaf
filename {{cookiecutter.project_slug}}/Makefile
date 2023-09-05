@@ -156,8 +156,8 @@ read-op-secrets: ## Read the secrets from 1Password and set to enviroment variab
 sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
 	envsubst < k8s/templates/sandbox.secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
-	# append the sealedsecrets annotation to the generated secrets manifest
-	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/sandbox/secrets.yaml
+	# append the sealedsecrets annotation to the generated secrets manifest for the sandbox namespace
+	sed -i -e 's/namespace: {{cookiecutter.project_dash}}/namespace: {{cookiecutter.project_dash}}-sandbox/' -e'/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/sandbox/secrets.yaml
 
 prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
