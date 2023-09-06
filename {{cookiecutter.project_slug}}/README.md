@@ -75,24 +75,6 @@ can access it at [http://localhost:3000/](http://localhost:3000/).
 
 ## Install Loki for log aggregation and the Kube Prometheus Stack with Grafana Dashboards
 
-Add a node to your cluster that you want to use for monitoring and run `kubectl
-get nodes` for a list of nodes. You should see output similar to the following:
-
-```
-$ kubectl get nodes
-NAME               STATUS   ROLES    AGE   VERSION
-pool-fc410-bivim   Ready    <none>   48d   v1.26.3
-pool-fc410-lziru   Ready    <none>   48d   v1.26.3
-pool-fc410-qdznj   Ready    <none>   15d   v1.26.4
-```
-
-Pick the node that you want to use for monitoring and add the
-"nodetype=monitoring" label to it:
-
-```
-kubectl label nodes pool-fc410-qdznj nodetype=monitoring
-```
-
 ### Setup AWS credentials
 
 First export the credentials to your environment variables. Change the values accordingly:
@@ -149,9 +131,3 @@ There is a predefined django logs table dashboard that can be created with the f
 ```
 make monitoring-dashboard
 ```
-
-### Next steps for Loki
-
-1. Enable persistency in Grafana, so that data sources connections (and dashboards?) are not lost on restarts
-2. Add a Loki powered dashboard, set thresholds, create alerts, monitor for messages
-3. Set up ingress for Grafana and Loki
