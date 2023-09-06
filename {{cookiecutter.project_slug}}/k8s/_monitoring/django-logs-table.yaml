@@ -27,7 +27,7 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 30,
+      "id": 33,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -92,12 +92,81 @@ data:
                 "uid": "P8E80F9AEF21F6940"
               },
               "editorMode": "builder",
-              "expr": "{app=\"django\"} |= ``",
+              "expr": "{namespace=\"default\", container=\"django\"} |= ``",
               "queryType": "range",
               "refId": "A"
             }
           ],
           "title": "Django Logs Table",
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "pluginVersion": "10.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "editorMode": "builder",
+              "expr": "{namespace=\"default\", container=\"postgres\"} |= ``",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Postgres Logs Table",
           "type": "table"
         }
       ],
@@ -115,7 +184,7 @@ data:
       "timepicker": {},
       "timezone": "",
       "title": "Django",
-      "uid": "1693997330",
+      "uid": "1693997350",
       "version": 3,
       "weekStart": ""
     }
