@@ -179,6 +179,9 @@ monitoring-login:  ## Get the login credentials for the monitoring stack
 monitoring-port-forward:  ## Forward the port for the monitoring stack
 	kubectl --namespace monitoring port-forward svc/kube-prometheus-grafana 8080:80
 
+monitoring-dashboard:  ## Create the dashboard for the monitoring stack
+  kubectl apply -f k8s/_monitoring/django-logs-table.yaml -n monitoring
+
 monitoring:  ## Show the status of the monitoring stack
 	kubectl get all -n monitoring
 

@@ -116,6 +116,12 @@ Now install the loki-stack and kube-prometheus-stack helm charts:
 make monitoring-up
 ```
 
+If you want to store the logs in an S3 bucket, you will need to include the yaml values `k8s/_monitoring/loki-stack-values.yaml` file for the `helm install loki` command in the Makefile:
+
+```
+helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.yaml --namespace monitoring --create-namespace
+```
+
 ### Connect to Grafana dashboard
 
 Connect to Grafana through local port forwarding, which is the only way to connect currently (since the service Grafana dashboard does not have an ingress entry on it's own)
@@ -136,6 +142,13 @@ Login to Grafana. Hit the `Explore` button and this gets you to the place with e
 
 By default, you are on the code view, and you can hit the 'label browser' option on the left side and make a selection based on a number of items - eg select namespace and the namespace that interests you. Hit the `Live` mode on the right side of the screen to see logs in real time - a good check that things are setup as expected!
 
+### Create a dashboard
+
+There is a predefined django logs table dashboard that can be created with the following command:
+
+```
+make monitoring-dashboard
+```
 
 ### Next steps for Loki
 
