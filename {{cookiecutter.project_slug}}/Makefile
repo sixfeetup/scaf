@@ -150,9 +150,6 @@ secure:  ## Analyze dependencies for security issues
 node:  ## Shell into the running Node container
 	@docker-compose exec frontend /bin/bash
 
-read-op-secrets: ## Read the secrets from 1Password and set to enviroment variables
-	/bin/bash -c "source .envrc" && echo "Environment variables set from 1Password"
-
 sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
 	envsubst < k8s/templates/sandbox.secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
