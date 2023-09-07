@@ -122,6 +122,12 @@ make monitoring-login
 
 Login to Grafana. Hit the `Explore` button and this gets you to the place with existing data sources. Select the newly added Loki data source.
 
+You are also able to change the password for the Grafana admin user. To do this, run the following command:
+
+```
+kubectl exec --namespace monitoring -it $(kubectl get pods --namespace monitoring -l "app=grafana,release=grafana" -o jsonpath="{.items[0].metadata.name}") grafana-cli admin reset-admin-password yourNewPasswordHere
+```
+
 By default, you are on the code view, and you can hit the 'label browser' option on the left side and make a selection based on a number of items - eg select namespace and the namespace that interests you. Hit the `Live` mode on the right side of the screen to see logs in real time - a good check that things are setup as expected!
 
 ### Create a dashboard
