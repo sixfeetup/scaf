@@ -106,7 +106,7 @@ helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.
 
 ### Connect to Grafana dashboard
 
-Connect to Grafana through local port forwarding, which is the only way to connect currently (since the service Grafana dashboard does not have an ingress entry on it's own)
+You can connect to Grafana through local port forwarding using the steps below. Alternatively, you can set up ingress to point to Grafana.
 
 ```
 make monitoring-port-forward
