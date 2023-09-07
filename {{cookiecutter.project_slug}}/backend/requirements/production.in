@@ -5,10 +5,12 @@
 gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
 psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
 uvicorn[standard]
+sentry-sdk==1.22.2  # https://github.com/getsentry/sentry-python
 
 # Django
 # ------------------------------------------------------------------------------
 django-storages[boto3]==1.13.1  # https://github.com/jschneier/django-storages
+daphne==4.0.0
 
 {%- if cookiecutter.mail_service == 'Mailgun' %}
 django-anymail[mailgun]==8.6  # https://github.com/anymail/django-anymail
