@@ -77,11 +77,11 @@ Switch to the `{{cookiecutter.project_slug}}-ec2-cluster`:
 kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
 ```
 
-## Credentials
+## ECR Credentials
 
-The frontend and backend ECR repo's are defined in hosting-terraform.
+The frontend and backend ECR repo's are defined in ./terraform/management
 
-In order for skaffold to push images and kubernetes to pull images, we need
+In order to push and pull images, we need
 to authenticate against the ECR repository.
 
 Switch to the AWS profile and log in:
@@ -91,13 +91,7 @@ export AWS_PROFILE={{cookiecutter.project_slug}}
 aws sso login
 ```
 
-You need to pipe a log in password to docker to allow skaffold to push images to ECR:
-
-```
-aws ecr get-login-password --region {{cookiecutter.aws_region}} | docker login --username AWS --password-stdin {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com
-```
-
-Finally, you need to add credentials to the kubernetes cluster so that it can pull images from the ECR repository.
+You need to add credentials to the kubernetes cluster so that it can pull images from the ECR repository.
 
 ```
 kubectl create secret docker-registry regcred \
