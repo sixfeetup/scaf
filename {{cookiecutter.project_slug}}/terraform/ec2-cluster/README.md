@@ -104,8 +104,3 @@ kubectl create secret docker-registry regcred \
 NB: AWS credentials will expire after 4 hours. If you are unable to push or pull images to ECR, you will need to reauthenticate.
 
 To simplify this, you can run `AWS_PROFILE={{cookiecutter.project_slug}} make kubecreds`
-
-# Controlplane
-
-ArgoCD and SealedSecrets are configured on the SFU controlplane.
-If you are not using the SFU controlplane you can set up your own controlplane on the EC2 instance in terraform/control_plane
