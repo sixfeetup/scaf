@@ -133,6 +133,12 @@ kubectl create secret generic iam-loki-s3 --from-literal=AWS_ACCESS_KEY_ID=$AWS_
 
 ### Install monitoring
 
+Before installing the monitoring tools, you will need to export the GRAFANA_ADMIN_PASSWORD environment variable. This will be used to set the Grafana admin password. Change the value accordingly:
+
+```
+export GRAFANA_ADMIN_PASSWORD='ABC123456'
+```
+
 Now install the loki-stack and kube-prometheus-stack helm charts:
 
 ```
