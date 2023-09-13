@@ -6,7 +6,7 @@ An ArgoCD application will automate your kubernetes deployments.
 
 Install [ArgoCD CLI](https://argo-cd.readthedocs.io/en/stable/cli_installation/).
 
-Log in to the sixfeetup dashboard
+Log in to your ArgoCD dashboard, eg
 
     $ argocd login argocd.sixfeetup.com
 
@@ -16,56 +16,30 @@ Find your cluster context (set your KUBECONFIG file if neccessary)
 
 Add your cluster to ArgoCD. This will also output the `CLUSTER_IP` you will use in the application.
 
-    $ argocd cluster add CLUSTER_NAME
+    $ argocd cluster add {{cookiecutter.project_slug}}-ec2-cluster
 
+### Creating the ArgoCD application manifests
 
-If you are working in the SFU enviornment move your application manifest to `sixfeetup/controlplane.git/argocd/applications/{{cookiecutter.project_slug}}/application.yaml`
+Export the cluster IP from ArgoCD to your environment
 
-```
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: PROJECT_NAME                                        # the application name, you will need a separate application for prod and sandbox
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: git@bitbucket.org:sixfeetup/PROJECT_NAME.git
-    targetRevision: HEAD
-    path: deploy/ENVIRONMENT                                # this is the path ArgoCD will watch for changes
-  destination:
-    server: CLUSTER_IP:6443                                 # this is the access to your cluster
-    namespace: PROJECT_NAME                                 # the namespace of your project on your cluster
-  syncPolicy:
-    automated:
-      prune: true
-    syncOptions:
-    - CreateNamespace=true
-```
+    $ export CLUSTER_IP=CLUSTER_IP
 
-Create a deploy key for your repository and add it to SealedSecrets.
-Add your repository deploy key in `argocd/applications/PROJECT_NAME/repocreds.yaml`
+Create a deploy key for your repository export it to your environment as `SSH_PRIVATE_KEY`.
 
-```
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  name: deploy-key
-  namespace: argocd
-spec:
-  encryptedData:
-    sshPrivateKey: ENCRYPTED_PRIVATE_KEY                    # encrypted value from SealedSecret
-  template:
-    metadata:
-      labels:
-        argocd.argoproj.io/secret-type: repository
-      name: deploy-key
-      namespace: argocd
-```
+    $ export SSH_PRIVATE_KEY=DEPLOY_KEY
 
+Export your repository url to your environment
+
+    $ export REPO_URL=PROJECT_REPOSITORY
+
+Create the `application.yaml` manifest and `repocred.yaml` secret and seal it
+
+    $ make argocd-app
+
+If you are working in the SFU environment move your application and repocreds manifest to `sixfeetup/controlplane.git/argocd/applications/{{cookiecutter.project_slug}}/`
 
 Apply the manifests
 
-    $ kubectl apply -f argocd/applications/PROJECT_NAME
+    $ kubectl apply -f argocd/applications/{{cookiecutter.project_slug}}
 
-Your ArgoCD application should be visible on the dashboard at https://argocd.sixfeetup.com. Check the repository and cluster connection.
+Your ArgoCD application should be visible on the ArgoCD dashboard. Check the repository and cluster connection.
