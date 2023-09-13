@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{cookiecutter.project_dash}}-key
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+stringData:
+  url: ${REPO_URL}
+  type: helm
+  sshPrivateKey: ${SSH_PRIVATE_KEY}

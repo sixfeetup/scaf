@@ -6,11 +6,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: PROJECT_REPOSITORY
+    repoURL: ${REPO_URL}
     targetRevision: HEAD
     path: k8s/sandbox
   destination:
-    server: https://CLUSTER_IP:6443
+    server: https://${CLUSTER_IP}:6443
     namespace: {{cookiecutter.project_dash}}-sandbox
   syncPolicy:
     automated:
@@ -26,11 +26,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: PROJECT_REPOSITORY
+    repoURL: ${REPO_URL}
     targetRevision: HEAD
     path: k8s/prod
   destination:
-    server: https://CLUSTER_IP:6443
+    server: https://${CLUSTER_IP}:6443
     namespace: {{cookiecutter.project_dash}}
   syncPolicy:
     automated: {}
