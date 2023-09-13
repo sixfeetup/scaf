@@ -162,6 +162,45 @@ prod-secrets: ## Substitute with secrets template with env variable and run kube
 	# append the sealedsecrets annotation to the generated secrets manifest
 	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/prod/secrets.yaml
 
+## Monitoring
+check_var = $(strip $(if $(filter undefined,$(origin $1)),$(error $1 is not set)))
+
+kube-prometheus-up:  ## Install kube-prometheus
+	@$(call check_var,GRAFANA_ADMIN_PASSWORD)
+	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	@helm repo update
+	@helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true,grafana.adminPassword=$(GRAFANA_ADMIN_PASSWORD) --namespace monitoring --create-namespace
+
+loki-up:  ## Install loki
+	@helm repo add grafana https://grafana.github.io/helm-charts
+	@helm repo update
+	@helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.yaml --namespace monitoring --create-namespace
+
+monitoring-up: kube-prometheus-up loki-up  ## Install the monitoring stack
+
+loki-down:  ## Uninstall loki
+	helm uninstall loki --namespace monitoring
+
+kube-prometheus-down:  ## Uninstall kube-prometheus
+	helm uninstall kube-prometheus --namespace monitoring
+
+monitoring-down: loki-down kube-prometheus-down  ## Uninstall the monitoring stack
+
+monitoring-login:  ## Get the login credentials for the monitoring stack
+	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-user}' | base64 -d; echo
+	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d; echo
+
+monitoring-port-forward:  ## Forward the port for the monitoring stack
+	kubectl --namespace monitoring port-forward svc/kube-prometheus-grafana 8080:80
+
+monitoring-dashboard:  ## Create the dashboard for the monitoring stack
+	kubectl apply -f k8s/_monitoring/django-logs-table.yaml -n monitoring
+
+monitoring:  ## Show the status of the monitoring stack
+	kubectl get all -n monitoring
+
+## Help
+
 help: ## Show the list of all the commands and their help text
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
 		/^[a-zA-Z_-]+:.*?##/ { if(target=="")print ""; target=$$1; printf " \033[36m%-10s\033[0m %s\n\n", $$1, $$2 } \
