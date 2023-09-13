@@ -163,16 +163,18 @@ prod-secrets: ## Substitute with secrets template with env variable and run kube
 	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/prod/secrets.yaml
 
 ## Monitoring
+check_var = $(strip $(if $(filter undefined,$(origin $1)),$(error $1 is not set)))
 
 kube-prometheus-up:  ## Install kube-prometheus
-	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	helm repo update
-	helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true,grafana.adminPassword=$(openssl rand -base64 24) --namespace monitoring --create-namespace
+	@$(call check_var,GRAFANA_ADMIN_PASSWORD)
+	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	@helm repo update
+	@helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true,grafana.adminPassword=$(GRAFANA_ADMIN_PASSWORD) --namespace monitoring --create-namespace
 
 loki-up:  ## Install loki
-	helm repo add grafana https://grafana.github.io/helm-charts
-	helm repo update
-	helm install loki grafana/loki-stack --namespace monitoring --create-namespace
+	@helm repo add grafana https://grafana.github.io/helm-charts
+	@helm repo update
+	@helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.yaml --namespace monitoring --create-namespace
 
 monitoring-up: kube-prometheus-up loki-up  ## Install the monitoring stack
 
