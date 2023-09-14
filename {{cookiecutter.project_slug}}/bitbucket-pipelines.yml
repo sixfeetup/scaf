@@ -79,7 +79,7 @@ definitions:
           # get kubeconfig from repository variables
           - echo $KUBE_CONFIG_SANDBOX | base64 -d > kubeconfig
           - export KUBECONFIG="kubeconfig"
-          - kubectl config use-context best-ec2-dev-cluster
+          - kubectl config use-context {{cookiecutter.project_slug}}-ec2-dev-cluster
           # update regcred
           - echo $(aws ecr get-login-password)
           - kubectl delete secret regcred --namespace=$NS --ignore-not-found
@@ -89,14 +89,15 @@ definitions:
           - kubectl delete secret app-secret --namespace=$NS --ignore-not-found
           - kubectl delete secret superuser-secret --namespace=$NS --ignore-not-found
           - kubectl create secret generic aws-creds --from-literal=ACCESS_KEY_ID=${AWS_KEY} --from-literal=ACCESS_SECRET_KEY=${AWS_SECRET} --namespace=$NS
-          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_best --namespace=$NS
+          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_{{cookiecutter.project_slug}} --namespace=$NS
           - kubectl create secret generic superuser-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=postgres --namespace=$NS
           - export DOCKER_BUILDKIT=1
           - echo "NEXT_PUBLIC_API_BASE_URL=https://{{cookiecutter.project_slug}}.sandbox.api.sixfeetup.com/" > ./frontend/.env
+          # build frontend image and push to ecr
           - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
+          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
           - docker build -t $FRONTEND_IMAGE:$BITBUCKET_COMMIT  -t $FRONTEND_IMAGE:latest frontend
           - docker push $FRONTEND_IMAGE -a
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
           - docker build -t $BACKEND_IMAGE:$BITBUCKET_COMMIT  -t $BACKEND_IMAGE:latest backend
           - docker push $BACKEND_IMAGE -a
           # install kustomize
@@ -107,9 +108,9 @@ definitions:
           # edit images
           - cd deploy/sandbox
           - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - kustomize edit set image best-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
+          - kustomize edit set image {{cookiecutter.project_slug}}-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
           - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - kustomize edit set image best-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
+          - kustomize edit set image {{cookiecutter.project_slug}}-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
           # commit & push
           - git add kustomization.yaml
           - git commit -am "[skip ci] Tag Images"
@@ -128,10 +129,8 @@ definitions:
           - pip
           - docker
         script:
+          - NS="{{cookiecutter.project_slug}}"
           - apt-get update && apt-get install --no-install-recommends -y curl sudo git
-          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - NS="best"
           - pip3 install awscli
           - aws configure set aws_access_key_id "${AWS_KEY}"
           - aws configure set aws_secret_access_key "${AWS_SECRET}"
@@ -144,7 +143,7 @@ definitions:
           # get kubeconfig from repository variables
           - echo $KUBE_CONFIG | base64 -d > kubeconfig
           - export KUBECONFIG="kubeconfig"
-          - kubectl config use-context best-ec2-cluster
+          - kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
           # update regcred
           - echo $(aws ecr get-login-password)
           - kubectl delete secret regcred --namespace=$NS --ignore-not-found
@@ -154,11 +153,13 @@ definitions:
           - kubectl delete secret app-secret --namespace=$NS --ignore-not-found
           - kubectl delete secret superuser-secret --namespace=$NS --ignore-not-found
           - kubectl create secret generic aws-creds --from-literal=ACCESS_KEY_ID=${AWS_KEY} --from-literal=ACCESS_SECRET_KEY=${AWS_SECRET} --namespace=$NS
-          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_best --namespace=$NS
+          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_{{cookiecutter.project_slug}} --namespace=$NS
           - kubectl create secret generic superuser-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=postgres --namespace=$NS
           - export DOCKER_BUILDKIT=1
-          - echo "NEXT_PUBLIC_API_BASE_URL=https://best.api.sixfeetup.com/" > ./frontend/.env
+          - echo "NEXT_PUBLIC_API_BASE_URL=https://{{cookiecutter.project_slug}}.api.sixfeetup.com/" > ./frontend/.env
           # build frontend image and push to ecr
+          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
+          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
           - docker build -t $FRONTEND_IMAGE:$BITBUCKET_COMMIT -t $FRONTEND_IMAGE:latest frontend
           - docker push $FRONTEND_IMAGE -a
           # tag the backend image with release tag
@@ -174,13 +175,14 @@ definitions:
           # edit images
           - cd deploy/prod
           - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - kustomize edit set image best-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
+          - kustomize edit set image {{cookiecutter.project_slug}}-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
           - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - kustomize edit set image best-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
+          - kustomize edit set image {{cookiecutter.project_slug}}-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
           # commit & push
           - git add kustomization.yaml
-          - git commit -am "Tag images [skip ci]"
+          - git commit -am "[skip ci] Tag Images"
           - git push
+        trigger: manual
 
 pipelines:
   default:
@@ -192,6 +194,5 @@ pipelines:
   main:
     - step: *build-and-push-images
 
-  # This can only be triggered manually in Bitbucket UI or with an API call
   custom:
     - step: *deploy-to-prod
