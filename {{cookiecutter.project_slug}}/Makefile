@@ -47,11 +47,16 @@ update: ## Pull the latest image from a registry
 	@docker pull redis:6.2
 
 
-
 ## Release/Deployment Targets
 
 .PHONY: ci
 ci: test secure build  ## Execute the same checks used in CI/CD
+
+check-lint-and-formatting:  ## Execute check of lint and formatting using existing pre-commit hooks
+	pip install pre-commit; \
+	cd backend/; \
+	pre-commit install; \
+	pre-commit run -a
 
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
