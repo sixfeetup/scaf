@@ -58,6 +58,15 @@ check-lint-and-formatting:  ## Execute check of lint and formatting using existi
 	pre-commit install; \
 	pre-commit run -a
 
+{% if cookiecutter.create_react_frontend == 'y' %}
+check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
+	cd frontend/; \
+	npm install --legacy-peer-deps; \
+	npm run lint-src; \
+	npm run typecheck; \
+	npm run test
+{% endif  %}
+
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
 	@git tag $(RELEASE_TAG)
