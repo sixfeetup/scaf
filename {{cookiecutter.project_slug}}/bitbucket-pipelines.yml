@@ -21,7 +21,7 @@ definitions:
         script:
           - curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list
           - apt-get update
-          - apt-get install --no-install-recommends -y build-essential ca-certificates curl gettext gnupg libpq-dev libffi-dev postgresql-client-12 postgresql-client-common
+          - apt-get install --no-install-recommends -y build-essential ca-certificates curl gettext gnupg libpq-dev libffi-dev postgresql-client postgresql-client-common
           - export DATABASE_URL=postgres://{{cookiecutter.project_slug}}:CHANGEME@127.0.0.1:5432/{{cookiecutter.project_slug}}
           {% if cookiecutter.use_celery == 'y' %}
           - export CELERY_BROKER_URL=redis://127.0.0.1:6379/0
