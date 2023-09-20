@@ -39,158 +39,23 @@ definitions:
         caches:
           - pip
         script:
-          - make check-lint-and-formatting
+          - make check-lint-and-test-frontend
 
-    - step: &frontend-linting-checks
+    {% if cookiecutter.create_react_frontend == 'y' %}
+    - step: &check-lint-and-test-frontend
         name: Frontend Lint & Typecheck & Test
         image: node:16-bullseye
         caches:
           - node
         script:
-          - cd ./front-end
-          - npm install --legacy-peer-deps
-          - npm run lint-src
-          - npm run typecheck
-          - npm run test
-
-    - step: &build-and-push-images
-        name: Build and Push Images
-        max-time: 10
-        services:
-          - docker
-        caches:
-          - pip
-          - docker
-        script:
-          # build images and push to ecr
-          - NS="{{cookiecutter.project_slug}}-sandbox"
-          - apt-get update && apt-get install --no-install-recommends -y curl sudo git
-          - pip3 install awscli
-          - aws configure set aws_access_key_id "${AWS_KEY}"
-          - aws configure set aws_secret_access_key "${AWS_SECRET}"
-          - eval $(aws ecr get-login --no-include-email --region ${AWS_REGION} | sed 's;https://;;g')
-          # install kubectl
-          - curl -Lo /tmp/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          - curl -Lo /tmp/kubectl.sha256 "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-          - echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check
-          - install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
-          # get kubeconfig from repository variables
-          - echo $KUBE_CONFIG_SANDBOX | base64 -d > kubeconfig
-          - export KUBECONFIG="kubeconfig"
-          - kubectl config use-context {{cookiecutter.project_slug}}-ec2-dev-cluster
-          # update regcred
-          - echo $(aws ecr get-login-password)
-          - kubectl delete secret regcred --namespace=$NS --ignore-not-found
-          - kubectl create secret docker-registry regcred --docker-server=385556909832.dkr.ecr.us-east-1.amazonaws.com --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ${AWS_REGION}) --namespace=$NS
-          # create secrets for CloudNativePG
-          - kubectl delete secret aws-creds --namespace=$NS --ignore-not-found
-          - kubectl delete secret app-secret --namespace=$NS --ignore-not-found
-          - kubectl delete secret superuser-secret --namespace=$NS --ignore-not-found
-          - kubectl create secret generic aws-creds --from-literal=ACCESS_KEY_ID=${AWS_KEY} --from-literal=ACCESS_SECRET_KEY=${AWS_SECRET} --namespace=$NS
-          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_{{cookiecutter.project_slug}} --namespace=$NS
-          - kubectl create secret generic superuser-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=postgres --namespace=$NS
-          - export DOCKER_BUILDKIT=1
-          - echo "NEXT_PUBLIC_API_BASE_URL=https://{{cookiecutter.project_slug}}.sandbox.api.sixfeetup.com/" > ./frontend/.env
-          # build frontend image and push to ecr
-          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - docker build -t $FRONTEND_IMAGE:$BITBUCKET_COMMIT  -t $FRONTEND_IMAGE:latest frontend
-          - docker push $FRONTEND_IMAGE -a
-          - docker build -t $BACKEND_IMAGE:$BITBUCKET_COMMIT  -t $BACKEND_IMAGE:latest backend
-          - docker push $BACKEND_IMAGE -a
-          # install kustomize
-          - URL=https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.0.3/kustomize_v5.0.3_linux_amd64.tar.gz
-          - curl -L $URL | tar zx
-          - sudo chmod +x ./kustomize
-          - sudo mv ./kustomize /usr/local/bin/
-          # edit images
-          - cd deploy/sandbox
-          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - kustomize edit set image {{cookiecutter.project_slug}}-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - kustomize edit set image {{cookiecutter.project_slug}}-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
-          # commit & push
-          - git add kustomization.yaml
-          - git commit -am "[skip ci] Tag Images"
-          - git push
-
-    - step: &deploy-to-prod
-        # rebuild frontend image to bake NEXT_PUBLIC_API_BASE_URL into static
-        # bundle.
-        # NextJS Browser environment variables can only be added to the bundle
-        # served to the client at BUILD time. See https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
-        name: Build and tag images for release to prod
-        max-time: 10
-        services:
-          - docker
-        caches:
-          - pip
-          - docker
-        script:
-          - NS="{{cookiecutter.project_slug}}"
-          - apt-get update && apt-get install --no-install-recommends -y curl sudo git
-          - pip3 install awscli
-          - aws configure set aws_access_key_id "${AWS_KEY}"
-          - aws configure set aws_secret_access_key "${AWS_SECRET}"
-          - eval $(aws ecr get-login --no-include-email --region ${AWS_REGION} | sed 's;https://;;g')
-          # install kubectl
-          - curl -Lo /tmp/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          - curl -Lo /tmp/kubectl.sha256 "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-          - echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check
-          - install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
-          # get kubeconfig from repository variables
-          - echo $KUBE_CONFIG | base64 -d > kubeconfig
-          - export KUBECONFIG="kubeconfig"
-          - kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
-          # update regcred
-          - echo $(aws ecr get-login-password)
-          - kubectl delete secret regcred --namespace=$NS --ignore-not-found
-          - kubectl create secret docker-registry regcred --docker-server=385556909832.dkr.ecr.us-east-1.amazonaws.com --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ${AWS_REGION}) --namespace=$NS
-          # create secrets for CloudNativePG
-          - kubectl delete secret aws-creds --namespace=$NS --ignore-not-found
-          - kubectl delete secret app-secret --namespace=$NS --ignore-not-found
-          - kubectl delete secret superuser-secret --namespace=$NS --ignore-not-found
-          - kubectl create secret generic aws-creds --from-literal=ACCESS_KEY_ID=${AWS_KEY} --from-literal=ACCESS_SECRET_KEY=${AWS_SECRET} --namespace=$NS
-          - kubectl create secret generic app-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=sfu_{{cookiecutter.project_slug}} --namespace=$NS
-          - kubectl create secret generic superuser-secret --from-literal=password=$POSTGRES_PASSWORD --from-literal=username=postgres --namespace=$NS
-          - export DOCKER_BUILDKIT=1
-          - echo "NEXT_PUBLIC_API_BASE_URL=https://{{cookiecutter.project_slug}}.api.sixfeetup.com/" > ./frontend/.env
-          # build frontend image and push to ecr
-          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - docker build -t $FRONTEND_IMAGE:$BITBUCKET_COMMIT -t $FRONTEND_IMAGE:latest frontend
-          - docker push $FRONTEND_IMAGE -a
-          # tag the backend image with release tag
-          # NOTE: most recent merge to main will be tagged "latest".
-          - docker pull $BACKEND_IMAGE:latest
-          - docker tag $BACKEND_IMAGE:latest $BACKEND_IMAGE:$BITBUCKET_COMMIT
-          - docker push $BACKEND_IMAGE:$BITBUCKET_COMMIT
-          # install kustomize
-          - URL=https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.0.3/kustomize_v5.0.3_linux_amd64.tar.gz
-          - curl -L $URL | tar zx
-          - sudo chmod +x ./kustomize
-          - sudo mv ./kustomize /usr/local/bin/
-          # edit images
-          - cd deploy/prod
-          - FRONTEND_IMAGE="${ECR_REPO_FRONTEND}"
-          - kustomize edit set image {{cookiecutter.project_slug}}-frontend=$FRONTEND_IMAGE:$BITBUCKET_COMMIT
-          - BACKEND_IMAGE="${ECR_REPO_BACKEND}"
-          - kustomize edit set image {{cookiecutter.project_slug}}-backend=$BACKEND_IMAGE:$BITBUCKET_COMMIT
-          # commit & push
-          - git add kustomization.yaml
-          - git commit -am "[skip ci] Tag Images"
-          - git push
-        trigger: manual
+          - make check-lint-and-test-frontend
+    {% endif %}
 
 pipelines:
   default:
     - parallel:
       - step: *check-lint-and-formatting
+      {% if cookiecutter.create_react_frontend == 'y' %}
+      - step: *check-lint-and-test-frontend
+      {% endif %}
       - step: *backend-tests
-      - step: *frontend-linting-checks
-
-  main:
-    - step: *build-and-push-images
-
-  custom:
-    - step: *deploy-to-prod
