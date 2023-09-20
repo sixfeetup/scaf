@@ -34,14 +34,12 @@ definitions:
           - redis
           - postgres
 
-    - step: &backend-linting-checks
-        name: Backend linting and formatting checks
+    - step: &check-lint-and-formatting
+        name: Check lint and formatting
         caches:
           - pip
         script:
-          - apt-get update && apt-get install --no-install-recommends -y git openssh-client
-          - pip install pre-commit
-          - pre-commit run -a
+          - make check-lint-and-formatting
 
     - step: &frontend-linting-checks
         name: Frontend Lint & Typecheck & Test
@@ -187,7 +185,7 @@ definitions:
 pipelines:
   default:
     - parallel:
-      - step: *backend-linting-checks
+      - step: *check-lint-and-formatting
       - step: *backend-tests
       - step: *frontend-linting-checks
 
