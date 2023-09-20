@@ -51,6 +51,11 @@ def remove_bitbucket_files():
         os.remove(file_name)
 
 
+def remove_github_files():
+    # If 'source_control_provider' is not 'github' remove related files
+    shutil.rmtree(".github")
+
+
 def append_to_project_gitignore(path):
     gitignore_file_path = ".gitignore"
     with open(gitignore_file_path, "a") as gitignore_file:
@@ -233,6 +238,9 @@ def main():
 
     if "{{ cookiecutter.source_control_provider }}" != "bitbucket":
         remove_bitbucket_files()
+
+    if "{{ cookiecutter.source_control_provider }}" != "github":
+        remove_github_files()
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
