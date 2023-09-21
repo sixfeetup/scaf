@@ -43,7 +43,7 @@ definitions:
         caches:
           - pip
         script:
-          - make check-lint-and-test-frontend
+          - make check-lint-and-formatting
 
 {% if cookiecutter.create_react_frontend == 'y' %}
     - step: &check-lint-and-test-frontend
