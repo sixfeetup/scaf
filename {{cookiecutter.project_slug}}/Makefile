@@ -65,7 +65,21 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 	npm run lint-src; \
 	npm run typecheck; \
 	npm run test
-{% endif  %}
+{% endif %}
+
+backend-test:  ## Execute backend tests
+	@docker-compose exec django pytest
+
+{% if cookiecutter.create_react_frontend == 'y' %}
+frontend-test:  ## Execute frontend tests
+	cd frontend; \
+	npm install --legacy-peer-deps; \
+	npm run test
+
+test: backend-test frontend-test  ## Run all tests
+{% else %}
+test: backend-test  ## Run all tests
+{% endif %}
 
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
@@ -149,9 +163,6 @@ down: ## shut down the cluster
 
 down-clean: ## Remove containers for services not defined in the docker-compose.yml file
 	@docker-compose -f ./docker-compose.yml down --remove-orphans
-
-test:  ## Run unit tests with PyTest in a running container
-	@docker-compose exec django pytest
 
 shell:  ## Shell into the running Django container
 	@docker-compose exec django /bin/bash
