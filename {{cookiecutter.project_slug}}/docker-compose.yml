@@ -2,6 +2,7 @@ version: '3.7'
 volumes:
   local_postgres_data_{{ cookiecutter.project_slug }}: {}
   local_postgres_data_{{ cookiecutter.project_slug }}_backups: {}
+
 services:
   db:
     image: 'postgres:16-bullseye'
@@ -10,6 +11,9 @@ services:
       - 'local_postgres_data_{{ cookiecutter.project_slug }}_backups:/backups'
     env_file:
       - backend/local/environment
+    ports:
+      - '5432:5432'
+
   django:
     image: '{{ cookiecutter.project_slug }}_local_django:dev'
     command: 'python manage.py runserver 0.0.0.0:8000'

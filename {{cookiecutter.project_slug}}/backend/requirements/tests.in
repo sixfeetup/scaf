@@ -9,5 +9,8 @@ django-coverage-plugin==2.0.3
 daphne==4.0.0
 
 # pytest
-pytest-django==4.5.2
-pytest-sugar==0.9.5
+pytest-django
+pytest-cov
+pytest-freezegun
+pytest-mock
+pytest-sugar
