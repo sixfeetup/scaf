@@ -31,7 +31,7 @@ clean: ## Remove the latest build
 
 squeaky-clean:  clean  ## Removes the resources not associated with a container, this is a quick way to get rid of old images, containers, volumes, and networks
 	@docker rmi python:3.10-slim-bullseye
-	@docker rmi postgres:14
+	@docker rmi postgres:16-bullseye
 	@docker rmi mailhog/mailhog:v1.0.0
 	@docker rmi node:16-bullseye-slim
 	@docker rmi redis:6.2
@@ -41,7 +41,7 @@ squeaky-clean:  clean  ## Removes the resources not associated with a container,
 
 update: ## Pull the latest image from a registry
 	@docker pull python:3.10-slim-bullseye
-	@docker pull postgres:14
+	@docker pull postgres:16-bullseye
 	@docker pull mailhog/mailhog:v1.0.0
 	@docker pull node:16-bullseye-slim
 	@docker pull redis:6.2
