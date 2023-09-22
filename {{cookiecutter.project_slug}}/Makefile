@@ -68,7 +68,10 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 {% endif %}
 
 backend-test:  ## Execute backend tests
-	@docker-compose exec django pytest
+	cd backend; \
+	pip --disable-pip-version-check install --no-deps -r requirements/production.txt; \
+	pip --disable-pip-version-check install --no-deps -r requirements/tests.txt; \
+	pytest --cov=./ --cov-report html --ds=config.settings.test
 
 {% if cookiecutter.create_react_frontend == 'y' %}
 frontend-test:  ## Execute frontend tests
