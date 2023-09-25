@@ -176,6 +176,11 @@ prod-secrets: ## Substitute with secrets template with env variable and run kube
 	# append the sealedsecrets annotation to the generated secrets manifest
 	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/prod/secrets.yaml
 
+argocd-app:
+	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml
+	envsubst < k8s/templates/repocreds.yaml.template | kubeseal --format yaml > k8s/argocd/repocreds.yaml
+	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/argocd/repocreds.yaml
+
 ## Monitoring
 check_var = $(strip $(if $(filter undefined,$(origin $1)),$(error $1 is not set)))
 
