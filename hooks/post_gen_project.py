@@ -22,7 +22,7 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_react_frontend = '{{cookiecutter.create_react_frontend}}' == 'y'
+create_react_frontend = "{{cookiecutter.create_react_frontend}}" == "y"
 if not create_react_frontend:
     shutil.rmtree("frontend")
 
@@ -42,6 +42,18 @@ def remove_celery_files():
     ]
     for file_name in file_names:
         os.remove(file_name)
+
+
+def remove_bitbucket_files():
+    # If 'source_control_provider' is not 'bitbucket' remove related files
+    file_names = ["bitbucket-pipelines.yml"]
+    for file_name in file_names:
+        os.remove(file_name)
+
+
+def remove_github_files():
+    # If 'source_control_provider' is not 'github' remove related files
+    shutil.rmtree(".github")
 
 
 def append_to_project_gitignore(path):
@@ -175,14 +187,10 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
     local_env_path = os.path.join("backend", "local", "environment")
 
     set_postgres_user(local_env_path, value=postgres_user)
-    set_postgres_password(
-        local_env_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_password(local_env_path, value=DEBUG_VALUE if debug else None)
 
     set_celery_flower_user(local_env_path, value=celery_flower_user)
-    set_celery_flower_password(
-        local_env_path, value=DEBUG_VALUE if debug else None
-    )
+    set_celery_flower_password(local_env_path, value=DEBUG_VALUE if debug else None)
 
 
 def set_flags_in_settings_files():
@@ -192,15 +200,25 @@ def set_flags_in_settings_files():
 
 def remove_drf_starter_files():
     os.remove(os.path.join("backend", "config", "api_router.py"))
-    shutil.rmtree(os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api"))
+    shutil.rmtree(
+        os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api")
+    )
     os.remove(
         os.path.join(
-            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
+            "backend",
+            "{{cookiecutter.project_slug}}",
+            "users",
+            "tests",
+            "test_drf_urls.py",
         )
     )
     os.remove(
         os.path.join(
-            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
+            "backend",
+            "{{cookiecutter.project_slug}}",
+            "users",
+            "tests",
+            "test_drf_views.py",
         )
     )
 
@@ -217,6 +235,12 @@ def main():
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
+
+    if "{{ cookiecutter.source_control_provider }}" != "bitbucket":
+        remove_bitbucket_files()
+
+    if "{{ cookiecutter.source_control_provider }}" != "github":
+        remove_github_files()
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()

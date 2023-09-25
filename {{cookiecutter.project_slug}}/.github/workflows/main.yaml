@@ -1,0 +1,25 @@
+name: Main Workflow
+
+on: [ push, pull_request ]
+
+jobs:
+  check-lint-and-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Check lint and formatting
+        run: make check-lint-and-formatting
+
+  {% if cookiecutter.create_react_frontend == 'y' %}
+  check-lint-and-test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Frontend Lint & Typecheck & Test
+        run: make check-lint-and-test-frontend
+  {% endif %}

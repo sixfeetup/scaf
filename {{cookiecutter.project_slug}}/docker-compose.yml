@@ -4,7 +4,7 @@ volumes:
   local_postgres_data_{{ cookiecutter.project_slug }}_backups: {}
 services:
   db:
-    image: 'postgres:14'
+    image: 'postgres:16-bullseye'
     volumes:
       - 'local_postgres_data_{{ cookiecutter.project_slug }}:/var/lib/postgresql/data'
       - 'local_postgres_data_{{ cookiecutter.project_slug }}_backups:/backups'

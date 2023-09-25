@@ -1,0 +1,61 @@
+image: python:3.10
+
+definitions:
+  services:
+    docker:
+      memory: 3072
+    postgres:
+      image: postgres:latest
+      environment:
+        POSTGRES_DB: {{cookiecutter.project_slug}}
+        POSTGRES_USER: {{cookiecutter.project_slug}}
+        POSTGRES_PASSWORD: CHANGEME
+    redis:
+      image: redis:stable
+
+  steps:
+    - step: &backend-tests
+        name: Backend Tests
+        caches:
+          - pip
+        script:
+          - curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+          - apt-get update
+          - apt-get install --no-install-recommends -y build-essential ca-certificates curl gettext gnupg libpq-dev libffi-dev postgresql-client postgresql-client-common
+          - export DATABASE_URL=postgres://{{cookiecutter.project_slug}}:CHANGEME@127.0.0.1:5432/{{cookiecutter.project_slug}}
+          {% if cookiecutter.use_celery == 'y' %}
+          - export CELERY_BROKER_URL=redis://127.0.0.1:6379/0
+          {% endif %}
+          - cd backend
+          - pip --disable-pip-version-check install --no-deps -r requirements/production.txt -r requirements/base.txt
+          - pip --disable-pip-version-check install --no-deps -r requirements/tests.txt
+          - pytest --cov=./ --cov-report html --ds=config.settings.test
+        services:
+          - redis
+          - postgres
+
+    - step: &check-lint-and-formatting
+        name: Check lint and formatting
+        caches:
+          - pip
+        script:
+          - make check-lint-and-test-frontend
+
+    {% if cookiecutter.create_react_frontend == 'y' %}
+    - step: &check-lint-and-test-frontend
+        name: Frontend Lint & Typecheck & Test
+        image: node:16-bullseye
+        caches:
+          - node
+        script:
+          - make check-lint-and-test-frontend
+    {% endif %}
+
+pipelines:
+  default:
+    - parallel:
+      - step: *check-lint-and-formatting
+      {% if cookiecutter.create_react_frontend == 'y' %}
+      - step: *check-lint-and-test-frontend
+      {% endif %}
+      - step: *backend-tests

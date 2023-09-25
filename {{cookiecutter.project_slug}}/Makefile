@@ -31,7 +31,7 @@ clean: ## Remove the latest build
 
 squeaky-clean:  clean  ## Removes the resources not associated with a container, this is a quick way to get rid of old images, containers, volumes, and networks
 	@docker rmi python:3.10-slim-bullseye
-	@docker rmi postgres:14
+	@docker rmi postgres:16-bullseye
 	@docker rmi mailhog/mailhog:v1.0.0
 	@docker rmi node:16-bullseye-slim
 	@docker rmi redis:6.2
@@ -41,17 +41,31 @@ squeaky-clean:  clean  ## Removes the resources not associated with a container,
 
 update: ## Pull the latest image from a registry
 	@docker pull python:3.10-slim-bullseye
-	@docker pull postgres:14
+	@docker pull postgres:16-bullseye
 	@docker pull mailhog/mailhog:v1.0.0
 	@docker pull node:16-bullseye-slim
 	@docker pull redis:6.2
-
 
 
 ## Release/Deployment Targets
 
 .PHONY: ci
 ci: test secure build  ## Execute the same checks used in CI/CD
+
+check-lint-and-formatting:  ## Execute check of lint and formatting using existing pre-commit hooks
+	pip install pre-commit; \
+	cd backend/; \
+	pre-commit install; \
+	pre-commit run -a
+
+{% if cookiecutter.create_react_frontend == 'y' %}
+check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
+	cd frontend/; \
+	npm install --legacy-peer-deps; \
+	npm run lint-src; \
+	npm run typecheck; \
+	npm run test
+{% endif  %}
 
 sandbox-release: ## create release tag and push to master
 	@echo "release tag: $(RELEASE_TAG)"
@@ -166,6 +180,45 @@ argocd-app:
 	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml
 	envsubst < k8s/templates/repocreds.yaml.template | kubeseal --format yaml > k8s/argocd/repocreds.yaml
 	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/argocd/repocreds.yaml
+
+## Monitoring
+check_var = $(strip $(if $(filter undefined,$(origin $1)),$(error $1 is not set)))
+
+kube-prometheus-up:  ## Install kube-prometheus
+	@$(call check_var,GRAFANA_ADMIN_PASSWORD)
+	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	@helm repo update
+	@helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true,grafana.adminPassword=$(GRAFANA_ADMIN_PASSWORD) --namespace monitoring --create-namespace
+
+loki-up:  ## Install loki
+	@helm repo add grafana https://grafana.github.io/helm-charts
+	@helm repo update
+	@helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.yaml --namespace monitoring --create-namespace
+
+monitoring-up: kube-prometheus-up loki-up  ## Install the monitoring stack
+
+loki-down:  ## Uninstall loki
+	helm uninstall loki --namespace monitoring
+
+kube-prometheus-down:  ## Uninstall kube-prometheus
+	helm uninstall kube-prometheus --namespace monitoring
+
+monitoring-down: loki-down kube-prometheus-down  ## Uninstall the monitoring stack
+
+monitoring-login:  ## Get the login credentials for the monitoring stack
+	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-user}' | base64 -d; echo
+	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d; echo
+
+monitoring-port-forward:  ## Forward the port for the monitoring stack
+	kubectl --namespace monitoring port-forward svc/kube-prometheus-grafana 8080:80
+
+monitoring-dashboard:  ## Create the dashboard for the monitoring stack
+	kubectl apply -f k8s/_monitoring/django-logs-table.yaml -n monitoring
+
+monitoring:  ## Show the status of the monitoring stack
+	kubectl get all -n monitoring
+
+## Help
 
 help: ## Show the list of all the commands and their help text
 	@awk 'BEGIN 	{ FS = ":.*##"; target="";printf "\nUsage:\n  make \033[36m<target>\033[33m\n\nTargets:\033[0m\n" } \
