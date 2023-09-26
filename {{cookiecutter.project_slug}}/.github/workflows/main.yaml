@@ -12,7 +12,6 @@ jobs:
           python-version: "3.10"
       - name: Check lint and formatting
         run: make check-lint-and-formatting
-
 {% if cookiecutter.create_react_frontend == 'y' %}
   check-lint-and-test-frontend:
     runs-on: ubuntu-latest
@@ -24,7 +23,6 @@ jobs:
       - name: Frontend Lint & Typecheck & Test
         run: make check-lint-and-test-frontend
 {% endif %}
-
   backend-test:
     runs-on: ubuntu-latest
 
@@ -32,8 +30,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: my_awesome_sixie_project
-          POSTGRES_USER: my_awesome_sixie_project
+          POSTGRES_DB: {{ cookiecutter.project_slug }}
+          POSTGRES_USER: {{ cookiecutter.project_slug }}
           POSTGRES_PASSWORD: TESTPASSWORD
         # Set health checks to wait until postgres has started
         options: >-
@@ -44,6 +42,16 @@ jobs:
         ports:
           - 5432:5432
 
+{% if cookiecutter.use_celery == 'y' %}
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+{% endif %}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
@@ -52,6 +60,7 @@ jobs:
       - name: Run backend tests
         run: make backend-test
         env:
-          DATABASE_URL: postgres://my_awesome_sixie_project:TESTPASSWORD@127.0.0.1:5432/my_awesome_sixie_project
-          POSTGRES_HOST: localhost
+          DATABASE_URL: postgres://{{ cookiecutter.project_slug }}:TESTPASSWORD@localhost:5432/{{ cookiecutter.project_slug }}
+          POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
+{% if cookiecutter.use_celery == 'y' %}          CELERY_BROKER_URL: redis://127.0.0.1:6379/0{% endif %}
