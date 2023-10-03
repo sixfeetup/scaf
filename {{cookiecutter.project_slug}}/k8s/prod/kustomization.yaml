@@ -7,3 +7,6 @@ bases:
 
 patches:
  - path: patches.yaml
+
+patchesStrategicMerge:
+ - patch-delete-mailhog.yaml
