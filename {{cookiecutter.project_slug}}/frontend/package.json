@@ -24,6 +24,8 @@
     ]
   },
   "dependencies": {
+    "@sentry/browser": "^7.73.0",
+    "@sentry/tracing": "^7.73.0",
     "@tanstack/react-query": "4.20.9",
     "axios": "1.2.2",
     "localforage": "1.10.0",

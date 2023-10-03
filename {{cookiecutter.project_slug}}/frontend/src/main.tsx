@@ -4,6 +4,16 @@ import App from './App'
 import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: `https://${process.env.SENTRY_DSN}`,
+  integrations: [new BrowserTracing()],
+
+  tracesSampleRate: 1.0
+});
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
