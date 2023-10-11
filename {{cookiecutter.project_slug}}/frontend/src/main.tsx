@@ -4,7 +4,7 @@ import App from './App'
 import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/react';
 import { BrowserTracing } from "@sentry/tracing";
 
 Sentry.init({
