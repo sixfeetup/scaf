@@ -48,6 +48,7 @@ variable "tags" {
     automation          = "terraform"
     "automation.config" = "{{cookiecutter.project_dash}}"
     application         = "{{cookiecutter.project_dash}}"
+    environment         = "sandbox"
   }
 }
 
