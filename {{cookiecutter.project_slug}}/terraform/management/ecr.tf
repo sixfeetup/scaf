@@ -3,6 +3,7 @@ module "ecr_backend" {
   version = "1.6.0"
 
   repository_name = "${module.global_variables.application}-backend"
+  repository_image_tag_mutability = "MUTABLE"
 
   repository_read_write_access_arns = [aws_iam_user.cicd_user.arn]
   repository_lifecycle_policy = jsonencode({
@@ -31,6 +32,7 @@ module "ecr_frontend" {
   version = "1.6.0"
 
   repository_name = "${module.global_variables.application}-frontend"
+  repository_image_tag_mutability = "MUTABLE"
 
   repository_read_write_access_arns = [aws_iam_user.cicd_user.arn]
   repository_lifecycle_policy = jsonencode({
