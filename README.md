@@ -7,6 +7,45 @@ PyPA [warehouse](https://github.com/pypa/warehouse) as I feel they have
 made an amazing developer onboarding experience for a very complicated
 project.
 
+## Quickstart
+
+1. Install cookiecutter
+```console
+  $ python3 -m pip install --user cookiecutter
+```
+2. Install kubectl and kind: https://kubernetes.io/docs/tasks/tools/
+
+3. Install Tilt: https://docs.tilt.dev/install.html
+
+4. Create a new project (directly from github):
+```console
+  $ cookiecutter https://github.com/sixfeetup/cookiecutter-sixiedjango/
+```
+
+5. Alternatively, you can clone the Six Feet Up cookiecutter repo and install it
+   from the local clone. This is the recommended way to install it if you are
+   planning to make changes to the cookiecutter template itself:
+```console
+  $ cookiecutter ./cookiecutter-sixiedjango
+```
+
+7. Change into your project directory and compile requirements:
+```console
+  $ cd myproject
+  $ make compile
+```
+
+8. Start Tilt
+```console
+  $ tilt up
+```
+
+9. Open Tilt in your browser at http://localhost:10350. You will notice that
+   container images are being built for Django and React. Once they are built,
+   you should be able to browse to http://localhost:8000 to access Django and
+   http://localhost:3000 to access the React Frontend.
+
+
 ## Installing cookiecutter
 
 To use this template, you need to install
