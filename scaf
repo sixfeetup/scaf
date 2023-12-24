@@ -1,0 +1,5 @@
+#!/bin/bash
+
+TEMPDIR=$(mktemp -d)
+echo "Temp dir is ", $TEMPDIR
+docker run --user $UID:$GID -it --rm -e HOME=/tmp/ -v $TEMPDIR:/tmp/ cookiecutter:latest
