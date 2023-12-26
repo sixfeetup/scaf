@@ -1,35 +1,35 @@
-# The Sixie Opinionated Django Cookiecutter
+# scaf
 
-This is a work in progress, but it is heavily inspired by the work
-of [cookiecutter-django](https://github.com/pydanny/cookiecutter-django)
-and Daniel Roy Greenfeld. It also borrows heavily from the ideas in the
-PyPA [warehouse](https://github.com/pypa/warehouse) as I feel they have
-made an amazing developer onboarding experience for a very complicated
-project.
+**scaf** provides developers and devops engineers with a complete blueprint for
+a new project and streamlines the development experience with Tilt.
 
-## Installing cookiecutter
+**scaf** generates a new project structure and Kubernetes manifests organized in
+three Kustomize layers for dev, sandbox and production from a customizable
+template. A new project contains the following:
+* React frontend
+* Django backend
+* Postgres database for local development
+* CloudNativePG deployment for production
+* Redis
+* Mailhog
+* ArgoCD 
+* Traefik
+* Certmanger
+* Certificates and Ingress Routes
+* Kube Prometheus Stack
+* Grafan Loki
+* GitHub and Bitbucket pipelines to build and push images, run security,
+formatting and linting checks
 
-To use this template, you need to install
-[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) first. You can follow the
-[instructions](https://cookiecutter.readthedocs.io/en/stable/installation.html) for your operating system.
+## Installion
 
-The quickest way is performing a [user install](https://pip-python3.readthedocs.io/en/stable/user_guide.html#user-installs)
-using the following command:
+Installation is supported on Linux and macOS:
+```
+curl -sSL https://github.com/sixfeetup/scaf/raw/master/install.sh | sh
+```
 
-  $ python3 -m pip install --user cookiecutter
-
-To verify if your install worked, you can use the following command (the versions may be
-different for you):
-
-  $ cookiecutter --version
-  
-  Cookiecutter 2.1.1 from /home/user/.local/lib/python3.10/site-packages (Python 3.10.6 (main, Nov 14 2022, 16:10:14) [GCC 11.3.0])
-
-You will also need [black](https://pypi.org/project/black/) and [isort](https://pypi.org/project/isort/). You can install them using the commands:
-
-  $ python3 -m pip install --user black
-  
-  $ python3 -m pip install --user isort
+The installation script will ask to install kubectl, kind and Tilt if it can't
+find it on your system.
 
 ## Creating a new project using this repo
 
