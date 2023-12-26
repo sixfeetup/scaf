@@ -4,4 +4,4 @@ docker run --rm -it -v .:/home/scaf/out \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
   scaf:latest \
-  cookiecutter https://github.com/sixfeetup/cookiecutter-sixiedjango/
+  cookiecutter ${1:-https://github.com/sixfeetup/cookiecutter-sixiedjango/}
