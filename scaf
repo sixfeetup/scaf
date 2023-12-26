@@ -1,5 +1,7 @@
 #!/bin/bash
 
-TEMPDIR=$(mktemp -d)
-echo "Temp dir is ", $TEMPDIR
-docker run --user $UID:$GID -it --rm -e HOME=/tmp/ -v $TEMPDIR:/tmp/ cookiecutter:latest
+docker run --rm -it -v .:/home/scaf/out \
+  -e HOST_UID="$(id -u)" \
+  -e HOST_GID="$(id -g)" \
+  scaf:latest \
+  cookiecutter https://github.com/sixfeetup/cookiecutter-sixiedjango/
