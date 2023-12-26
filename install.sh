@@ -2,11 +2,9 @@
 
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/cookiecutter-sixiedjango/rcompaan/157-simplify-install/scaf"
 TEMP_DOWNLOAD="./scaf"
-
-# Final destination path
 DESTINATION="/usr/local/bin/scaf"
 
-# Download the scaf script to the current directory
+# Download scaf to the current directory
 echo "Downloading scaf ..."
 curl -L $SCAF_SCRIPT_URL -o $TEMP_DOWNLOAD
 
