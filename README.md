@@ -1,11 +1,13 @@
-# scaf
+<p align="center">
+  <img src="https://github.com/sixfeetup/cookiecutter-sixiedjango/assets/784273/4e378983-c351-4656-95b9-b5c38d70991d" width="450px">
+</p>
 
-**scaf** provides developers and devops engineers with a complete blueprint for
+**scaf** provides developers and DevOps engineers with a complete blueprint for
 a new project and streamlines the development experience with Tilt.
 
-**scaf** generates a new project structure and Kubernetes manifests organized in
-three Kustomize layers for dev, sandbox and production from a customizable
-template. A new project contains the following:
+**scaf** generates a new project structure with Kubernetes manifests in
+three Kustomize layers for dev, sandbox, and production. A new project 
+contains the following:
 * React frontend
 * Django backend
 * Postgres database for local development
@@ -17,71 +19,42 @@ template. A new project contains the following:
 * Certmanger
 * Certificates and Ingress Routes
 * Kube Prometheus Stack
-* Grafan Loki
+* Grafana Loki
 * GitHub and Bitbucket pipelines to build and push images, run security,
 formatting and linting checks
+* Terraform config to set up a k3s cluster on AWS
 
-## Installion
+## Installation
 
 Installation is supported on Linux and macOS:
 ```
 curl -sSL https://github.com/sixfeetup/scaf/raw/master/install.sh | sh
 ```
 
-The installation script will ask to install kubectl, kind and Tilt if it can't
-find it on your system.
+The installation script will ask to install kubectl, kind, and Tilt if it can't
+be found on your system.
 
 ## Creating a new project using this repo
 
-With [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) installed
-in your environment you can create a new project with the command:
+Run `scaf` and answer all the questions, and you'll have your new project!
 
-  $ cookiecutter https://github.com/sixfeetup/cookiecutter-sixiedjango/ -o [project_destination_directory]
-
-Answer all the questions, and you'll have your new project!
-
-Inside `[project_destination_directory]/[project_slug]/README.md` you will have more
+Inside `[project_slug]/README.md`, you will have more
 documentation explaining how to use and configure your newly created project.
 
 ## Terraform and AWS
 
-In order to deploy your project using terraform and AWS you can follow the instructions in `terraform/README.md`.  
+To deploy your project using Terraform and AWS, you can follow the instructions in `terraform/README.md.`  
 Note that you will need:
 - an AWS account where you have access to the `OrganizationAccountAccessRole`
-- terraform and aws cli installed and configured 
+- terraform, and AWS CLI installed and configured 
 
-## Development on the Cookie Cutter
+## Development on scaf
 
-When making changes to the Cookie Cutter, keep the following in mind:
+When making changes to scaf, keep the following in mind:
 
 - update pins in requirements/*.in files but *don't\* commit the compiled requirements.txt
   files to the repo.
-- update to latest Python supported by Django. For Django 4.1 this is 3.8, 3.9, and 3.10.
-
-## Python Libraries
-
-This template includes the Python libraries listed below. Some of them
-will be installed only if requested when answering the questions in the project creation.
-
-- [argon2-cffi](https://github.com/hynek/argon2_cffi) - enables the use of the Argon2 password hasher in Django, as [recommended](https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#using-argon2-with-django) by Django docs.
-- [celery](https://github.com/celery/celery) - Distributed Task Queue
-- [crispy-bootstrap5](https://pypi.org/project/crispy-bootstrap5/) - Bootstrap5 template pack for django-crispy-forms.
-- [django](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
-- [django-allauth](https://github.com/pennersr/django-allauth) - set of Django applications addressing authentication, registration, account management, as well as 3rd party (social) account authentication. It assumes you are using regular Django Templates.
-- [django-anymail](https://pypi.org/project/django-anymail/) - Django email backends for different providers such as Amazon SES, Mailgun, SMTP, etc.
-- [django-celery-beat](https://github.com/celery/django-celery-beat) - Celery Periodic Tasks backed by the Django ORM.
-- [django-compressor](https://github.com/django-compressor/django-compressor) - Compresses linked and inline javascript or CSS into a single cached file.
-- [django-cors-headers](https://github.com/adamchainz/django-cors-headers) - Django app for handling the server headers required for Cross-Origin Resource Sharing (CORS). Needs to be configured for [REST framework](https://www.django-rest-framework.org/topics/ajax-csrf-cors/#cors).
-- [django-crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms) - improve rendering of Django forms. It assumes that you are using regular Django Templates.
-- [django-environ](https://django-environ.readthedocs.io/en/stable/) -  allows you to utilize 12-factor inspired environment variables to configure your Django application. It is being used in all project settings files.
-- [django-model-utils](https://django-model-utils.readthedocs.io/en/stable/) - mixins and utilities for your project. It is not explicitly used in our generated project but is available for use in your project.
-- [django-redis](https://github.com/jazzband/django-redis) - Full-featured Redis cache backend for Django.
-- [django-storages](https://pypi.org/project/django-storages/) - Support multiple storage backends in Django.
-- [djangorestframework](https://github.com/encode/django-rest-framework) - Django REST framework is a powerful and flexible toolkit for building Web APIs.
-- [drf-spectacular](https://github.com/tfranzel/drf-spectacular) - Sane and flexible OpenAPI 3 schema generation for Django REST framework. Useful when testing and developing APIs.
-- [flower](https://github.com/mher/flower) - Real-time monitor and web admin for Celery distributed task queue.
-- [redis](https://github.com/redis/redis-py) - Redis Python client. Required by Celery as we use Redis as [broker](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html#using-redis)
-- [Pillow](https://pypi.org/project/Pillow/) - Python Imaging Library. Required if we have `models.ImageField` fields in our project.
+- update to the latest Python supported by Django. For Django 4.1, this is 3.8, 3.9, and 3.10.
 
 ## Development using Kubernetes
 
@@ -89,12 +62,12 @@ This section describes the local development using [Kubernetes](https://kubernet
 
 ### Requirements
 
-To work with Kubernetes you need to install some additional software packages. Depending on your operating system, the installation instructions may vary.
+To work with Kubernetes, you need to install some additional software packages. Depending on your operating system, the installation instructions may vary.
 
 The following tools are required:
 
 - `kubectl` to manage the Kubernetes cluster
-- `skaffold` for local development with Kubernetes
+- `Tilt` for local development with Kubernetes
 - `minikube,` `kind,` or `Docker Desktop` to run the Kubernetes cluster
 
 We will use [minikube](https://minikube.sigs.k8s.io/docs/start/) to create the cluster. For macOS, [Docker](https://docs.docker.com/get-docker/) is a good fit with most compatibility (VirtualBox currently has some issues).
