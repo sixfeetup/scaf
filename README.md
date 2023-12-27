@@ -1,4 +1,6 @@
-![scaf-logo](https://github.com/sixfeetup/cookiecutter-sixiedjango/assets/784273/4e378983-c351-4656-95b9-b5c38d70991d)
+<p align="center">
+  <img src="https://github.com/sixfeetup/cookiecutter-sixiedjango/assets/784273/4e378983-c351-4656-95b9-b5c38d70991d" width="450px">
+</p>
 
 **scaf** provides developers and devops engineers with a complete blueprint for
 a new project and streamlines the development experience with Tilt.
