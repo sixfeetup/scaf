@@ -1,7 +1,12 @@
 #!/bin/bash
 
+PROJECT_SLUG=${1:-myproject}
+
 docker run --rm -it -v .:/home/scaf/out \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
   scaf:latest \
-  cookiecutter ${1:-https://github.com/sixfeetup/cookiecutter-sixiedjango/}
+  cookiecutter ${2:-https://github.com/sixfeetup/cookiecutter-sixiedjango/} \
+  project_slug=$PROJECT_SLUG
+
+kind create cluster --name $PROJECT_SLUG
