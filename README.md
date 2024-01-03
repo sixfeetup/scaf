@@ -36,9 +36,9 @@ be found on your system.
 
 ## Creating a new project using this repo
 
-Run `scaf` and answer all the questions, and you'll have your new project!
+Run `scaf myproject`, answer all the questions, and you'll have your new project!
 
-Inside `[project_slug]/README.md`, you will have more
+Inside `myproject/README.md`, you will have more
 documentation explaining how to use and configure your newly created project.
 
 ## Terraform and AWS
