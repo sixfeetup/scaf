@@ -1,20 +1,28 @@
 # {{ cookiecutter.project_name }}
 
-## Requirements
+### Requirements
 
-We recommend you install `kind` or `minikube` to run a local Kubernetes cluster.
+To work with Kubernetes, you need to install some additional software packages.
+Depending on your operating system, the installation instructions may vary.
 
-The installation of `kubectl,` `kind,` and `minikube` is described in the
-[Kubernetes Tools installation docs](https://kubernetes.io/docs/tasks/tools/).
+The `scaf` install script installs `kubectl`, `kind` and `Tilt`. Consult the
+links below if you prefer to use Minikube or Docker Desktop instead:
+* [minikube](https://minikube.sigs.k8s.io/docs/start/).
+* [Docker](https://docs.docker.com/get-docker/).
 
-Additionally, you need to install [Tilt](https://tilt.dev) to rebuild container
-images and perform live updates while developing.
+### Starting the cluster
 
-If you plan to run cnpg, you need to install also cloudnative-pg to your k8s cluster:
+1. The `scaf` command automatically creates a new cluster with `kind` and
+   makes it the current context. You can verify that it is running with:
+```
+    $ kubectl cluster-info
+```
+2. Verify the context with `kubectl config current-context`.
 
-    $ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.18/releases/cnpg-1.18.5.yaml
-
-See documentation for more details: https://cloudnative-pg.io/documentation/1.18/installation_upgrade/#installation-on-kubernetes
+3. If you want to create a cluster with a different name, run:
+```
+   $ kind create cluster --name <alt-project-name>
+```
 
 ## Initial Project Setup
 
