@@ -14,4 +14,9 @@ docker run --rm -it -v .:/home/scaf/out \
   cookiecutter ${2:-https://github.com/sixfeetup/cookiecutter-sixiedjango/} \
   project_slug=$PROJECT_SLUG
 
-kind create cluster --name $PROJECT_SLUG
+if [ $? -eq 0 ]; then
+    kind create cluster --name $PROJECT_SLUG
+else
+    echo "Failed to create project."
+    exit 1
+fi
