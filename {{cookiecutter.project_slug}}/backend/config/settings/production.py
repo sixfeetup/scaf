@@ -196,7 +196,6 @@ LOGGING = {
 
 # Sentry
 # ------------------------------------------------------------------------------
-SENTRY_DSN = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
 
 sentry_logging = LoggingIntegration(
@@ -205,7 +204,9 @@ sentry_logging = LoggingIntegration(
 )
 
 sentry_sdk.init(
-    dsn=SENTRY_DSN,
+    dsn=env('SENTRY_DSN'),
+    environment=env('ENVIRONMENT','production'),
+    release=env('RELEASE', ''),
     integrations=[sentry_logging, DjangoIntegration(), CeleryIntegration()],
 )
 

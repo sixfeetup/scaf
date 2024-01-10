@@ -37,13 +37,11 @@
     ...
     sentry_sdk.init(
         dsn=env('SENTRY_DSN', ''),
+        environment=env('ENVIRONMENT','production'),
+        release=env('RELEASE',''),
         integrations=[DjangoIntegration()]
     )
 ```
-3. Make sure you have set the `SENTRY_DSN` environment value in `k8s/{environment}/django.configmap.yaml` with the DSN provided in the Sentry project for this environment:
-```
-  # sentry monitoring
-  SENTRY_DSN: "XXX"
-```
+3. Make sure you have set the `SENTRY_DSN` token set up in 1password .envrc with the Sentry project DSN for this project. One Sentry project should be used for all environments
 
 You can find it by clicking Settings on the sidebar, then Projects on the secondary sidebar, then the project, then Client Keys (DSN)

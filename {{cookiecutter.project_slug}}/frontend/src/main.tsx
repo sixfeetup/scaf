@@ -9,6 +9,8 @@ import { BrowserTracing } from "@sentry/tracing";
 
 Sentry.init({
   dsn: `https://${process.env.SENTRY_DSN}`,
+  environment: `${process.env.ENVIRONMENT}`,
+  release: `${process.env.RELEASE}`,
   integrations: [new BrowserTracing()],
 
   tracesSampleRate: 1.0

@@ -8,6 +8,8 @@ RUN npm install
 # copy node_modules from the build image
 FROM base
 
+ARG RELEASE=""
+
 WORKDIR /app
 RUN chown node:node /app
 COPY --from=build --chown=node:node /app/node_modules node_modules
