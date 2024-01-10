@@ -51,7 +51,9 @@ install_kubectl() {
 
     case $os_arch in
         "linux-amd64"|"darwin-amd64"|"darwin-arm64"|"linux-arm64")
-            url="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/$os_arch/kubectl"
+            os=${os_arch%-*}
+            arch=${os_arch#*-}
+            url="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${os}/${arch}/kubectl"
             curl -LO $url
             chmod +x ./kubectl
             sudo mv ./kubectl /usr/local/bin/kubectl
