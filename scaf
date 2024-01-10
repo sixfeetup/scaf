@@ -2,6 +2,11 @@
 
 PROJECT_SLUG=${1:-myproject}
 
+if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9]+$ ]]; then
+    echo "Error: PROJECT_SLUG should only contain alphanumeric characters."
+    exit 1
+fi
+
 docker run --rm -it -v .:/home/scaf/out \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
