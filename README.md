@@ -28,9 +28,7 @@ formatting and linting checks
 
 Installation is supported on Linux and macOS:
 ```
-# XXX: Update to final destination before merge:
-# curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh"
-curl -sSL https://raw.githubusercontent.com/sixfeetup/cookiecutter-sixiedjango/rcompaan/157-simplify-install/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh"
 ```
 
 The installation script will ask to install kubectl, kind, and Tilt if it can't

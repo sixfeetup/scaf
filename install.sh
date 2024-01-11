@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# XXX: Update to final destination before merge:
-# SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/main/scaf"
-SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/cookiecutter-sixiedjango/rcompaan/157-simplify-install/scaf"
+SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/main/scaf"
 TEMP_DOWNLOAD="./scaf"
 DESTINATION="/usr/local/bin/scaf"
 
