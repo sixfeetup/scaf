@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PROJECT_SLUG=${1:-myproject}
+
+if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9]+$ ]]; then
+    echo "Error: PROJECT_SLUG should only contain alphanumeric characters."
+    exit 1
+fi
+
+docker run --rm -it -v .:/home/scaf/out \
+  -e HOST_UID="$(id -u)" \
+  -e HOST_GID="$(id -g)" \
+  sixfeetup/scaf:latest \
+  cookiecutter ${2:-https://github.com/sixfeetup/cookiecutter-sixiedjango/} \
+  project_slug=$PROJECT_SLUG
+
+if [ $? -eq 0 ]; then
+    kind create cluster --name $PROJECT_SLUG
+else
+    echo "Failed to create project."
+    exit 1
+fi
