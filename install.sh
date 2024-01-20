@@ -8,15 +8,6 @@ command_exists() {
     type "$1" &> /dev/null
 }
 
-prompt_install() {
-    read -p "Do you want to install $1? (y/n) " answer
-    if [[ $answer = [Yy]* ]]; then
-        install_$1
-    else
-        echo "Skipping installation of $1."
-    fi
-}
-
 detect_os_and_arch() {
     os=$(uname -s)
     arch=$(uname -m)
@@ -112,7 +103,7 @@ install_scaf() {
 for tool in kubectl kind tilt; do
     if ! command_exists $tool; then
         echo "$tool is not installed."
-        prompt_install $tool
+        install_$tool
     else
         echo "$tool is already installed."
     fi

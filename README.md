@@ -28,10 +28,10 @@ formatting and linting checks
 
 Installation is supported on Linux and macOS:
 ```
-curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh"
+curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
 ```
 
-The installation script will ask to install kubectl, kind, and Tilt if it can't
+The installation script will install kubectl, kind, and Tilt if it can't
 be found on your system.
 
 ## Creating a new project using this repo
