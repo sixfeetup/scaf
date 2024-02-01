@@ -12,7 +12,11 @@ jobs:
     steps:
     - name: Install Requirements
       run: |
+        echo "DEBUG: PATH=$PATH"
+        echo "DEBUG: ls /usr/local/bin $(ls /usr/local/bin/)"
         curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
+        echo "DEBUG: PATH=$PATH"
+        echo "DEBUG: ls /usr/local/bin $(ls /usr/local/bin/)"
 
     - name: Create Project with Scaf
       run: |
