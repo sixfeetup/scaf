@@ -1,0 +1,23 @@
+name: Create scaf project
+
+on: [push, pull_request]
+
+jobs:
+  setup:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install Requirements
+      run: |
+        curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
+
+    - name: Create Project with Scaf
+      run: |
+        /usr/local/bin/scaf myproject
+
