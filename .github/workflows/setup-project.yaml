@@ -11,12 +11,14 @@ jobs:
 
     steps:
     - name: Install Requirements
+      shell: bash
       run: |
         curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
         echo "DEBUG: type \"scaf\" $(type scaf)"
         echo "DEBUG: which \"scaf\" $(which scaf)"
 
     - name: Create Project with Scaf
+      shell: bash
       run: |
         /usr/local/bin/scaf myproject
 
