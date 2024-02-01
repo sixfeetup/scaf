@@ -10,9 +10,6 @@ jobs:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-
     - name: Install Requirements
       run: |
         curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
