@@ -8,7 +8,8 @@ RUN npm install
 # copy node_modules from the build image
 FROM base
 
-ARG RELEASE=""
+# this is used by Sentry to associate errors with releases
+ARG RELEASE="dev"
 
 WORKDIR /app
 RUN chown node:node /app
