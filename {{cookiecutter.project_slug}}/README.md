@@ -116,11 +116,16 @@ The decrypted values can be retrieved running:
 Sentry can be used for error reporting at the application level. Sentry is included as a dependency in the project requirements, and the SENTRY_DSN configuration variable is included in the Django config map.
 Next, one needs to add the project to Sentry by following the steps below:
 
-1. Create the project in your organisation's Sentry instance, e.g. https://sixfeetup.sentry.io/projects/
+Note: The values for both tokens can be empty if you don't wish to use Sentry.
+
+1. Create two projects in your organisation's Sentry instance, e.g. https://sixfeetup.sentry.io/projects/
+   1. One project for the backend 
+   2. One project for the frontend 
 2. Configure Slack notifications
-3. Add team members in Sentry
-4. Install `sentry-sdk` from the requirements file
-5. Update `django.configmap.yaml` SENTRY_DSN with the DSN provided in the Sentry project for this environment
+3. Add team members in Sentry 
+4. Update `django.configmap.yaml` SENTRY_DSN_BACKEND with the DSN provided in the Sentry backend project 
+5. Update `.env` SENTRY_DSN_FRONTEND with the DSN provided in the Sentry frontend project
+
 
 For more detailed steps view `./docs/sentry.md`
 

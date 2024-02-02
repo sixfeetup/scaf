@@ -1,10 +1,3 @@
-import logging
-
-import sentry_sdk
-from sentry_sdk.integrations.celery import CeleryIntegration
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
-
 from .base import *  # noqa
 from .base import env
 
@@ -184,8 +177,6 @@ LOGGING = {
             "handlers": ["console"],
             "propagate": False,
         },
-        # Errors logged by the SDK itself
-        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
         "django.security.DisallowedHost": {
             "level": "ERROR",
             "handlers": ["console"],
@@ -193,22 +184,6 @@ LOGGING = {
         },
     },
 }
-
-# Sentry
-# ------------------------------------------------------------------------------
-SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
-
-sentry_logging = LoggingIntegration(
-    level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
-    event_level=logging.ERROR,  # Send errors as events
-)
-
-sentry_sdk.init(
-    dsn=env('SENTRY_DSN'),
-    environment=env('ENVIRONMENT','production'),
-    release=env('RELEASE', ''),
-    integrations=[sentry_logging, DjangoIntegration(), CeleryIntegration()],
-)
 
 # Your stuff...
 # ------------------------------------------------------------------------------
