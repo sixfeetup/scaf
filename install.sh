@@ -5,7 +5,7 @@ TEMP_DOWNLOAD="./scaf"
 DESTINATION="/usr/local/bin/scaf"
 
 command_exists() {
-    type "$1" &> /dev/null
+    command -v "$1" &> /dev/null
 }
 
 detect_os_and_arch() {
