@@ -9,6 +9,7 @@ django-redis==5.2.0
 Pillow==9.4.0
 # urllib3<1.27,>=1.25.4 (from botocore==1.29.133), see #60 
 urllib3<1.27
+sentry-sdk[django]==1.40.0
 
 {%- if cookiecutter.use_compressor == "y" %}
 django-compressor==4.1
