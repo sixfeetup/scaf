@@ -8,7 +8,9 @@ import * as Sentry from '@sentry/react';
 import { BrowserTracing } from "@sentry/tracing";
 
 Sentry.init({
-  dsn: `https://${process.env.SENTRY_DSN}`,
+  dsn: `https://${process.env.SENTRY_DSN_FRONTEND}`,
+  environment: `${process.env.ENVIRONMENT}`,
+  release: `${process.env.RELEASE}`,
   integrations: [new BrowserTracing()],
 
   tracesSampleRate: 1.0

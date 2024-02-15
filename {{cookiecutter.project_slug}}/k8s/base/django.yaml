@@ -43,6 +43,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: django-config
+            - secretRef:
+                name: secrets-config
       initContainers:
         - name: check-db-ready
           image: postgres:12.7
@@ -58,3 +60,5 @@ spec:
           envFrom:
             - configMapRef:
                 name: django-config
+            - secretRef:
+                name: secrets-config

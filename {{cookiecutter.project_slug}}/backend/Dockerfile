@@ -70,6 +70,8 @@ ENV BOGUS 1
 WORKDIR /app/src
 
 ARG DEVEL=no
+# this is used by Sentry to associate errors with releases
+ARG RELEASE="dev"
 
 # This is a work around because otherwise postgresql-client bombs out trying
 # to create symlinks to these directories.

@@ -23,3 +23,9 @@ patches:
   target:
     kind: Deployment
     name: mailhog
+
+configMapGenerator:
+  - name: django-config
+    behavior: merge
+    literals:
+     - ENVIRONMENT="production"
