@@ -20,7 +20,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: sixfeetup/scaf:${{ GITHUB_SHA }}
+        tags: sixfeetup/scaf:${{ github.sha }}
 
   setup:
     environment: dev
