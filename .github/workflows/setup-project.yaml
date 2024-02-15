@@ -49,6 +49,13 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: docker --version
 
+    - name: Wait for Docker to be ready
+      run: |
+        until docker info; do
+          echo "Waiting for Docker to be ready..."
+          sleep 5
+        done
+
     - name: Install Requirements
       shell: bash
       run: |
