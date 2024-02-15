@@ -37,10 +37,10 @@ else
   COOKIECUTTER_OPTIONS=""
 fi
 
+DOCKER_RUN_OPTIONS=""
+
 # Check if --no-input is in COOKIECUTTER_OPTIONS
-if [[ "$COOKIECUTTER_OPTIONS" == *"--no-input"* ]]; then
-  DOCKER_RUN_OPTIONS="-t"
-else
+if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
   DOCKER_RUN_OPTIONS="-it"
 fi
 
