@@ -44,6 +44,10 @@ if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
   DOCKER_RUN_OPTIONS="-it"
 fi
 
+echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
+echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
+echo "REPO_URL: $REPO_URL"
+
 IMAGE_TAG=${IMAGE_TAG:-latest}
 docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
