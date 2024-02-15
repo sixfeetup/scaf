@@ -35,6 +35,7 @@ jobs:
       shell: bash
       run: |
         INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
+        SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
         echo "Downloading install script from $INSTALL_URL"
         curl -sSL $INSTALL_URL | sh
 
