@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build-and-push:
+    environment: dev
     runs-on: ubuntu-latest
     steps:
     - name: Check out the repo
@@ -22,6 +23,7 @@ jobs:
         tags: sixfeetup/scaf:${{ env.GITHUB_SHA }}
 
   setup:
+    environment: dev
     needs: build-and-push
     runs-on: ${{ matrix.os }}
     strategy:
