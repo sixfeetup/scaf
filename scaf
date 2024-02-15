@@ -1,19 +1,53 @@
 #!/bin/bash
 
-PROJECT_SLUG=${1:-myproject}
+# Default repository URL if none is provided
+DEFAULT_REPO_URL="https://github.com/sixfeetup/cookiecutter-sixiedjango/"
 
+# Ensure at least one argument is provided (for project_slug)
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
+  exit 1
+fi
+
+# The first argument is always the project slug
+PROJECT_SLUG="$1"
+
+# Validate the project slug
 if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9]+$ ]]; then
     echo "Error: PROJECT_SLUG should only contain alphanumeric characters."
     exit 1
 fi
 
-docker run --rm -it -v .:/home/scaf/out \
+# Remove the project_slug from the argument list
+shift
+
+# Assume the last argument is the template URL unless it starts with a dash
+if [ $# -gt 0 ]; then
+  LAST_ARG="${@: -1}"
+  if [[ $LAST_ARG == -* ]]; then
+    REPO_URL="$DEFAULT_REPO_URL"
+    COOKIECUTTER_OPTIONS="$@"
+  else
+    REPO_URL="$LAST_ARG"
+    # Remove the last argument (the REPO_URL) from the options
+    COOKIECUTTER_OPTIONS="${@:1:$(($#-1))}"
+  fi
+else
+  REPO_URL="$DEFAULT_REPO_URL"
+  COOKIECUTTER_OPTIONS=""
+fi
+
+# Run docker with the specified options
+docker run --rm -it -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
   sixfeetup/scaf:latest \
-  cookiecutter ${2:-https://github.com/sixfeetup/cookiecutter-sixiedjango/} \
-  project_slug=$PROJECT_SLUG
+  cookiecutter \
+  $COOKIECUTTER_OPTIONS \
+  $REPO_URL \
+  project_slug="$PROJECT_SLUG" \
 
+# Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
     kind create cluster --name $PROJECT_SLUG
 else
