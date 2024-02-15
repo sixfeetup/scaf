@@ -25,37 +25,9 @@ jobs:
   setup:
     environment: dev
     needs: build-and-push
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Install Docker on macOS
-      if: matrix.os == 'macos-latest'
-      run: |
-        if ! type "docker" &> /dev/null; then
-          echo "Docker is not installed. Installing Docker..."
-          brew install --cask docker
-          # Open Docker.app to initialize the Docker environment
-          open /Applications/Docker.app
-          # Wait for Docker to start. Adjust the sleep time as necessary.
-          sleep 60
-        else
-          echo "Docker is already installed."
-        fi
-
-    - name: Verify Docker Installation on macOS
-      if: matrix.os == 'macos-latest'
-      run: docker --version
-
-    - name: Wait for Docker to be ready
-      run: |
-        until docker info; do
-          echo "Waiting for Docker to be ready..."
-          sleep 5
-        done
-
     - name: Install Requirements
       shell: bash
       run: |
