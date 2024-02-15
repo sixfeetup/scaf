@@ -34,11 +34,14 @@ jobs:
     - name: Install Requirements
       shell: bash
       run: |
-        curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh | sh
+        INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
+        echo "Downloading install script from $INSTALL_URL"
+        curl -sSL $INSTALL_URL | sh
 
     - name: Create Project with Scaf
       shell: bash
       run: |
         IMAGE_TAG=$GITHUB_SHA
+        echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
         /usr/local/bin/scaf myproject --no-input
 
