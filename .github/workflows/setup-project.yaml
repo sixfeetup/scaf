@@ -14,12 +14,6 @@ jobs:
       shell: bash
       run: |
         curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
-        echo "DEBUG: type scaf $(type scaf)"
-        echo "DEBUG: type ls $(type ls)"
-        echo "DEBUG: command scaf $(command scaf)"
-        echo "DEBUG: command ls $(command ls)"
-        echo "DEBUG: command -v scaf $(command -v scaf)"
-        echo "DEBUG: command -v ls $(command -v ls)"
 
     - name: Create Project with Scaf
       shell: bash
