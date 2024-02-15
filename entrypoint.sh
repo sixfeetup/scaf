@@ -72,6 +72,8 @@ else
     echo "scaf already has the UID $HOST_UID."
 fi
 
+chown scaf:scaf /home/scaf/out
+
 echo "Finalizing: Dropping privileges and executing command..."
 # Drop privileges and execute the next container command, or 'sh' if not specified
 if [ "$#" -gt 0 ]; then
