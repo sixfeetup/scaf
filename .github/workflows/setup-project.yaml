@@ -31,6 +31,24 @@ jobs:
         os: [ubuntu-latest, macos-latest]
 
     steps:
+    - name: Install Docker on macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        if ! type "docker" &> /dev/null; then
+          echo "Docker is not installed. Installing Docker..."
+          brew install --cask docker
+          # Open Docker.app to initialize the Docker environment
+          open /Applications/Docker.app
+          # Wait for Docker to start. Adjust the sleep time as necessary.
+          sleep 60
+        else
+          echo "Docker is already installed."
+        fi
+
+    - name: Verify Docker Installation on macOS
+      if: matrix.os == 'macos-latest'
+      run: docker --version
+
     - name: Install Requirements
       shell: bash
       run: |
