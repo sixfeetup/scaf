@@ -37,15 +37,22 @@ else
   COOKIECUTTER_OPTIONS=""
 fi
 
+# Check if --no-input is in COOKIECUTTER_OPTIONS
+if [[ "$COOKIECUTTER_OPTIONS" == *"--no-input"* ]]; then
+  DOCKER_RUN_OPTIONS="-t"
+else
+  DOCKER_RUN_OPTIONS="-it"
+fi
+
 IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm -it -v "$(pwd):/home/scaf/out" \
+docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
   sixfeetup/scaf:$IMAGE_TAG \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
-  project_slug="$PROJECT_SLUG" \
+  project_slug="$PROJECT_SLUG"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
