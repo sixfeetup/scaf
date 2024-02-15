@@ -37,11 +37,11 @@ else
   COOKIECUTTER_OPTIONS=""
 fi
 
-# Run docker with the specified options
+IMAGE_TAG=${IMAGE_TAG:-latest}
 docker run --rm -it -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
-  sixfeetup/scaf:latest \
+  sixfeetup/scaf:$IMAGE_TAG \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
