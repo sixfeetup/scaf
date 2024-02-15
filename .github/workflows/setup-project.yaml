@@ -13,7 +13,7 @@ jobs:
     - name: Install Requirements
       shell: bash
       run: |
-        curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
+        curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh | sh
 
     - name: Create Project with Scaf
       shell: bash
