@@ -5,3 +5,4 @@ bases:
  - ../base
 resources:
 - ./postgres.yaml
+- ./secrets.yaml
