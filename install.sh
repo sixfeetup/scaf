@@ -1,11 +1,12 @@
 #!/bin/bash
 
-SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/main/scaf"
+BRANCH=${SCAF_SCRIPT_BRANCH:-main}
+SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
 TEMP_DOWNLOAD="./scaf"
 DESTINATION="/usr/local/bin/scaf"
 
 command_exists() {
-    command -v "$1" &> /dev/null
+    command -v "$1" > /dev/null 2>&1
 }
 
 detect_os_and_arch() {
@@ -81,7 +82,7 @@ install_tilt() {
 
 install_scaf() {
     # Download and install scaf
-    echo "Downloading scaf ..."
+    echo "Downloading scaf from $SCAF_SCRIPT_URL..."
     curl -L $SCAF_SCRIPT_URL -o $TEMP_DOWNLOAD
 
     if [ -f "$TEMP_DOWNLOAD" ]; then
