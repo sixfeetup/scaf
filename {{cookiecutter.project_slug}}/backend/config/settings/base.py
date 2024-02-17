@@ -4,7 +4,9 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+{% if cookiecutter.use_sentry == 'y' %}
 import sentry_sdk
+{% endif %}
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # {{ cookiecutter.project_slug }}/
@@ -318,6 +320,7 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+{% if cookiecutter.use_sentry == 'y' %}
 # ------------------------------------------------------------------------------
 # Sentry
 sentry_sdk.init(
@@ -325,6 +328,7 @@ sentry_sdk.init(
     environment=env('ENVIRONMENT','production'),
     release=env('RELEASE', 'dev'),
 )
+{% endif %}
 
 # Your stuff...
 # ------------------------------------------------------------------------------
