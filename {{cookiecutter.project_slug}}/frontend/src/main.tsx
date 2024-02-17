@@ -6,8 +6,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 {% if cookiecutter.use_sentry == 'y' %}
 import * as Sentry from '@sentry/react';
-{% endif %}
 import { BrowserTracing } from "@sentry/tracing";
+{% endif %}
 
 {% if cookiecutter.use_sentry == 'y' %}
 Sentry.init({
