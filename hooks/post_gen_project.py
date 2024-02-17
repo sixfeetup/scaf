@@ -223,7 +223,7 @@ def remove_drf_starter_files():
     )
 
 
-def remove_drf_starter_files():
+def remove_sentry_files():
     os.remove(os.path.join("docs", "sentry.md"))
 
 
