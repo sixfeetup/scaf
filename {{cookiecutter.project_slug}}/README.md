@@ -119,6 +119,7 @@ The decrypted values can be retrieved running:
 
     $ kubectl get secret secrets-config -n {{cookiecutter.project_dash}} -o yaml > unsealed_secrets.yaml
 
+{% if cookiecutter.use_sentry == 'y' %}
 ## Adding Sentry to Projects
 
 Sentry can be used for error reporting at the application level. Sentry is included as a dependency in the project requirements, and the SENTRY_DSN configuration variable is included in the Django config map.
@@ -137,6 +138,7 @@ Note: The values for both tokens can be empty if you don't wish to use Sentry.
 
 For more detailed steps view `./docs/sentry.md`
 
+{% endif %}
 ## Install Loki for log aggregation and the Kube Prometheus Stack with Grafana Dashboards
 
 ### Setup AWS credentials

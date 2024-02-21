@@ -20,8 +20,13 @@
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",
+  "use_sentry": "n",
   "debug": "n",
-  "source_control_provider": ["bitbucket", "github", "none"],
+  "source_control_provider": [
+    "bitbucket",
+    "github",
+    "none"
+  ],
   "__prompts__": {
     "source_control_provider": {
       "__prompt__": "Which source control provider do you want to use?",

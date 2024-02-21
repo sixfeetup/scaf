@@ -223,6 +223,10 @@ def remove_drf_starter_files():
     )
 
 
+def remove_sentry_files():
+    os.remove(os.path.join("docs", "sentry.md"))
+
+
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
@@ -244,6 +248,9 @@ def main():
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
+
+    if "{{ cookiecutter.use_sentry }}".lower() == "n":
+        remove_sentry_files()
 
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))
