@@ -34,16 +34,18 @@
 
 ### Add code to Django
 
-Make sure the following is to your preferences in all logical locations in the `backend/config/settings/{environment}.py` files that you set up as Projects in Sentry:
+By default this is in the base config. Make sure the following is to your preferences in all logical locations in the `backend/config/settings/{environment}.py` files:
+
 ```
     import sentry_sdk
     ...
     sentry_sdk.init(
-        dsn=env('SENTRY_DSN_BACKEND', ''),
-        environment=env('ENVIRONMENT','production'),
-        release=env('RELEASE',''),
+        dsn=env.str("SENTRY_DSN_BACKEND", default=""),
+        environment=env.str("ENVIRONMENT", default="production"),
+        release=env.str("RELEASE", default="dev"),
     )
 ```
-Make sure you have the correct `SENTRY_DSN_BACKEND` and `SENTRY_DSN_FRONTEND` tokens set up in 1password .envrc with the Sentry project DSNs for this project. The same Sentry projects should be used across all environments
+
+Update `k8s/base/django.configmap.yaml` `SENTRY_DSN_BACKEND`, `VITE_SENTRY_DSN_FRONTEND` with the DSNs provided for the relevant Sentry projects. 
 
 You can find them in Sentry by clicking Settings on the sidebar, then Projects on the secondary sidebar, then the project, then Client Keys (DSN)

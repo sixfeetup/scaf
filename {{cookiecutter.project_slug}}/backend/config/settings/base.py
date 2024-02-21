@@ -324,9 +324,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ------------------------------------------------------------------------------
 # Sentry
 sentry_sdk.init(
-    dsn=env('SENTRY_DSN_BACKEND', ''),
-    environment=env('ENVIRONMENT','production'),
-    release=env('RELEASE', 'dev'),
+    dsn=env.str("SENTRY_DSN_BACKEND", default=""),
+    environment=env.str("ENVIRONMENT", default="production"),
+    release=env.str("RELEASE", default="dev"),
 )
 {% endif %}
 
