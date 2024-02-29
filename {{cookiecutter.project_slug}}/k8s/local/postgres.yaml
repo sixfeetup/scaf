@@ -42,7 +42,7 @@ spec:
             - containerPort: 5432
           envFrom:
           - configMapRef:
-              name: django-config
+              name: app-config
           - secretRef:
               name: secrets-config
           volumeMounts:

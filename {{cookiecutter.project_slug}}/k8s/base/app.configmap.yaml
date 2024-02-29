@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: django-config
+  name: app-config
 data:
   DJANGO_DEBUG: "False"
   USE_DOCKER: "yes"

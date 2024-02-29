@@ -46,6 +46,6 @@ By default this is in the base config. Make sure the following is to your prefer
     )
 ```
 
-Update `k8s/base/django.configmap.yaml` `SENTRY_DSN_BACKEND`, `VITE_SENTRY_DSN_FRONTEND` with the DSNs provided for the relevant Sentry projects. 
+Update `k8s/base/app.configmap.yaml` `SENTRY_DSN_BACKEND`, `VITE_SENTRY_DSN_FRONTEND` with the DSNs provided for the relevant Sentry projects. 
 
 You can find them in Sentry by clicking Settings on the sidebar, then Projects on the secondary sidebar, then the project, then Client Keys (DSN)

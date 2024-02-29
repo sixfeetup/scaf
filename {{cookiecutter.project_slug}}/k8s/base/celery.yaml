@@ -23,16 +23,16 @@ spec:
           command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "worker", "-E", "-l", "info"]
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config
         - name: celerybeat
           image: {{ cookiecutter.project_slug }}_local_django:latest
           command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "beat"]
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config
         - name: flower
           image: {{ cookiecutter.project_slug }}_local_django:latest
           command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "flower"]
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config

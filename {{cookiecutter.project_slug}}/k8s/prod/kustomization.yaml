@@ -25,7 +25,7 @@ patches:
     name: mailhog
 
 configMapGenerator:
-  - name: django-config
+  - name: app-config
     behavior: merge
     literals:
      - ENVIRONMENT="production"

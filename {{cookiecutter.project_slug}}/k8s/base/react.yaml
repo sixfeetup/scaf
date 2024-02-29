@@ -48,6 +48,6 @@ spec:
               value: django:8000
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config
             - secretRef:
                 name: secrets-config

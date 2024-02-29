@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
 {%- if cookiecutter.use_celery == "y" %}- ./celery.yaml{%- endif %}
-- ./django.configmap.yaml
+- ./app.configmap.yaml
 - ./django.yaml
 - ./mailhog.yaml
 - ./react.yaml
