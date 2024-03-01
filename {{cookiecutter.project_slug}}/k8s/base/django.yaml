@@ -42,7 +42,7 @@ spec:
               containerPort: 8000
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config
             - secretRef:
                 name: secrets-config
       initContainers:
@@ -59,6 +59,6 @@ spec:
           command: ["python", "manage.py", "migrate"]
           envFrom:
             - configMapRef:
-                name: django-config
+                name: app-config
             - secretRef:
                 name: secrets-config

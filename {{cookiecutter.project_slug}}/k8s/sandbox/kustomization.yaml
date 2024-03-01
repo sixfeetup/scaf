@@ -9,7 +9,7 @@ patches:
  - path: patches.yaml
 
 configMapGenerator:
-  - name: django-config
+  - name: app-config
     behavior: merge
     literals:
      - ENVIRONMENT="sandbox"

@@ -132,9 +132,7 @@ Note: The values for both tokens can be empty if you don't wish to use Sentry.
    2. One project for the frontend 
 2. Configure Slack notifications
 3. Add team members in Sentry 
-4. Update `django.configmap.yaml` SENTRY_DSN_BACKEND with the DSN provided in the Sentry backend project 
-5. Update `.env` SENTRY_DSN_FRONTEND with the DSN provided in the Sentry frontend project
-
+4. Update `k8s/base/app.configmap.yaml` `SENTRY_DSN_BACKEND`, `VITE_SENTRY_DSN_FRONTEND` with the DSNs appropriate for the relevant Sentry projects. 
 
 For more detailed steps view `./docs/sentry.md`
 

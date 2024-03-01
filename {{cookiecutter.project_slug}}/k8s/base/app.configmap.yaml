@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: django-config
+  name: app-config
 data:
   DJANGO_DEBUG: "False"
   USE_DOCKER: "yes"
@@ -30,4 +30,6 @@ data:
 {% if cookiecutter.use_sentry == 'y' %}
   SENTRY_DSN_BACKEND: ""
   ENVIRONMENT: "dev"
+  VITE_SENTRY_DSN_FRONTEND: ""
+  VITE_ENVIRONMENT: "dev"
 {% endif %}

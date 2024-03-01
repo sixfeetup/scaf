@@ -10,10 +10,11 @@ import { BrowserTracing } from "@sentry/tracing";
 {% endif %}
 
 {% if cookiecutter.use_sentry == 'y' %}
+const sentry_dsn = import.meta.env?.VITE_SENTRY_DSN_FRONTEND;
 Sentry.init({
-  dsn: `https://${process.env.SENTRY_DSN_FRONTEND}`,
-  environment: `${process.env.ENVIRONMENT}`,
-  release: `${process.env.RELEASE}`,
+  dsn: sentry_dsn ? sentry_dsn : '',
+  environment: import.meta.env?.VITE_ENVIRONMENT ? import.meta.env?.VITE_ENVIRONMENT : 'production',
+  release: import.meta.env?.VITE_RELEASE ? import.meta.env?.VITE_RELEASE : 'dev',
   integrations: [new BrowserTracing()],
   tracesSampleRate: 1.0
 });
