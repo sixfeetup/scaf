@@ -56,7 +56,7 @@ RUN set -x \
         -r /tmp/requirements/base.txt
 
 RUN set -x \
-    && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
+    && if [ "$TEST" = "yes" ] || [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
         -r /tmp/requirements/tests.txt; fi
 
 # Now we can build the application image
