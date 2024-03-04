@@ -381,3 +381,5 @@ dist
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+
+.idea/
