@@ -45,6 +45,25 @@ spec:
                 name: app-config
             - secretRef:
                 name: secrets-config
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+              host: {{ cookiecutter.domain_name }}
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 60
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8000
+              host: {{ cookiecutter.domain_name }}
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
       initContainers:
         - name: check-db-ready
           image: postgres:12.7
