@@ -6,13 +6,13 @@ metadata:
     app: django
     tier: backend
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: django
     tier: backend
   ports:
     - port: 8000
-      targetPort: 8000
+      targetPort: http-server
 ---
 apiVersion: apps/v1
 kind: Deployment
