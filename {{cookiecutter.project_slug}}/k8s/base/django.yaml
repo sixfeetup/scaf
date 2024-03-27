@@ -36,7 +36,7 @@ spec:
       containers:
         - name: django
           image: {{ cookiecutter.project_slug }}_local_django:latest
-          command: ["python", "manage.py", "runserver"]
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
           ports:
             - name: http-server
               containerPort: 8000
@@ -49,20 +49,24 @@ spec:
             httpGet:
               path: /healthz
               port: 8000
-              host: {{ cookiecutter.domain_name }}
-            initialDelaySeconds: 15
-            periodSeconds: 60
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 29
+            periodSeconds: 29
+            timeoutSeconds: 2
             failureThreshold: 3
             terminationGracePeriodSeconds: 60
-            timeoutSeconds: 2
           readinessProbe:
             httpGet:
               path: /readiness
               port: 8000
-              host: {{ cookiecutter.domain_name }}
-            initialDelaySeconds: 30
-            timeoutSeconds: 5
-            periodSeconds: 10
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 31
+            periodSeconds: 31
+            timeoutSeconds: 3
             successThreshold: 1
       initContainers:
         - name: check-db-ready
