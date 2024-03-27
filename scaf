@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/sixfeetup/cookiecutter-sixiedjango/"
+DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
