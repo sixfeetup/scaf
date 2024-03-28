@@ -46,6 +46,12 @@ update: ## Pull the latest image from a registry
 	@docker pull node:16-bullseye-slim
 	@docker pull redis:6.2
 
+1pass:  ## Create a vault and items in 1Password
+	op vault create "{{ cookiecutter.project_name }}"; \
+	op item create --category login --title "DJANGO_SECRET_KEY" --vault "{{ cookiecutter.project_name }}" "token=$(op item create --dry-run --category Password --generate-password='letters,digits,symbols,50' --format json | jq -r '.fields[] | select(.id == "password").value')"; \
+	op item create --category login --title='POSTGRES_DB' --vault "{{ cookiecutter.project_name }}" --generate-password='letters,digits,symbols,32' "username=postgres"; \
+	op item create --category login --title "AWS_ACCESS_KEY_SES" --vault "{{ cookiecutter.project_name }}" "token=token"; \
+	op item create --category login --title "AWS_SECRET_KEY_SES" --vault "{{ cookiecutter.project_name }} "token=token";
 
 ## Release/Deployment Targets
 
