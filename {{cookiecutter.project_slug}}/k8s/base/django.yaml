@@ -6,13 +6,13 @@ metadata:
     app: django
     tier: backend
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: django
     tier: backend
   ports:
     - port: 8000
-      targetPort: 8000
+      targetPort: http-server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,7 +36,7 @@ spec:
       containers:
         - name: django
           image: {{ cookiecutter.project_slug }}_local_django:latest
-          command: ["python", "manage.py", "runserver"]
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
           ports:
             - name: http-server
               containerPort: 8000
@@ -45,6 +45,29 @@ spec:
                 name: app-config
             - secretRef:
                 name: secrets-config
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 29
+            periodSeconds: 29
+            timeoutSeconds: 2
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 31
+            periodSeconds: 31
+            timeoutSeconds: 3
+            successThreshold: 1
       initContainers:
         - name: check-db-ready
           image: postgres:12.7

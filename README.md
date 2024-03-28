@@ -55,4 +55,3 @@ When making changes to scaf, keep the following in mind:
 - update pins in requirements/*.in files but *don't\* commit the compiled requirements.txt
   files to the repo.
 - update to the latest Python supported by Django. For Django 4.1, this is 3.8, 3.9, and 3.10.
-

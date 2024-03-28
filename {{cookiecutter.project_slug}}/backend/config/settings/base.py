@@ -132,6 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
