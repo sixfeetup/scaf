@@ -6,7 +6,7 @@ resources:
  - ../base
   - certificate.yaml
   - cluster-issuer.yaml
-  - ingressroute.yaml
+  - ingress-route.yaml
   - postgres.yaml
   - secrets.yaml
 

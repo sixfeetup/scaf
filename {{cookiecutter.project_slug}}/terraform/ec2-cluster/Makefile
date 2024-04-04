@@ -46,7 +46,7 @@ destroy:
 	terraform destroy
 
 kubecreds:
-	aws sso login --profile={{cookiecutter.project_slug}}
+	aws sso login
 	aws ecr get-login-password --region {{cookiecutter.aws_region}} | docker login --username AWS \
 		--password-stdin {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com
 	kubectl delete secret regcred -n {{cookiecutter.project_dash}} --ignore-not-found
