@@ -2,30 +2,44 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: {{cookiecutter.project_dash}}
 
-bases:
+resources:
  - ../base
+  - certificate.yaml
+  - cluster-issuer.yaml
+  - ingressroute.yaml
+  - postgres.yaml
+  - secrets.yaml
 
 patches:
-- path: patches.yaml
-- patch: |
-    $patch: delete
-    kind: Service
-    metadata:
+  - path: patch-django.yaml
+  - path: patch-react.yaml
+  - patch: |
+      $patch: delete
+      kind: Service
+      metadata:
+        name: mailhog
+    target:
+      kind: Service
       name: mailhog
-  target:
-    kind: Service
-    name: mailhog
-- patch: |
-    $patch: delete
-    kind: Deployment
-    metadata:
+  - patch: |
+      $patch: delete
+      kind: Deployment
+      metadata:
+        name: mailhog
+    target:
+      kind: Deployment
       name: mailhog
-  target:
-    kind: Deployment
-    name: mailhog
 
 configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
      - ENVIRONMENT="production"
+
+images:
+  - name: {{cookiecutter.project_slug}}_local_django
+    newName: {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com/{{cookiecutter.project_dash}}-backend
+    newTag: latest
+  - name: {{cookiecutter.project_slug}}_local_frontend
+    newName: {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com/{{cookiecutter.project_dash}}-frontend
+    newTag: latest

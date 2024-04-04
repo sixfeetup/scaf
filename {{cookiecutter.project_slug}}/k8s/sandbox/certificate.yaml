@@ -8,5 +8,5 @@ spec:
     name: letsencrypt-staging
     kind: ClusterIssuer
   dnsNames:
-  - "k8s.sandbox.{{ cookiecutter.domain_name }}"
-  - "api.sandbox.{{ cookiecutter.domain_name }}"
+  - api.sandbox.{{ cookiecutter.domain_name }}
+  - k8s.sandbox.{{ cookiecutter.domain_name }}

@@ -9,7 +9,8 @@ spec:
       tier: backend
   template:
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: django
-          command: ['/bin/sh', '-c']
-          args: ["daphne", "--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]
+          command: ["daphne", "--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]

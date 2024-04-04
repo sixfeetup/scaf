@@ -6,9 +6,6 @@ module "global_variables" {
 
 provider "aws" {
   region = module.global_variables.aws_region
-  assume_role {
-    role_arn = "arn:aws:iam::${module.global_variables.account_id}:role/OrganizationAccountAccessRole"
-  }
 }
 
 terraform {

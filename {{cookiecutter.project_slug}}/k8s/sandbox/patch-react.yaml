@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: urejanjeokolice
+      tier: frontend
+  template:
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: frontend

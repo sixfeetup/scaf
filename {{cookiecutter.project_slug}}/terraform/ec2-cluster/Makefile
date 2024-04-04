@@ -14,24 +14,30 @@ deploy:
 INSTANCE_IP :=  $(shell ./bin/ip | sed 's/"//g')
 
 config:
-	ssh -oStrictHostKeyChecking=no -i ~/.ssh/{{cookiecutter.project_slug}}_default_key \
+	ssh -oStrictHostKeyChecking=no -i ~/.ssh/urejanjeokolice_default_key \
 		ubuntu@$(INSTANCE_IP) \
 		'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san $(INSTANCE_IP)" K3S_KUBECONFIG_MODE="644" sh -s -'
-	ssh -oStrictHostKeyChecking=no -i ~/.ssh/{{cookiecutter.project_slug}}_default_key \
+	ssh -oStrictHostKeyChecking=no -i ~/.ssh/urejanjeokolice_default_key \
 		ubuntu@$(INSTANCE_IP) cat /etc/rancher/k3s/k3s.yaml \
-		> ~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	sed -ie 's/127.0.0.1/$(INSTANCE_IP)/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	sed -ie 's/default/{{cookiecutter.project_slug}}-ec2-cluster/' ~/.kube/{{cookiecutter.project_slug}}.ec2.config
-	export KUBECONFIG=~/.kube/{{cookiecutter.project_slug}}.ec2.config
+		> ~/.kube/urejanjeokolice.ec2.config
+	sed -ie 's/127.0.0.1/$(INSTANCE_IP)/' ~/.kube/urejanjeokolice.ec2.config
+	sed -ie 's/default/urejanjeokolice-ec2-cluster/' ~/.kube/urejanjeokolice.ec2.config
+	export KUBECONFIG=~/.kube/urejanjeokolice.ec2.config
 	kubectl config get-contexts
-	kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
+	kubectl config use-context urejanjeokolice-ec2-cluster
 	# do not apply cloudconfig in sandbox
 	# kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.20/releases/cnpg-1.20.0.yaml
 	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.yaml
-	kubectl apply -f config.yml
+	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+	helm upgrade --install sealed-secrets -n kube-system --set-string fullnameOverride=sealed-secrets-controller sealed-secrets/sealed-secrets
+
+cluster-uninstall:
+	ssh -oStrictHostKeyChecking=no -i ~/.ssh/urejanjeokolice_default_key \
+		ubuntu@$(INSTANCE_IP) \
+		'sudo /usr/local/bin/k3s-uninstall.sh'
 
 ssh:
-	./bin/ssh
+	ssh -i ~/.ssh/urejanjeokolice_default_key ubuntu@$(INSTANCE_IP)
 
 show-ip:
 	@./bin/ip

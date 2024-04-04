@@ -1,3 +1,8 @@
+variable "domain_zone" {
+  type    = string
+  default = "{{ cookiecutter.domain_name }}"
+}
+
 variable "domain" {
   type    = string
   default = "sandbox.{{ cookiecutter.domain_name }}"
