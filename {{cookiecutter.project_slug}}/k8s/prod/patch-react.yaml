@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: urejanjeokolice
+      app: {{ cookiecutter.project_slug }}
       tier: frontend
   template:
     spec:
