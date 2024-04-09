@@ -13,4 +13,5 @@ spec:
         - name: regcred
       containers:
         - name: django
-          command: ["daphne", "--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]
+          command: ["daphne"]
+          args: ["--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]

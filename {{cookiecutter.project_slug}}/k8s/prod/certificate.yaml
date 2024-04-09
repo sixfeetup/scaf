@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: cluster-cert-tls
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
   - api.{{ cookiecutter.domain_name }}
