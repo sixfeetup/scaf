@@ -12,11 +12,11 @@ terraform {
   }
 
   backend "s3" {
-    region         = "{{cookiecutter.aws_region}}"
-    bucket         = "{{cookiecutter.project_dash}}-terraform-state"
-    key            = "{{cookiecutter.project_dash}}.management.json"
+    region         = "{{ cookiecutter.aws_region }}"
+    bucket         = "{{ cookiecutter.project_dash }}-terraform-state"
+    key            = "{{ cookiecutter.project_dash }}.management.json"
     encrypt        = true
-    dynamodb_table = "{{cookiecutter.project_dash}}-terraform-state"
+    dynamodb_table = "{{ cookiecutter.project_dash }}-terraform-state"
   }
 }
 

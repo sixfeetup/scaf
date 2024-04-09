@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: {{cookiecutter.project_dash}}-sandbox
+namespace: {{ cookiecutter.project_dash }}-sandbox
 
 resources:
   - ../base
@@ -21,9 +21,9 @@ configMapGenerator:
      - ENVIRONMENT="sandbox"
 
 images:
-  - name: {{cookiecutter.project_slug}}_local_django
-    newName: {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com/{{cookiecutter.project_dash}}-backend
+  - name: {{ cookiecutter.project_slug }}_local_django
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
-  - name: {{cookiecutter.project_slug}}_local_frontend
-    newName: {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com/{{cookiecutter.project_dash}}-frontend
+  - name: {{ cookiecutter.project_slug }}_local_frontend
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest

@@ -49,7 +49,7 @@ resource "aws_iam_user_policy" "cicd_user" {
       "Action": [
         "ec2:*"
       ],
-      "Resource": "arn:aws:ec2:{{cookiecutter.aws_region}}:{{cookiecutter.aws_account_id}}:instance/*"
+      "Resource": "arn:aws:ec2:{{ cookiecutter.aws_region }}:{{ cookiecutter.aws_account_id }}:instance/*"
     }
   ]
 }

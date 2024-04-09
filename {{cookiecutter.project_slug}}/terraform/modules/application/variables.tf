@@ -1,6 +1,6 @@
 variable "application" {
   type    = string
-  default = "{{cookiecutter.project_dash}}"
+  default = "{{ cookiecutter.project_dash }}"
 }
 
 variable "environment" {

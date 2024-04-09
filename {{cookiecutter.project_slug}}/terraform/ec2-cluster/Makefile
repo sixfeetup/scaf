@@ -3,7 +3,7 @@ generate-tfvars:
 	bin/generate-tfvars
 
 key-pair:
-	ssh-keygen -t ED25519 -f ~/.ssh/{{cookiecutter.project_slug}}_default_key -N ""
+	ssh-keygen -t ED25519 -f ~/.ssh/{{ cookiecutter.project_slug }}_default_key -N ""
 
 plan:
 	terraform plan
@@ -46,16 +46,16 @@ destroy:
 	terraform destroy
 
 kubecreds:
-	aws sso login --profile={{cookiecutter.project_slug}}
-	aws ecr get-login-password --region {{cookiecutter.aws_region}} | docker login --username AWS \
-		--password-stdin {{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com
-	kubectl delete secret regcred -n {{cookiecutter.project_dash}}-prod --ignore-not-found
-	kubectl delete secret regcred -n {{cookiecutter.project_dash}}-sandbox --ignore-not-found
-	kubectl create secret docker-registry regcred -n {{cookiecutter.project_dash}}-prod \
-		--docker-server={{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com \
+	aws sso login --profile={{ cookiecutter.project_slug }}
+	aws ecr get-login-password --region {{ cookiecutter.aws_region }} | docker login --username AWS \
+		--password-stdin {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com
+	kubectl delete secret regcred -n {{ cookiecutter.project_dash }}-prod --ignore-not-found
+	kubectl delete secret regcred -n {{ cookiecutter.project_dash }}-sandbox --ignore-not-found
+	kubectl create secret docker-registry regcred -n {{ cookiecutter.project_dash }}-prod \
+		--docker-server={{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com \
 		--docker-username=AWS \
 		--docker-password=$(shell aws ecr get-login-password)
-	kubectl create secret docker-registry regcred -n {{cookiecutter.project_dash}}-sandbox \
-		--docker-server={{cookiecutter.aws_account_id}}.dkr.ecr.{{cookiecutter.aws_region}}.amazonaws.com \
+	kubectl create secret docker-registry regcred -n {{ cookiecutter.project_dash }}-sandbox \
+		--docker-server={{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com \
 		--docker-username=AWS \
 		--docker-password=$(shell aws ecr get-login-password)

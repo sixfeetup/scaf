@@ -184,11 +184,11 @@ node:  ## Shell into the running Node container
 
 sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
-	NAMESPACE={{cookiecutter.project_dash}}-sandbox envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
+	NAMESPACE={{ cookiecutter.project_dash }}-sandbox envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
 
 prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
-	NAMESPACE={{cookiecutter.project_dash}} envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
+	NAMESPACE={{ cookiecutter.project_dash }} envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
 
 argocd-app:
 	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml

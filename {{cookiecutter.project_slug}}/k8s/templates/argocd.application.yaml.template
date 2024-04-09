@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{cookiecutter.project_dash}}-sandbox
+  name: {{ cookiecutter.project_dash }}-sandbox
   namespace: argocd
 spec:
   project: default
@@ -11,7 +11,7 @@ spec:
     path: k8s/sandbox
   destination:
     server: https://${CLUSTER_IP}:6443
-    namespace: {{cookiecutter.project_dash}}-sandbox
+    namespace: {{ cookiecutter.project_dash }}-sandbox
   syncPolicy:
     automated:
       prune: true
@@ -21,7 +21,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{cookiecutter.project_dash}}-prod
+  name: {{ cookiecutter.project_dash }}-prod
   namespace: argocd
 spec:
   project: default
@@ -31,7 +31,7 @@ spec:
     path: k8s/prod
   destination:
     server: https://${CLUSTER_IP}:6443
-    namespace: {{cookiecutter.project_dash}}
+    namespace: {{ cookiecutter.project_dash }}
   syncPolicy:
     automated: {}
     syncOptions:
