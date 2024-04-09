@@ -14,10 +14,6 @@ data:
   PGDATA: "/var/lib/postgresql/data/pgdata"
   POSTGRES_DB: "{{ cookiecutter.project_slug }}"
   POSTGRES_USER: "{{ cookiecutter.project_slug }}"
-  # POSTGRES_PASSWORD and DATABASE_URL set in the secrets-config:
-  # use make scripts sandbox-secrets or prod-secrets
-  POSTGRES_PASSWORD: ""
-  DATABASE_URL: ""
   REDIS_URL: "redis://redis:6379/1"
 {%- if cookiecutter.use_celery == "y" %}
   CELERY_BROKER_URL: "redis://redis:6379/0"

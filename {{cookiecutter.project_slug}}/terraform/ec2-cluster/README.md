@@ -94,7 +94,7 @@ aws sso login
 Create namespaces
 
 ```
-kubectl create namespace {{cookiecutter.project_dash}}
+kubectl create namespace {{cookiecutter.project_dash}}-prod
 kubectl create namespace {{cookiecutter.project_dash}}-sandbox
 ```
 

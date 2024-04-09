@@ -7,7 +7,6 @@ HINT = "\x1b[3;33m"
 SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 pv = sys.version_info
-print(pv)
 assert (
     pv.major == 3 and pv.minor in [8,9,10,11]
 ), "Django 4.1 only supports Python 3.8, 3.9, 3.10, or 3.11."
