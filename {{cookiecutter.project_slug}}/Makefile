@@ -22,7 +22,7 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 {% endif %}
 
 backend-test:  ## Execute backend tests
-	$(KUBECTL_EXEC_BACKEND) -c "pytest --cov=./ --cov-report html --ds=config.settings.test"
+	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
 
 {% if cookiecutter.create_react_frontend == 'y' %}
 frontend-test:  ## Execute frontend tests
