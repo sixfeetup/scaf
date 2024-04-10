@@ -64,8 +64,7 @@ To prepare your development environment you can use the following commands:
 
     $ git clone [repo-url]
     $ cd {{ cookiecutter.project_slug }}
-    $ make build-dev
-    $ make up
+    $ tilt up
 
 ## Next steps
 
