@@ -10,9 +10,8 @@ sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
 build: export DOCKER_BUILDKIT = 1
 build: ./backend/Dockerfile backend/requirements/production.txt ./frontend/Dockerfile ## Create the build and runtime images
 	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
-	{% if cookiecutter.create_react_frontend == 'y' %}
-	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
-	{% endif %}
+{% if cookiecutter.create_react_frontend == 'y' %}
+	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend{% endif %}
 
 #build-front-end:  ## Build the front-end React app
 #	@docker-compose exec front-end npm run build
@@ -46,6 +45,12 @@ update: ## Pull the latest image from a registry
 	@docker pull node:16-bullseye-slim
 	@docker pull redis:6.2
 
+1pass:  ## Create a vault and items in 1Password
+	op vault create "{{ cookiecutter.project_name }}"; \
+  op item create --category login --title "DJANGO_SECRET_KEY" --vault "{{ cookiecutter.project_name }}" "token=$(op item create --dry-run --category Password --generate-password='letters,digits,symbols,50' --format json | jq -r '.fields[] | select(.id == "password").value')"; \
+  op item create --category login --title='POSTGRES_DB' --vault "{{ cookiecutter.project_name }}" --generate-password='letters,digits,symbols,32' "username=postgres"; \
+  op item create --category login --title "AWS_ACCESS_KEY_SES" --vault "{{ cookiecutter.project_name }}" "token=token"; \
+  op item create --category login --title "AWS_SECRET_KEY_SES" --vault "{{ cookiecutter.project_name }}" "token=token";
 
 ## Release/Deployment Targets
 
@@ -131,9 +136,8 @@ backend/requirements/tests.txt: compile
 build-dev: export DOCKER_BUILDKIT = 1
 build-dev: ./backend/Dockerfile backend/requirements/local.txt ./frontend/Dockerfile ## Create the dev build and runtime images
 	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
-	{% if cookiecutter.create_react_frontend == 'y' %}
-	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend
-	{% endif %}
+{% if cookiecutter.create_react_frontend == 'y' %}
+	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend{% endif %}
 
 outdated: ## Show all the outdated packages with their latest versions in the container
 	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated

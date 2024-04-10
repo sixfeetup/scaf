@@ -91,6 +91,13 @@ export AWS_PROFILE={{ cookiecutter.project_slug }}
 aws sso login
 ```
 
+Create namespaces
+
+```
+kubectl create namespace {{ cookiecutter.project_dash }}-prod
+kubectl create namespace {{ cookiecutter.project_dash }}-sandbox
+```
+
 You need to add credentials to the kubernetes cluster so that it can pull images from the ECR repository.
 
 ```

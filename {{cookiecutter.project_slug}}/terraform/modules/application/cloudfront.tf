@@ -1,10 +1,10 @@
-resource "aws_cloudfront_origin_access_identity" "static_storage" {
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "${var.application}-${var.environment}"
 }
 
 resource "aws_cloudfront_distribution" "ec2_cluster" {
   enabled             = true
-  aliases             = [var.domain_zone]
+  aliases             = [var.domain]
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
   default_root_object = ""

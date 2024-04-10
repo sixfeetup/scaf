@@ -28,10 +28,16 @@ config:
 	# do not apply cloudconfig in sandbox
 	# kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.20/releases/cnpg-1.20.0.yaml
 	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.yaml
-	kubectl apply -f config.yml
+	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+	helm upgrade --install sealed-secrets -n kube-system --set-string fullnameOverride=sealed-secrets-controller sealed-secrets/sealed-secrets
+
+cluster-uninstall:
+	ssh -oStrictHostKeyChecking=no -i ~/.ssh/{{ cookiecutter.project_slug }}_default_key \
+		ubuntu@$(INSTANCE_IP) \
+		'sudo /usr/local/bin/k3s-uninstall.sh'
 
 ssh:
-	./bin/ssh
+	ssh -i ~/.ssh/{{ cookiecutter.project_slug }}_default_key ubuntu@$(INSTANCE_IP)
 
 show-ip:
 	@./bin/ip
@@ -43,9 +49,9 @@ kubecreds:
 	aws sso login --profile={{ cookiecutter.project_slug }}
 	aws ecr get-login-password --region {{ cookiecutter.aws_region }} | docker login --username AWS \
 		--password-stdin {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com
-	kubectl delete secret regcred -n {{ cookiecutter.project_dash }} --ignore-not-found
+	kubectl delete secret regcred -n {{ cookiecutter.project_dash }}-prod --ignore-not-found
 	kubectl delete secret regcred -n {{ cookiecutter.project_dash }}-sandbox --ignore-not-found
-	kubectl create secret docker-registry regcred -n {{ cookiecutter.project_dash }} \
+	kubectl create secret docker-registry regcred -n {{ cookiecutter.project_dash }}-prod \
 		--docker-server={{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com \
 		--docker-username=AWS \
 		--docker-password=$(shell aws ecr get-login-password)
