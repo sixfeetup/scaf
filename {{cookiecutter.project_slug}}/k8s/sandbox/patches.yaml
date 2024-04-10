@@ -1,15 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
+  name: backend
 spec:
   selector:
     matchLabels:
-      app: django
-      tier: backend
+      app: backend
   template:
     spec:
       containers:
-        - name: django
+        - name: backend
           command: ['/bin/sh', '-c']
           args: ["daphne", "--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]

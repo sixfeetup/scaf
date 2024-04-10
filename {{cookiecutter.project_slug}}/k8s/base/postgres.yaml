@@ -3,37 +3,30 @@ kind: Service
 metadata:
   name: postgres
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
-    environment: dev
+    app: postgres
 spec:
   ports:
     - port: 5432
       targetPort: 5432
   selector:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
+    app: postgres
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
-    environment: dev
+    app: postgres
 spec:
   serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: db
+      app: postgres
   template:
     metadata:
       labels:
-        app: {{ cookiecutter.project_slug }}
-        tier: db
+        app: postgres
     spec:
       containers:
         - name: postgres

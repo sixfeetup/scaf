@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: mailhog
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: smtp
-    environment: dev
+    app: mailhog
 spec:
   type: ClusterIP
   selector:
-    app: {{ cookiecutter.project_slug }}
-    tier: smtp
+    app: mailhog
   ports:
     - port: 8025
       targetPort: smtp-server
@@ -20,20 +17,16 @@ kind: Deployment
 metadata:
   name: mailhog
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: smtp
-    environment: dev
+    app: mailhog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: smtp
+      app: mailhog
   template:
     metadata:
       labels:
-        app: {{ cookiecutter.project_slug }}
-        tier: smtp
+        app: mailhog
     spec:
       containers:
         - name: mailhog
