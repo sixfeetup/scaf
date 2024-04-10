@@ -4,12 +4,12 @@
 
 1. Log in to sentry.io and click the Create Project button
 2. Choose Django
-3. Name the Project with client-backend naming convention (ex. {{cookiecutter.project_dash}}-backend)
+3. Name the Project with client-backend naming convention (ex. {{ cookiecutter.project_dash }}-backend)
 4. Assign a team (create a team, if needed, with the plus icon next to the team dropdown). Teams should be based around the people involved in a project or projects that need to know about errors, not just the client.
 5. Click the Create Project button
 6. Repeat the above steps with the following changes:
 7. Choose React
-8. Name the Project with client-frontend naming convention (ex. {{cookiecutter.project_dash}}-frontend)
+8. Name the Project with client-frontend naming convention (ex. {{ cookiecutter.project_dash }}-frontend)
 9. Assign a team (create a team, if needed, with the plus icon next to the team dropdown). Teams should be based around the people involved in a project or projects that need to know about errors, not just the client.
 10. Click the Create Project button
 

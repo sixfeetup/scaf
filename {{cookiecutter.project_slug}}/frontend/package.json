@@ -1,10 +1,10 @@
 {
-  "name": "{{cookiecutter.project_name}}",
+  "name": "{{ cookiecutter.project_name }}",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "//scripts": {
-    "prepare": "Use this version of prepare command while working on cookiecutter itself cd ../../ && husky install ./{{cookiecutter.project_slug}}/frontend/.husky"
+    "prepare": "Use this version of prepare command while working on cookiecutter itself cd ../../ && husky install ./{{ cookiecutter.project_slug }}/frontend/.husky"
   },
   "scripts": {
     "dev": "vite",
