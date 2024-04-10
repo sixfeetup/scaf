@@ -12,7 +12,7 @@ load("ext://syncback", "syncback")
 docker_build(
     "backend",
     context="backend",
-    build_args={"DEVEL": "yes"},
+    build_args={"DEVEL": "yes", "TEST": "yes"},
     live_update=[
         sync("./backend/{{ cookiecutter.project_slug }}", "/app/src/{{ cookiecutter.project_slug }}"),
     ],
