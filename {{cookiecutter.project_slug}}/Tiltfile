@@ -10,16 +10,16 @@ print(
 load("ext://syncback", "syncback")
 
 docker_build(
-    "{{ cookiecutter.project_slug }}_local_django",
+    "backend",
     context="backend",
-    build_args={"DEVEL": "yes"},
+    build_args={"DEVEL": "yes", "TEST": "yes"},
     live_update=[
         sync("./backend/{{ cookiecutter.project_slug }}", "/app/src/{{ cookiecutter.project_slug }}"),
     ],
 )
 
 docker_build(
-    "{{ cookiecutter.project_slug }}_local_frontend",
+    "frontend",
     context="frontend",
     live_update=[
         sync("./frontend", "/app"),
@@ -32,7 +32,7 @@ k8s_yaml(
 
 syncback(
     "backend-sync",
-    "deploy/django",
+    "deploy/backend",
     "/app/src/{{ cookiecutter.project_slug }}/",
     target_dir="./backend/{{ cookiecutter.project_slug }}",
     rsync_path='/app/bin/rsync.tilt',
@@ -47,6 +47,6 @@ syncback(
 )
 
 k8s_resource(workload='frontend', port_forwards=3000)
-k8s_resource(workload='django', port_forwards=8000)
+k8s_resource(workload='backend', port_forwards=8000)
 k8s_resource(workload='mailhog', port_forwards=8025)
 k8s_resource(workload='postgres', port_forwards=5432)
