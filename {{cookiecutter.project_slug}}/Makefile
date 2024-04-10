@@ -1,50 +1,5 @@
-TAG?=dev
-PGPORT?=5432
-DUMPFILE?=sandbox.dump
-RELEASE_TAG?=unspecified
-
-sandbox-release: RELEASE_DATE :=  $(shell date +"%Y-%m-%d")
-sandbox-release: RELEASE_LETTER := $(strip $(shell git tag -l | grep $(RELEASE_DATE) | wc -l | tr 0123456789 abcdefghij ))
-sandbox-release: RELEASE_TAG := $(RELEASE_DATE)$(RELEASE_LETTER)
-
-build: export DOCKER_BUILDKIT = 1
-build: ./backend/Dockerfile backend/requirements/production.txt ./frontend/Dockerfile ## Create the build and runtime images
-	@docker build -t {{ cookiecutter.project_slug }}_local_django:$(TAG) ./backend
-{% if cookiecutter.create_react_frontend == 'y' %}
-	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend{% endif %}
-
-#build-front-end:  ## Build the front-end React app
-#	@docker-compose exec front-end npm run build
-
-destroy-data: ## Remove the database volumes and start with a clean database
-	@docker-compose stop db
-	@docker-compose rm -f db
-	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data
-	@docker volume rm {{ cookiecutter.project_slug }}_local_postgres_data_backups
-	@docker-compose up -d db
-
-
-clean: ## Remove the latest build
-	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:$(TAG)
-
-
-squeaky-clean:  clean  ## Removes the resources not associated with a container, this is a quick way to get rid of old images, containers, volumes, and networks
-	@docker rmi python:3.10-slim-bullseye
-	@docker rmi postgres:16-bullseye
-	@docker rmi mailhog/mailhog:v1.0.0
-	@docker rmi node:16-bullseye-slim
-	@docker rmi redis:6.2
-	@docker system prune -a
-	@for image in `docker images -f "dangling=true" -q`; do \
-		echo removing $$image && docker rmi $$image ; done
-
-update: ## Pull the latest image from a registry
-	@docker pull python:3.10-slim-bullseye
-	@docker pull postgres:16-bullseye
-	@docker pull mailhog/mailhog:v1.0.0
-	@docker pull node:16-bullseye-slim
-	@docker pull redis:6.2
-
+KUBECTL_EXEC_BACKEND = kubectl exec -it $$(kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}") -- bash
+KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") -- bash
 
 ## Release/Deployment Targets
 
@@ -67,59 +22,16 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 {% endif %}
 
 backend-test:  ## Execute backend tests
-	cd backend; \
-	pip --disable-pip-version-check install --no-deps -r requirements/production.txt; \
-	pip --disable-pip-version-check install --no-deps -r requirements/tests.txt; \
-	pytest --cov=./ --cov-report html --ds=config.settings.test
+	$(KUBECTL_EXEC_BACKEND) -c "pytest --cov=./ --cov-report html --ds=config.settings.test"
 
 {% if cookiecutter.create_react_frontend == 'y' %}
 frontend-test:  ## Execute frontend tests
-	cd frontend; \
-	npm install --legacy-peer-deps; \
-	npm run test
+	$(KUBECTL_EXEC_FRONTEND) -c "npm run test"
 
 test: backend-test frontend-test  ## Run all tests
 {% else %}
 test: backend-test  ## Run all tests
 {% endif %}
-
-sandbox-release: ## create release tag and push to master
-	@echo "release tag: $(RELEASE_TAG)"
-	@git tag $(RELEASE_TAG)
-	@git push --tags
-
-staging-release: ## update pipeline tag and execute
-ifeq ($(RELEASE_TAG), unspecified)
-	@echo "provide a valid RELEASE_TAG argument"
-	git tag -l
-endif
-	@echo "release tag: $(RELEASE_TAG)"
-	@git tag -l | grep $(RELEASE_TAG) | wc -l | awk '$$1 != 1 {print "RELEASE_TAG does not match any git tag"; exit 1 }'
-	@aws --profile={{ cookiecutter.project_slug }}-deploy ecr batch-get-image --repository-name {{ cookiecutter.project_slug }} --image-ids imageTag=$(RELEASE_TAG) \
-		| jq '.images | length'| awk '$$1 != 1 {print "RELEASE_TAG does not match any ECR images"; exit 1 }'
-	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline --name {{ cookiecutter.project_slug }}-staging \
-		| jq 'del(.metadata) | .pipeline.stages[0].actions[0].configuration.ImageTag = "$(RELEASE_TAG)"' \
-		| xargs -0 aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
-	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline start-pipeline-execution --name {{ cookiecutter.project_slug }}-staging
-
-prod-release: ## update pipeline tag and execute
-ifeq ($(RELEASE_TAG), unspecified)
-	@echo "provide a valid RELEASE_TAG argument"
-	git tag -l
-endif
-	@echo "release tag: $(RELEASE_TAG)"
-	@git tag -l | grep $(RELEASE_TAG) | wc -l | awk '$$1 != 1 {print "RELEASE_TAG does not match any git tag"; exit 1 }'
-	@aws --profile={{ cookiecutter.project_slug }}-deploy ecr batch-get-image --repository-name {{ cookiecutter.project_slug }} --image-ids imageTag=$(RELEASE_TAG) \
-		| jq '.images | length'| awk '$$1 != 1 {print "RELEASE_TAG does not match any ECR images"; exit 1 }'
-	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline --name {{ cookiecutter.project_slug }}-prod \
-		| jq 'del(.metadata) | .pipeline.stages[0].actions[0].configuration.ImageTag = "$(RELEASE_TAG)"' \
-		| xargs -0 aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline update-pipeline --cli-input-json 1>/dev/null
-	@aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline start-pipeline-execution --name {{ cookiecutter.project_slug }}-prod
-
-check-x-release = @aws --profile={{ cookiecutter.project_slug }}-deploy codepipeline get-pipeline-state --name {{ cookiecutter.project_slug }}-$(subst check-,,$(subst -release,,$@))  | jq '.stageStates[0].latestExecution.pipelineExecutionId as $$execId | { Pipeline: .pipelineName, Started: .stageStates[0].actionStates[0].latestExecution.lastStatusChange, Actions: .stageStates | map( .latestExecution.pipelineExecutionId as $$stage_execId | .actionStates | map( { (.actionName): (if $$stage_execId == $$execId then .latestExecution.status else "Pending" end) } ))  | flatten | add }'
-
-check-sandbox-release check-staging-release check-prod-release: ## check status of release pipeline
-	$(check-x-release)
 
 ## Development Targets
 
@@ -127,17 +39,11 @@ backend/requirements/local.txt: compile
 backend/requirements/production.txt: compile
 backend/requirements/tests.txt: compile
 
-build-dev: export DOCKER_BUILDKIT = 1
-build-dev: ./backend/Dockerfile backend/requirements/local.txt ./frontend/Dockerfile ## Create the dev build and runtime images
-	@docker build --build-arg DEVEL=yes --build-arg TEST=yes -t {{ cookiecutter.project_slug }}_local_django:dev ./backend
-{% if cookiecutter.create_react_frontend == 'y' %}
-	@docker build -t {{ cookiecutter.project_slug }}_local_frontend:$(TAG) ./frontend{% endif %}
-
 outdated: ## Show all the outdated packages with their latest versions in the container
-	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pip list --outdated
+	$(KUBECTL_EXEC_BACKEND) -c "pip list --outdated"
 
 pipdeptree: ## Show the dependencies of installed packages as a tree structure
-	@docker run --rm {{ cookiecutter.project_slug }}_local_django:$(TAG) pipdeptree
+	$(KUBECTL_EXEC_BACKEND) -c "pipdeptree"
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
 	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.10-slim-bullseye /bin/bash -c \
@@ -149,32 +55,15 @@ compile: backend/requirements/base.in backend/requirements/tests.in ## compile l
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in; \
 		 python -m piptools compile --upgrade --allow-unsafe --output-file /local/local.txt /local/local.in"
 
-load-dump: destroy-data ## Fresh load the data file passed in
-	@sleep 5
-	pg_restore -h localhost -p $(PGPORT) -j 4 -n public --no-owner -U {{ cookiecutter.project_slug }} -W -d {{ cookiecutter.project_slug }} $(DUMPFILE)
+shell-backend:  ## Shell into the running Django container
+	$(KUBECTL_EXEC_BACKEND)
 
-clean-dev: ## Force removal of the latest image
-	@docker rmi -f {{ cookiecutter.project_slug }}_local_django:dev
-
-up: ## start up the cluster locally
-	@docker-compose -f ./docker-compose.yml -f ./docker-compose.override.yml up
-
-down: ## shut down the cluster
-	@docker-compose -f ./docker-compose.yml down
-
-down-clean: ## Remove containers for services not defined in the docker-compose.yml file
-	@docker-compose -f ./docker-compose.yml down --remove-orphans
-
-shell:  ## Shell into the running Django container
-	@docker-compose exec django /bin/bash
+shell-frontend:
+	$(KUBECTL_EXEC_FRONTEND)
 
 .PHONY: secure
 secure:  ## Analyze dependencies for security issues
-	@docker-compose exec django safety check
-	#@docker-compose exec django pip-audit --desc
-
-node:  ## Shell into the running Node container
-	@docker-compose exec frontend /bin/bash
+	$(KUBECTL_EXEC_BACKEND) -c "safety check"
 
 sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
