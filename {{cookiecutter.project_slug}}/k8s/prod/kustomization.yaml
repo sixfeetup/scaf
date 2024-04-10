@@ -13,22 +13,6 @@ resources:
 patches:
   - path: patch-django.yaml
   - path: patch-react.yaml
-  - patch: |
-      $patch: delete
-      kind: Service
-      metadata:
-        name: mailhog
-    target:
-      kind: Service
-      name: mailhog
-  - patch: |
-      $patch: delete
-      kind: Deployment
-      metadata:
-        name: mailhog
-    target:
-      kind: Deployment
-      name: mailhog
 
 configMapGenerator:
   - name: app-config
