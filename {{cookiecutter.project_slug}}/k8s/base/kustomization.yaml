@@ -5,6 +5,5 @@ resources:
 {%- if cookiecutter.use_celery == "y" %}- ./celery.yaml{%- endif %}
 - ./app.configmap.yaml
 - ./django.yaml
-- ./mailhog.yaml
 - ./react.yaml
 - ./redis.yaml
