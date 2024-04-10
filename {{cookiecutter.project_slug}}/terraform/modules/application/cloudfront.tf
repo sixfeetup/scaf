@@ -1,4 +1,4 @@
-resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+resource "aws_cloudfront_origin_access_identity" "cluster_origin_access_identity" {
   comment = "${var.application}-${var.environment}"
 }
 
