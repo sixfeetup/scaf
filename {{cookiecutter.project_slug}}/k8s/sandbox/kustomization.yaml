@@ -3,16 +3,20 @@ kind: Kustomization
 namespace: {{ cookiecutter.project_dash }}-sandbox
 
 resources:
-  - ../base
-  - certificate.yaml
-  - cluster-issuer.yaml
-  - ingress-route.yaml
-  - postgres.yaml
+  - ../prod
+  - ../mailhog
   - secrets.yaml
 
 patches:
-  - path: patch-django.yaml
-  - path: patch-react.yaml
+- patch: |-
+    - op: replace
+      path: /spec/dnsNames
+      value:
+        - api.sandbox.{{ cookiecutter.domain_name }}
+        - k8s.sandbox.{{ cookiecutter.domain_name }}
+  target:
+    kind: Certificate
+    name: cluster-cert
 
 configMapGenerator:
   - name: app-config
