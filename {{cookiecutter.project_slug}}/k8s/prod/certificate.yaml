@@ -8,5 +8,5 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - "k8s.{{ cookiecutter.domain_name }}"
-  - "api.{{ cookiecutter.domain_name }}"
+  - api.{{ cookiecutter.domain_name }}
+  - k8s.{{ cookiecutter.domain_name }}

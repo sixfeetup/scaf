@@ -2,14 +2,28 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: {{ cookiecutter.project_dash }}-sandbox
 
-bases:
- - ../base
+resources:
+  - ../base
+  - certificate.yaml
+  - cluster-issuer.yaml
+  - ingress-route.yaml
+  - postgres.yaml
+  - secrets.yaml
 
 patches:
- - path: patches.yaml
+  - path: patch-django.yaml
+  - path: patch-react.yaml
 
 configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
      - ENVIRONMENT="sandbox"
+
+images:
+  - name: {{ cookiecutter.project_slug }}_local_django
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
+    newTag: latest
+  - name: {{ cookiecutter.project_slug }}_local_frontend
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
+    newTag: latest
