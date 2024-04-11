@@ -10,12 +10,6 @@ resources:
 patches:
 - patch: |-
     - op: replace
-      path: /metadata/name
-      value: cluster-sandbox-cert
-    - op: replace
-      path: /spec/secretName
-      value: cluster-sandbox-cert-tls
-    - op: replace
       path: /spec/issuerRef/name
       value: letsencrypt-staging
     - op: replace
@@ -33,9 +27,6 @@ patches:
     - op: replace
       path: /spec/routes/0/match
       value: Host(`api.sandbox.{{ cookiecutter.domain_name }}`)
-    - op: replace
-      path: /spec/tls/secretName
-      value: cluster-sandbox-cert-tls
   target:
     kind: IngressRoute
     name: backend-ingress
@@ -46,9 +37,6 @@ patches:
     - op: replace
       path: /spec/routes/0/match
       value: Host(`k8s.sandbox.{{ cookiecutter.domain_name }}`)
-    - op: replace
-      path: /spec/tls/secretName
-      value: cluster-sandbox-cert-tls
   target:
     kind: IngressRoute
     name: k8s-ingress
