@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: {{ cookiecutter.project_dash }}-prod
 
 resources:
- - ../base
+  - ../base
   - certificate.yaml
   - cluster-issuer.yaml
   - ingress-route.yaml

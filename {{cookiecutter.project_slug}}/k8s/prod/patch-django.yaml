@@ -1,12 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
+  name: backend
 spec:
   selector:
     matchLabels:
-      app: django
-      tier: backend
+      app: backend
   template:
     spec:
       imagePullSecrets:

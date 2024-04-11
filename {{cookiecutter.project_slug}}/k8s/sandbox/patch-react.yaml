@@ -5,8 +5,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: frontend
+      app: frontend
   template:
     spec:
       imagePullSecrets:
