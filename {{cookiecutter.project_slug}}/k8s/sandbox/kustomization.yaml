@@ -10,6 +10,15 @@ resources:
 patches:
 - patch: |-
     - op: replace
+      path: /metadata/name
+      value: cluster-sandbox-cert
+    - op: replace
+      path: /spec/secretName
+      value: cluster-sandbox-cert-tls
+    - op: replace
+      path: /spec/issuerRef/name
+      value: letsencrypt-staging
+    - op: replace
       path: /spec/dnsNames
       value:
         - api.sandbox.{{ cookiecutter.domain_name }}
@@ -17,6 +26,32 @@ patches:
   target:
     kind: Certificate
     name: cluster-cert
+- patch: |-
+    - op: replace
+      path: /metadata/annotations/cert-manager.io~1cluster-issuer
+      value: letsencrypt-staging
+    - op: replace
+      path: /spec/routes/0/match
+      value: Host(`api.sandbox.{{ cookiecutter.domain_name }}`)
+    - op: replace
+      path: /spec/tls/secretName
+      value: cluster-sandbox-cert-tls
+  target:
+    kind: IngressRoute
+    name: backend-ingress
+- patch: |-
+    - op: replace
+      path: /metadata/annotations/cert-manager.io~1cluster-issuer
+      value: letsencrypt-staging
+    - op: replace
+      path: /spec/routes/0/match
+      value: Host(`k8s.sandbox.{{ cookiecutter.domain_name }}`)
+    - op: replace
+      path: /spec/tls/secretName
+      value: cluster-sandbox-cert-tls
+  target:
+    kind: IngressRoute
+    name: k8s-ingress
 
 configMapGenerator:
   - name: app-config
@@ -25,9 +60,9 @@ configMapGenerator:
      - ENVIRONMENT="sandbox"
 
 images:
-  - name: {{ cookiecutter.project_slug }}_local_django
+  - name: backend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
-  - name: {{ cookiecutter.project_slug }}_local_frontend
+  - name: frontend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest

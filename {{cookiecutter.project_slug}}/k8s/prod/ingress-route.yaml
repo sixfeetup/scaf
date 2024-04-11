@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: django-ingress
+  name: backend-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-staging
 spec:
@@ -12,7 +12,7 @@ spec:
       match: Host(`api.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
-        - name: django
+        - name: backend
           port: 8000
   tls:
     secretName: cluster-cert-tls
@@ -31,7 +31,7 @@ spec:
       match: Host(`k8s.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
-        - name: django
+        - name: backend
           port: 8000
   tls:
     secretName: cluster-cert-tls

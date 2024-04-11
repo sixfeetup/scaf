@@ -21,9 +21,9 @@ configMapGenerator:
      - ENVIRONMENT="production"
 
 images:
-  - name: {{ cookiecutter.project_slug }}_local_django
+  - name: backend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
-  - name: {{ cookiecutter.project_slug }}_local_frontend
+  - name: frontend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest
