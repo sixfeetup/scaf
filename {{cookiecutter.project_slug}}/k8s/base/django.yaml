@@ -69,7 +69,7 @@ spec:
           command: [
               "sh",
               "-c",
-              "until pg_isready -h postgres -p 5432;
+              "until pg_isready -h $(POSTGRES_HOST) -p 5432;
               do echo waiting for postgres; sleep 2; done;",
             ]
         - name: backend-migration
