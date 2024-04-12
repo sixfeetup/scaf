@@ -11,8 +11,31 @@ resources:
   - secrets.yaml
 
 patches:
-  - path: patch-django.yaml
-  - path: patch-react.yaml
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/command
+      value: ["daphne"]
+    - op: replace
+      path: /spec/template/spec/containers/0/args
+      value: ["--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]
+    - op: add
+      path: /spec/template/spec/imagePullSecrets
+      value: 
+        - name: regcred
+    - op: replace
+      path: /spec/template/spec/initContainers/0/command
+      value: ["sh", "-c", "until pg_isready -h postgres-r -p 5432; do echo waiting for postgres; sleep 2; done;"]
+  target:
+    kind: Deployment
+    name: backend
+- patch: |-
+    - op: add
+      path: /spec/template/spec/imagePullSecrets
+      value: 
+        - name: regcred
+  target:
+    kind: Deployment
+    name: frontend
 
 configMapGenerator:
   - name: app-config

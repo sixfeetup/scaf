@@ -5,9 +5,12 @@ namespace: {{ cookiecutter.project_dash }}-sandbox
 resources:
   - ../prod
   - ../mailhog
-  - secrets.yaml
 
 patches:
+- target:
+    kind: SealedSecret
+    name: secrets-config
+  path: secrets.yaml
 - patch: |-
     - op: replace
       path: /spec/issuerRef/name

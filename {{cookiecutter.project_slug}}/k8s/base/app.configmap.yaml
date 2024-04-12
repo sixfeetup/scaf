@@ -15,6 +15,9 @@ data:
   POSTGRES_DB: "{{ cookiecutter.project_slug }}"
   POSTGRES_USER: "{{ cookiecutter.project_slug }}"
   REDIS_URL: "redis://redis:6379/1"
+{%- if cookiecutter.mail_service == 'Mailgun' %}
+  MAILGUN_DOMAIN: "{{ cookiecutter.domain_name }}"
+  MAILGUN_API_URL: "https://api.mailgun.net/v3"{%- endif %}
 {%- if cookiecutter.use_celery == "y" %}
   CELERY_BROKER_URL: "redis://redis:6379/0"
   FLOWER_BROKER_URL: "redis://redis:6379/0"

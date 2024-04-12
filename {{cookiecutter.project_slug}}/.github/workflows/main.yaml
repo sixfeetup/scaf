@@ -60,7 +60,7 @@ jobs:
       - name: Run backend tests
         run: make backend-test
         env:
-          DATABASE_URL: postgres://{{ cookiecutter.project_slug }}:TESTPASSWORD@localhost:5432/{{ cookiecutter.project_slug }}
+          DATABASE_URL: postgresql://{{ cookiecutter.project_slug }}:TESTPASSWORD@localhost:5432/{{ cookiecutter.project_slug }}
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
 {% if cookiecutter.use_celery == 'y' %}          CELERY_BROKER_URL: redis://127.0.0.1:6379/0{% endif %}

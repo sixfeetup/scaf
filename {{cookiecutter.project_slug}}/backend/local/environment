@@ -9,7 +9,7 @@ DJANGO_SECURE_SSL_REDIRECT=False
 POSTGRES_USER={{ cookiecutter.project_slug }}
 POSTGRES_PASSWORD=CHANGEME
 
-DATABASE_URL=postgres://{{ cookiecutter.project_slug }}:CHANGEME@db:5432/{{ cookiecutter.project_slug }}
+DATABASE_URL=postgresql://{{ cookiecutter.project_slug }}:CHANGEME@db:5432/{{ cookiecutter.project_slug }}
 
 REDIS_URL=redis://redis:6379/1
 {%- if cookiecutter.use_celery == "y" %}
