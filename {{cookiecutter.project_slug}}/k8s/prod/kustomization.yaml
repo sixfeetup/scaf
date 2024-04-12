@@ -25,6 +25,22 @@ patches:
     - op: replace
       path: /spec/template/spec/initContainers/0/command
       value: ["sh", "-c", "until pg_isready -h postgres-r -p 5432; do echo waiting for postgres; sleep 2; done;"]
+    - op: add
+      path: /spec/template/spec/initContainers/1/env
+      value:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
   target:
     kind: Deployment
     name: backend
