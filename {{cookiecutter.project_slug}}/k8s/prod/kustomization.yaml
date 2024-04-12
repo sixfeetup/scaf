@@ -1,31 +1,73 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: {{ cookiecutter.project_dash }}
+namespace: {{ cookiecutter.project_dash }}-prod
 
-bases:
- - ../base
+resources:
+  - ../base
+  - certificate.yaml
+  - cluster-issuer.yaml
+  - ingress-route.yaml
+  - postgres.cnpg.yaml
+  - secrets.yaml
 
 patches:
-- path: patches.yaml
-- patch: |
-    $patch: delete
-    kind: Service
-    metadata:
-      name: mailhog
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/command
+      value: ["daphne"]
+    - op: replace
+      path: /spec/template/spec/containers/0/args
+      value: ["--bind", "0.0.0.0", "--port", "8000", "--ping-interval", "15", "--ping-timeout", "5", "config.asgi:application"]
+    - op: add
+      path: /spec/template/spec/imagePullSecrets
+      value: 
+        - name: regcred
+    - op: replace
+      path: /spec/template/spec/initContainers/0/command
+      value: ["sh", "-c", "until pg_isready -h $(POSTGRES_HOST); do echo waiting for postgres; sleep 2; done;"]
+    - op: add
+      path: /spec/template/spec/initContainers/1/env
+      value:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: host
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
   target:
-    kind: Service
-    name: mailhog
-- patch: |
-    $patch: delete
     kind: Deployment
-    metadata:
-      name: mailhog
+    name: backend
+- patch: |-
+    - op: add
+      path: /spec/template/spec/imagePullSecrets
+      value: 
+        - name: regcred
   target:
     kind: Deployment
-    name: mailhog
+    name: frontend
 
 configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
      - ENVIRONMENT="production"
+
+images:
+  - name: backend
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
+    newTag: latest
+  - name: frontend
+    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
+    newTag: latest
