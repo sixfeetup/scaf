@@ -63,6 +63,7 @@ configMapGenerator:
     behavior: merge
     literals:
      - ENVIRONMENT="production"
+     - DJANGO_SETTINGS_MODULE="config.settings.production"
 
 images:
   - name: backend
