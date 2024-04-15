@@ -6,4 +6,5 @@ resources:
 - ./django.yaml
 - ./react.yaml
 - ./redis.yaml
-{%- if cookiecutter.use_celery == "y" %}- ./celery.yaml{%- endif %}
+{%- if cookiecutter.use_celery == "y" %}
+- ./celery.yaml{%- endif %}
