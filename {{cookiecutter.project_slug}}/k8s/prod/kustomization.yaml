@@ -22,6 +22,14 @@ patches:
       path: /spec/template/spec/imagePullSecrets
       value: 
         - name: regcred
+    - op: add
+      path: /spec/template/spec/initContainers/0/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: host
     - op: replace
       path: /spec/template/spec/initContainers/0/command
       value: ["sh", "-c", "until pg_isready -h $(POSTGRES_HOST); do echo waiting for postgres; sleep 2; done;"]

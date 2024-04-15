@@ -72,9 +72,6 @@ spec:
               "until pg_isready -h $(POSTGRES_HOST);
               do echo waiting for postgres; sleep 2; done;",
             ]
-          envFrom:
-            - secretRef:
-                name: secrets-config
         - name: backend-migration
           image: backend:latest
           command: ["python", "manage.py", "migrate"]
