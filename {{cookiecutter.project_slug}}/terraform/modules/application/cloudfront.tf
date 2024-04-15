@@ -4,7 +4,7 @@ resource "aws_cloudfront_origin_access_identity" "cluster_origin_access_identity
 
 resource "aws_cloudfront_origin_access_control" "static_storage" {
   name                              = "static_storage"
-  description                       = "Django Backend Bucket Access Policy"
+  description                       = "Backend Bucket Access Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -55,6 +55,12 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = aws_s3_bucket.static_storage.id
     viewer_protocol_policy = "redirect-to-https"
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {
