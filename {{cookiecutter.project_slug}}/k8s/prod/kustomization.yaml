@@ -63,6 +63,8 @@ configMapGenerator:
     behavior: merge
     literals:
      - ENVIRONMENT="production"
+     - DJANGO_SETTINGS_MODULE="config.settings.production"
+     - AWS_S3_CUSTOM_DOMAIN="{{ cookiecutter.domain_name }}"
 
 images:
   - name: backend

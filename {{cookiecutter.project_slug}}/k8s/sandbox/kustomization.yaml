@@ -49,11 +49,12 @@ configMapGenerator:
     behavior: merge
     literals:
      - ENVIRONMENT="sandbox"
+     - DJANGO_SETTINGS_MODULE="config.settings.production"
+     - DJANGO_CSRF_TRUSTED_ORIGINS="https://sandbox.{{ cookiecutter.domain_name }}"
+     - AWS_S3_CUSTOM_DOMAIN="sandbox.{{ cookiecutter.domain_name }}"
 
 images:
-  - name: backend
-    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
+  - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
-  - name: frontend
-    newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
+  - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest
