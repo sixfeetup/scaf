@@ -6,3 +6,17 @@ resources:
 - ../mailhog
 - ./postgres.yaml
 - ./secrets.yaml
+
+patches:
+- patch: |-
+    - op: add
+      path: /spec/template/spec/initContainers/0/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: secrets-config
+              key: POSTGRES_HOST
+  target:
+    kind: Deployment
+    name: backend

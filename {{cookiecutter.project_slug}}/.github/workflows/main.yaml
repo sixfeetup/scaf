@@ -22,6 +22,15 @@ jobs:
           node-version: '16'
       - name: Frontend Lint & Typecheck & Test
         run: make check-lint-and-test-frontend
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Frontend Unit Tests
+        run: CI=true make frontend-test
 {% endif %}
   backend-test:
     runs-on: ubuntu-latest
@@ -58,7 +67,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: Run backend tests
-        run: make backend-test
+        run: CI=true make backend-test
         env:
           DATABASE_URL: postgresql://{{ cookiecutter.project_slug }}:TESTPASSWORD@localhost:5432/{{ cookiecutter.project_slug }}
           POSTGRES_HOST: postgres
