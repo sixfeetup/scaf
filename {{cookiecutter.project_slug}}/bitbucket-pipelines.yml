@@ -51,7 +51,7 @@ definitions:
           - make check-lint-and-test-frontend
 
     - step: &check-test-frontend
-        name: Frontend Lint & Typecheck & Test
+        name: Frontend Unit Tests
         image: node:16-bullseye
         caches:
           - node
