@@ -17,8 +17,8 @@ Run apply in the bootstrap directory first to set up the terraform remote state 
 * `./management`  
 Set up the ECR repositories for the docker images, as well as IAM users and route 53 zone, this should be run after bootstrap.
 
-* `./ec2-cluster`  
-Sets up an EC2 instance and deploys a k3s cluster on it. For more information follow ./ec2_cluster/README.md  
+* `./cluster-k3s`
+Sets up an EC2 instance and deploys a k3s cluster on it. For more information follow ./cluster-k3s/README.md  
 Note this will create a t2.medium instance that does not fall under the free tier.  
 This should be set up before attempting to deploy prod/sandbox.
 
