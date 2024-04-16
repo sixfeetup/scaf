@@ -26,7 +26,7 @@ definitions:
 {% if cookiecutter.use_celery == 'y' %}
           - export CELERY_BROKER_URL=redis://127.0.0.1:6379/0
 {% endif %}
-          - make backend-test
+          - CI=true make backend-test
 
         services:
 {% if cookiecutter.use_celery == 'y' %}
