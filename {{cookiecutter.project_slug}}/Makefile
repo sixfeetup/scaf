@@ -23,11 +23,12 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 
 backend-test: ## Execute backend tests
 ifeq ($(CI),true)
+	cd backend; \
 	pip install \
 		-r requirements/production.txt \
 		-r requirements/base.txt \
 		-r requirements/tests.txt; \
-	cd backend/{{ cookiecutter.project_slug }}; \
+	cd {{ cookiecutter.project_slug }}; \
 	pytest --cov=./ --cov-report html --ds=config.settings.test
 else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
