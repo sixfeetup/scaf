@@ -23,7 +23,12 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 
 backend-test: ## Execute backend tests
 ifeq ($(CI),true)
-	cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test
+	cd backend/{{ cookiecutter.project_slug }}; \
+	pip install \
+		-r requirements/production.txt \
+		-r requirements/base.txt \
+		-r requirements/tests.txt; \
+	pytest --cov=./ --cov-report html --ds=config.settings.test
 else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
 endif
@@ -31,6 +36,8 @@ endif
 {% if cookiecutter.create_react_frontend == 'y' %}
 frontend-test: ## Execute frontend tests
 ifeq ($(CI),true)
+	cd frontend/; \
+	npm ci; \
 	npm run test
 else
 	$(KUBECTL_EXEC_FRONTEND) -c "npm run test"

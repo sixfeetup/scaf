@@ -49,6 +49,14 @@ definitions:
           - node
         script:
           - make check-lint-and-test-frontend
+
+    - step: &check-test-frontend
+        name: Frontend Lint & Typecheck & Test
+        image: node:16-bullseye
+        caches:
+          - node
+        script:
+          - CI=true make frontend-test
 {% endif %}
 
 pipelines:
