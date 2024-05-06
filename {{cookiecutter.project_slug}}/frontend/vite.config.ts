@@ -14,7 +14,7 @@ export default ({ mode }) => {
       port: 3000,
       proxy: {
         '/api': {
-          target: process.env.VITE_PROXY_TARGET || 'http://django:8000',
+          target: process.env.VITE_PROXY_TARGET || 'http://backend:8000',
           changeOrigin: false
         }
       }

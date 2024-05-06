@@ -3,17 +3,12 @@ kind: Cluster
 metadata:
   name: postgres
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
-    environment: dev
+    app: postgres
 spec:
   instances: 1
-
   envFrom:
   - configMapRef:
       name: app-config
-
   primaryUpdateStrategy: unsupervised
-
   storage:
     size: 2Gi

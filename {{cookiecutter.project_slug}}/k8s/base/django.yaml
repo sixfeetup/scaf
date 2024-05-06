@@ -1,15 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: django
+  name: backend
   labels:
-    app: django
-    tier: backend
+    app: backend
 spec:
   type: ClusterIP
   selector:
-    app: django
-    tier: backend
+    app: backend
   ports:
     - port: 8000
       targetPort: http-server
@@ -17,34 +15,31 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
+  name: backend
   labels:
-    app: django
-    tier: backend
+    app: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django
-      tier: backend
+      app: backend
   template:
     metadata:
       labels:
-        app: django
-        tier: backend
+        app: backend
     spec:
       containers:
-        - name: django
-          image: {{ cookiecutter.project_slug }}_local_django:latest
+        - name: backend
+          image: backend:latest
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
           ports:
             - name: http-server
               containerPort: 8000
           envFrom:
-            - configMapRef:
-                name: app-config
             - secretRef:
                 name: secrets-config
+            - configMapRef:
+                name: app-config
           livenessProbe:
             httpGet:
               path: /healthz
@@ -74,14 +69,14 @@ spec:
           command: [
               "sh",
               "-c",
-              "until pg_isready -h postgres -p 5432;
+              "until pg_isready -h $(POSTGRES_HOST);
               do echo waiting for postgres; sleep 2; done;",
             ]
-        - name: django-migration
-          image: {{ cookiecutter.project_slug }}_local_django:latest
+        - name: backend-migration
+          image: backend:latest
           command: ["python", "manage.py", "migrate"]
           envFrom:
-            - configMapRef:
-                name: app-config
             - secretRef:
                 name: secrets-config
+            - configMapRef:
+                name: app-config

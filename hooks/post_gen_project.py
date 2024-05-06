@@ -22,7 +22,7 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_react_frontend = "{{cookiecutter.create_react_frontend}}" == "y"
+create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
 if not create_react_frontend:
     shutil.rmtree("frontend")
 
@@ -201,12 +201,12 @@ def set_flags_in_settings_files():
 def remove_drf_starter_files():
     os.remove(os.path.join("backend", "config", "api_router.py"))
     shutil.rmtree(
-        os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api")
+        os.path.join("backend", "{{ cookiecutter.project_slug }}", "users", "api")
     )
     os.remove(
         os.path.join(
             "backend",
-            "{{cookiecutter.project_slug}}",
+            "{{ cookiecutter.project_slug }}",
             "users",
             "tests",
             "test_drf_urls.py",
@@ -215,7 +215,7 @@ def remove_drf_starter_files():
     os.remove(
         os.path.join(
             "backend",
-            "{{cookiecutter.project_slug}}",
+            "{{ cookiecutter.project_slug }}",
             "users",
             "tests",
             "test_drf_views.py",

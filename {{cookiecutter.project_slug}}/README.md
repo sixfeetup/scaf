@@ -64,8 +64,7 @@ To prepare your development environment you can use the following commands:
 
     $ git clone [repo-url]
     $ cd {{ cookiecutter.project_slug }}
-    $ make build-dev
-    $ make up
+    $ tilt up
 
 ## Next steps
 
@@ -98,8 +97,8 @@ Creating a new secret involves encrypting the secret using kubeseal. [Installing
 
 Configure kubernetes to your current project config and context, making sure you are in the correct prod/sandbox environment
 
-    $ export KUBECONFIG=~/.kube/config:~/.kube/{{cookiecutter.project_slug}}.ec2.config
-    $ kubectl config use-context {{cookiecutter.project_slug}}-ec2-cluster
+    $ export KUBECONFIG=~/.kube/config:~/.kube/{{ cookiecutter.project_slug }}.ec2.config
+    $ kubectl config use-context {{ cookiecutter.project_slug }}-ec2-cluster
 
 To ease managing your passwords and secrets you can store the values in 1Password. The `.envrc` file will read from 1Password and export the values to the enviroment.
 You will need to install and configure [1Password cli](https://developer.1password.com/docs/cli/get-started/)
@@ -117,7 +116,7 @@ When a secret is added/removed update the `k8s/templates` files, update the envi
 
 The decrypted values can be retrieved running:
 
-    $ kubectl get secret secrets-config -n {{cookiecutter.project_dash}} -o yaml > unsealed_secrets.yaml
+    $ kubectl get secret secrets-config -n {{ cookiecutter.project_dash }} -o yaml > unsealed_secrets.yaml
 
 {% if cookiecutter.use_sentry == 'y' %}
 ## Adding Sentry to Projects

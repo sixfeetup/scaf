@@ -8,28 +8,27 @@ data:
   DJANGO_ADMIN_URL: "admin/"
   DJANGO_SETTINGS_MODULE: "config.settings.local"
   DJANGO_SECRET_KEY: "CHANGEME"
-  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,django,{{ cookiecutter.domain_name }}"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,django,.{{ cookiecutter.domain_name }}"
   DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost,https://{{ cookiecutter.domain_name }}"
   DJANGO_SECURE_SSL_REDIRECT: "False"
-  POSTGRES_USER: "{{ cookiecutter.project_slug }}"
-  POSTGRES_PASSWORD: "CHANGEME"
   PGDATA: "/var/lib/postgresql/data/pgdata"
-  DATABASE_URL: "psql://{{ cookiecutter.project_slug }}:CHANGEME@postgres:5432/{{ cookiecutter.project_slug }}"
+  POSTGRES_DB: "{{ cookiecutter.project_slug }}"
+  POSTGRES_USER: "{{ cookiecutter.project_slug }}"
   REDIS_URL: "redis://redis:6379/1"
-  {%- if cookiecutter.use_celery == "y" %}
+{%- if cookiecutter.mail_service == 'Mailgun' %}
+  MAILGUN_DOMAIN: "{{ cookiecutter.domain_name }}"
+  MAILGUN_API_URL: "https://api.mailgun.net/v3"{%- endif %}
+{%- if cookiecutter.use_celery == "y" %}
   CELERY_BROKER_URL: "redis://redis:6379/0"
   FLOWER_BROKER_URL: "redis://redis:6379/0"
   FLOWER_ADDRESS: "0.0.0.0"
-  FLOWER_PORT: "5555"
-  {%- endif %}
+  FLOWER_PORT: "5555"{%- endif %}
 
   # S3 storage access
-  AWS_S3_ACCESS_KEY_ID: CHANGEME_S3_IAM_USER
-  DJANGO_AWS_S3_REGION_NAME: {{cookiecutter.aws_region}}
+  DJANGO_AWS_REGION_NAME: "{{ cookiecutter.aws_region }}"
   DJANGO_AWS_STORAGE_BUCKET_NAME: "CHANGEME_S3_BUCKET_NAME"
 {% if cookiecutter.use_sentry == 'y' %}
   SENTRY_DSN_BACKEND: ""
   ENVIRONMENT: "dev"
   VITE_SENTRY_DSN_FRONTEND: ""
-  VITE_ENVIRONMENT: "dev"
-{% endif %}
+  VITE_ENVIRONMENT: "dev"{% endif %}

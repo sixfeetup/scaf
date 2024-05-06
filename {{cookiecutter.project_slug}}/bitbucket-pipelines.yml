@@ -8,8 +8,8 @@ definitions:
     postgres:
       image: postgres:latest
       environment:
-        POSTGRES_DB: {{cookiecutter.project_slug}}
-        POSTGRES_USER: {{cookiecutter.project_slug}}
+        POSTGRES_DB: {{ cookiecutter.project_slug }}
+        POSTGRES_USER: {{ cookiecutter.project_slug }}
         POSTGRES_PASSWORD: TESTPASSWORD
 {% if cookiecutter.use_celery == 'y' %}
     redis:
@@ -22,11 +22,11 @@ definitions:
         caches:
           - pip
         script:
-          - export DATABASE_URL=postgres://{{cookiecutter.project_slug}}:TESTPASSWORD@localhost:5432/{{cookiecutter.project_slug}}
+          - export DATABASE_URL=postgres://{{ cookiecutter.project_slug }}:TESTPASSWORD@localhost:5432/{{ cookiecutter.project_slug }}
 {% if cookiecutter.use_celery == 'y' %}
           - export CELERY_BROKER_URL=redis://127.0.0.1:6379/0
 {% endif %}
-          - make backend-test
+          - CI=true make backend-test
 
         services:
 {% if cookiecutter.use_celery == 'y' %}
@@ -49,6 +49,14 @@ definitions:
           - node
         script:
           - make check-lint-and-test-frontend
+
+    - step: &check-test-frontend
+        name: Frontend Unit Tests
+        image: node:16-bullseye
+        caches:
+          - node
+        script:
+          - CI=true make frontend-test
 {% endif %}
 
 pipelines:

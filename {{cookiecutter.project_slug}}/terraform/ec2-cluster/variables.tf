@@ -38,7 +38,7 @@ variable "app_instance" {
 
 variable "path_to_public_key" {
   type    = string
-  default = "~/.ssh/{{cookiecutter.project_slug}}_default_key.pub"
+  default = "~/.ssh/{{ cookiecutter.project_slug }}_default_key.pub"
 }
 
 variable "tags" {
@@ -46,8 +46,8 @@ variable "tags" {
 
   default = {
     automation          = "terraform"
-    "automation.config" = "{{cookiecutter.project_dash}}"
-    application         = "{{cookiecutter.project_dash}}"
+    "automation.config" = "{{ cookiecutter.project_dash }}"
+    application         = "{{ cookiecutter.project_dash }}"
   }
 }
 

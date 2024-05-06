@@ -1,14 +1,30 @@
-resource "aws_cloudfront_origin_access_identity" "static_storage" {
+resource "aws_cloudfront_origin_access_identity" "cluster_origin_access_identity" {
   comment = "${var.application}-${var.environment}"
+}
+
+resource "aws_cloudfront_origin_access_control" "static_storage" {
+  name                              = "static_storage"
+  description                       = "Backend Bucket Access Policy"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
 
 resource "aws_cloudfront_distribution" "ec2_cluster" {
   enabled             = true
-  aliases             = [var.domain_zone]
+  aliases             = [var.domain]
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
   default_root_object = ""
 
+  // Django static storage s3 bucket
+  origin {
+    domain_name              = aws_s3_bucket.static_storage.bucket_regional_domain_name
+    origin_id                = aws_s3_bucket.static_storage.id
+    origin_access_control_id = aws_cloudfront_origin_access_control.static_storage.id
+  }
+
+  // Kubernetes cluster
   origin {
     domain_name = var.cluster_domain
     origin_id   = var.cluster_id
@@ -31,6 +47,20 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = var.cluster_id
+  }
+
+  ordered_cache_behavior {
+    path_pattern           = "/static/*"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = aws_s3_bucket.static_storage.id
+    viewer_protocol_policy = "redirect-to-https"
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   viewer_certificate {

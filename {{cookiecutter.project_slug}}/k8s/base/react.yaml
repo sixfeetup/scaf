@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: frontend
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: frontend
-    environment: dev
+    app: frontend
 spec:
   type: ClusterIP
   selector:
-    app: {{ cookiecutter.project_slug }}
-    tier: frontend
+    app: frontend
   ports:
     - port: 3000
       targetPort: http-server
@@ -20,24 +17,20 @@ kind: Deployment
 metadata:
   name: frontend
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: frontend
-    environment: dev
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: frontend
+      app: frontend
   template:
     metadata:
       labels:
-        app: {{ cookiecutter.project_slug }}
-        tier: frontend
+        app: frontend
     spec:
       containers:
         - name: frontend
-          image: {{ cookiecutter.project_slug }}_local_frontend:latest
+          image: frontend:latest
           ports:
             - name: http-server
               containerPort: 3000
@@ -45,7 +38,7 @@ spec:
             - name: PORT
               value: "3000"
             - name: DJANGO_ADDRESS
-              value: django:8000
+              value: backend:8000
           envFrom:
             - configMapRef:
                 name: app-config
