@@ -61,11 +61,40 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # ------------------------------------------------------------------------------
 # https://django-storages.readthedocs.io/en/latest/#installation
 INSTALLED_APPS += ["storages"]  # noqa F405
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_STORAGE_BUCKET_NAME = env("DJANGO_AWS_STORAGE_BUCKET_NAME")
-# It is required to set AWS_S3_CUSTOM_DOMAIN when the bucket is private and static content is served through CloudFront
-AWS_S3_CUSTOM_DOMAIN = env("AWS_S3_CUSTOM_DOMAIN", default=None)
-AWS_S3_URL_PROTOCOL = env("AWS_S3_CUSTOM_DOMAIN_PROTOCOL", default="https:")
+
+# STORAGES
+
+USE_S3 = env.bool("USE_S3", default=True)
+AWS_REGION = env("AWS_REGION", default="us-east-1")
+AWS_ACCESS_KEY_ID = env("AWS_S3_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_S3_SECRET_ACCESS_KEY")
+AWS_S3_BUCKET_NAME_DATA = env("AWS_S3_BUCKET_NAME_DATA")
+AWS_S3_BUCKET_NAME_MEDIA = env("AWS_S3_BUCKET_NAME_MEDIA")
+AWS_STORAGE_BUCKET_NAME = AWS_S3_BUCKET_NAME_MEDIA
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
+
+AWS_S3_CUSTOM_DOMAIN = env(
+    "AWS_S3_CUSTOM_DOMAIN", default=f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+)
+AWS_S3_URL_PROTOCOL = env("AWS_S3_URL_PROTOCOL", default="https:")
+
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+
+STORAGES = {
+    "default": {
+        # "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "jackiebot.utils.storages.MediaStorage",
+    },
+    "staticfiles": {
+        # "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "jackiebot.utils.storages.StaticStorage",
+    },
+}
+
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_QUERYSTRING_AUTH = False
 # DO NOT change these unless you know what you're doing.
@@ -74,20 +103,6 @@ _AWS_EXPIRY = 60 * 60 * 24 * 7
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
 }
-#  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_DEFAULT_ACL = "public-read"
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-AWS_S3_REGION_NAME = env("DJANGO_AWS_REGION_NAME", default="us-east-1")
-
-# STATIC
-# ------------------------
-STATICFILES_STORAGE = "{{ cookiecutter.project_slug }}.utils.storages.StaticStorage"
-STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
-
-# MEDIA
-# ------------------------------------------------------------------------------
-DEFAULT_FILE_STORAGE = "{{ cookiecutter.project_slug }}.utils.storages.MediaStorage"
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -138,8 +153,13 @@ ANYMAIL = {
 }
 {%- elif cookiecutter.mail_service == 'Amazon SES' %}
 # https://anymail.readthedocs.io/en/stable/esps/amazon_ses/
-EMAIL_BACKEND = "anymail.backends.amazon_ses.EmailBackend"
-ANYMAIL = {}
+EMAIL_BACKEND = "django_ses.SESBackend"
+
+AWS_SES_ACCESS_KEY_ID = env("AWS_SES_ACCESS_KEY_ID")
+AWS_SES_SECRET_ACCESS_KEY = env("AWS_SES_SECRET_ACCESS_KEY")
+AWS_SES_REGION_NAME = env("AWS_REGION", default="us-east-1")
+AWS_SES_REGION_ENDPOINT = f"email.{AWS_SES_REGION_NAME}.amazonaws.com"
+USE_SES_V2 = True
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
 # https://anymail.readthedocs.io/en/stable/esps
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

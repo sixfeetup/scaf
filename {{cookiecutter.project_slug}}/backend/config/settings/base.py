@@ -331,5 +331,7 @@ sentry_sdk.init(
 )
 {% endif %}
 
+USE_S3 = env.bool("USE_S3", default=False)
+
 # Your stuff...
 # ------------------------------------------------------------------------------
