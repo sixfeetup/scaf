@@ -27,6 +27,8 @@ resource "aws_iam_policy" "application_user_policy" {
                 "s3:PutObjectAcl"
             ],
             "Resource": [
+                "${aws_s3_bucket.data_storage.arn}/*",
+                "${aws_s3_bucket.data_storage.arn}",
                 "${aws_s3_bucket.static_storage.arn}/*",
                 "${aws_s3_bucket.static_storage.arn}"
             ]
@@ -34,8 +36,7 @@ resource "aws_iam_policy" "application_user_policy" {
         {
             "Effect": "Allow",
             "Action": [
-              "SES:SendEmail",
-              "SES:SendRawEmail"
+              "ses:*"
             ],
             "Resource": "*"
         }

@@ -1,5 +1,20 @@
+resource "aws_s3_bucket" "data_storage" {
+  bucket_prefix = "${var.application}-data-${var.environment}-"
+  tags          = local.common_tags
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "data_storage" {
+  bucket = aws_s3_bucket.data_storage.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
 resource "aws_s3_bucket" "static_storage" {
-  bucket_prefix = "${var.application}-${var.environment}-"
+  bucket_prefix = "${var.application}-static-${var.environment}-"
   tags          = local.common_tags
 }
 

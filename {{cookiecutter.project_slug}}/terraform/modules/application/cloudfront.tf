@@ -3,7 +3,7 @@ resource "aws_cloudfront_origin_access_identity" "cluster_origin_access_identity
 }
 
 resource "aws_cloudfront_origin_access_control" "static_storage" {
-  name                              = "static_storage"
+  name                              = "static_storage_${var.environment}"
   description                       = "Backend Bucket Access Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
@@ -38,8 +38,8 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
   }
 
   default_cache_behavior {
-    # Using the CachingOptimized policy:
-    cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
+    # Using the CachingDisabled policy:
+    cache_policy_id = data.aws_cloudfront_cache_policy.caching_disabled.id
     # Using the AllViewerExceptHostHeader origin policy
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
 
@@ -50,17 +50,13 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
   }
 
   ordered_cache_behavior {
+    # Using the CachingOptimized policy:
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
     path_pattern           = "/static/*"
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = aws_s3_bucket.static_storage.id
     viewer_protocol_policy = "redirect-to-https"
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
   }
 
   viewer_certificate {

@@ -10,7 +10,7 @@ resource "aws_acm_certificate" "cert" {
 resource "aws_route53_record" "cert" {
   name     = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_name
   type     = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
-  zone_id  = data.aws_route53_zone.route_zone.id
+  zone_id  = data.aws_route53_zone.route_zone.zone_id
   records  = [tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value]
   ttl      = 300
 }
