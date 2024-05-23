@@ -87,11 +87,11 @@ MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
 STORAGES = {
     "default": {
         # "BACKEND": "storages.backends.s3.S3Storage",
-        "BACKEND": "jackiebot.utils.storages.MediaStorage",
+        "BACKEND": "{{ cookiecutter.project_slug }}.utils.storages.MediaStorage",
     },
     "staticfiles": {
         # "BACKEND": "storages.backends.s3.S3Storage",
-        "BACKEND": "jackiebot.utils.storages.StaticStorage",
+        "BACKEND": "{{ cookiecutter.project_slug }}.utils.storages.StaticStorage",
     },
 }
 
