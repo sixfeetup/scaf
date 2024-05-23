@@ -6,9 +6,6 @@ metadata:
     app: postgres
 spec:
   instances: 1
-  envFrom:
-  - configMapRef:
-      name: app-config
   primaryUpdateStrategy: unsupervised
   storage:
     size: 2Gi

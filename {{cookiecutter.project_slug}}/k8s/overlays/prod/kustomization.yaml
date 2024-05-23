@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: {{ cookiecutter.project_dash }}-prod
 
 resources:
-  - ../base
+  - ../../base
   - certificate.yaml
   - cluster-issuer.yaml
   - ingress-route.yaml
@@ -33,6 +33,9 @@ patches:
     - op: replace
       path: /spec/template/spec/initContainers/0/command
       value: ["sh", "-c", "until pg_isready -h $(POSTGRES_HOST); do echo waiting for postgres; sleep 2; done;"]
+    - op: replace
+      path: /spec/template/spec/initContainers/2/args
+      value: ["manage.py", "collectstatic", "--noinput"]
     - op: add
       path: /spec/template/spec/initContainers/1/env
       value:
@@ -57,6 +60,52 @@ patches:
   target:
     kind: Deployment
     name: backend
+{% if cookiecutter.use_celery == 'y' %}
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: host
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
+    - op: add
+      path: /spec/template/spec/containers/1/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: host
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
+    - op: add
+      path: /spec/template/spec/containers/2/env
+      value:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: host
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-app
+              key: uri
+  target:
+    kind: Deployment
+    name: celery
+{% endif %}
+{% if cookiecutter.create_react_frontend == 'y' %}
 - patch: |-
     - op: add
       path: /spec/template/spec/imagePullSecrets
@@ -65,19 +114,26 @@ patches:
   target:
     kind: Deployment
     name: frontend
+{% endif %}
 
 configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
+     - DJANGO_DEBUG="False"
      - ENVIRONMENT="production"
      - DJANGO_SETTINGS_MODULE="config.settings.production"
+     - USE_S3="True"
      - AWS_S3_CUSTOM_DOMAIN="{{ cookiecutter.domain_name }}"
+     - AWS_S3_BUCKET_NAME_DATA=""
+     - AWS_S3_BUCKET_NAME_MEDIA=""
 
 images:
   - name: backend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
+{% if cookiecutter.create_react_frontend == 'y' %}
   - name: frontend
     newName: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest
+{% endif %}

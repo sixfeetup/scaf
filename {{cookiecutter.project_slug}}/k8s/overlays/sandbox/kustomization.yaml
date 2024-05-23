@@ -4,7 +4,7 @@ namespace: {{ cookiecutter.project_dash }}-sandbox
 
 resources:
   - ../prod
-  - ../mailhog
+  - ../../mailhog
 
 patches:
 - target:
@@ -48,13 +48,19 @@ configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
+     - DJANGO_DEBUG="False"
      - ENVIRONMENT="sandbox"
      - DJANGO_SETTINGS_MODULE="config.settings.production"
+     - USE_S3="True"
      - DJANGO_CSRF_TRUSTED_ORIGINS="https://sandbox.{{ cookiecutter.domain_name }}"
      - AWS_S3_CUSTOM_DOMAIN="sandbox.{{ cookiecutter.domain_name }}"
+     - AWS_S3_BUCKET_NAME_DATA=""
+     - AWS_S3_BUCKET_NAME_MEDIA=""
 
 images:
   - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
+{% if cookiecutter.create_react_frontend == 'y' %}
   - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
     newTag: latest
+{% endif %}

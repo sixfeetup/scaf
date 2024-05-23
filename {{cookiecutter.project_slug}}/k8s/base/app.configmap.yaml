@@ -25,8 +25,10 @@ data:
   FLOWER_PORT: "5555"{%- endif %}
 
   # S3 storage access
-  DJANGO_AWS_REGION_NAME: "{{ cookiecutter.aws_region }}"
-  DJANGO_AWS_STORAGE_BUCKET_NAME: "CHANGEME_S3_BUCKET_NAME"
+  USE_S3: "False"
+  AWS_REGION: "{{ cookiecutter.aws_region }}"
+  AWS_S3_BUCKET_NAME_DATA: "CHANGEME_S3_BUCKET_NAME"
+  AWS_S3_BUCKET_NAME_MEDIA: "CHANGEME_S3_BUCKET_NAME"
 {% if cookiecutter.use_sentry == 'y' %}
   SENTRY_DSN_BACKEND: ""
   ENVIRONMENT: "dev"

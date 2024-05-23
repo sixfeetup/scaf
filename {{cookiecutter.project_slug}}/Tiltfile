@@ -18,6 +18,7 @@ docker_build(
     ],
 )
 
+{% if cookiecutter.create_react_frontend == 'y' %}
 docker_build(
     "frontend",
     context="frontend",
@@ -25,9 +26,10 @@ docker_build(
         sync("./frontend", "/app"),
     ],
 )
+{% endif %}
 
 k8s_yaml(
-    kustomize("./k8s/local/")
+    kustomize("./k8s/overlays/local/")
 )
 
 syncback(
@@ -38,6 +40,7 @@ syncback(
     rsync_path='/app/bin/rsync.tilt',
 )
 
+{% if cookiecutter.create_react_frontend == 'y' %}
 syncback(
     "frontend-sync",
     "deploy/frontend",
@@ -45,6 +48,7 @@ syncback(
     target_dir="./frontend",
     rsync_path='/app/rsync.tilt',
 )
+{% endif %}
 
 k8s_resource(workload='frontend', port_forwards=3000)
 k8s_resource(workload='backend', port_forwards=8000)
