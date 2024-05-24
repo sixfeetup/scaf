@@ -52,6 +52,7 @@ docker-compose.override.yml
 
 # Environment files
 env
+.envrc
 
 # vs code
 .vscode/
