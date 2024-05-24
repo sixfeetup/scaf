@@ -50,7 +50,9 @@ syncback(
 )
 {% endif %}
 
+{% if cookiecutter.create_react_frontend == 'y' %}
 k8s_resource(workload='frontend', port_forwards=3000)
+{% endif %}
 k8s_resource(workload='backend', port_forwards=8000)
 k8s_resource(workload='mailhog', port_forwards=8025)
 k8s_resource(workload='postgres', port_forwards=5432)
