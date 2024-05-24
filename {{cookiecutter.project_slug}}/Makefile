@@ -7,8 +7,8 @@ KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o 
 	op item create --category login --title="POSTGRES_DB" --vault "{{ cookiecutter.project_name }}" --generate-password="letters,digits,symbols,32" "username=postgres"; \
 	op item create --category login --title "AWS_S3_ACCESS_KEY_ID" --vault "{{ cookiecutter.project_name }}" "token=token"; \
 	op item create --category login --title "AWS_S3_SECRET_ACCESS_KEY" --vault "{{ cookiecutter.project_name }}" "token=token"; \
-	op item create --category login --title "AWS_ACCESS_KEY_SES" --vault "{{ cookiecutter.project_name }}" "token=token"; \
-	op item create --category login --title "AWS_SECRET_KEY_SES" --vault "{{ cookiecutter.project_name }}" "token=token";
+	op item create --category login --title "AWS_SES_ACCESS_KEY_ID" --vault "{{ cookiecutter.project_name }}" "token=token"; \
+	op item create --category login --title "AWS_SES_SECRET_ACCESS_KEY" --vault "{{ cookiecutter.project_name }}" "token=token";
 
 ## Release/Deployment Targets
 
