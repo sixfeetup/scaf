@@ -27,6 +27,14 @@ if not create_react_frontend:
     shutil.rmtree("frontend")
 
 
+def remove_react_files():
+    file_names = [
+        os.path.join("k8s", "base", "react.yaml"),
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
+
+
 def remove_celery_files():
     file_names = [
         os.path.join("backend", "{{ cookiecutter.project_slug }}", "celery.py"),
@@ -236,6 +244,9 @@ def main():
         debug=debug,
     )
     set_flags_in_settings_files()
+
+    if "{{ cookiecutter.create_react_frontend }}".lower() == "n":
+        remove_react_files()
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
