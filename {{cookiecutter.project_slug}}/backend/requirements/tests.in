@@ -1,4 +1,4 @@
-# Test dependencies go here.
+# Test development dependencies go here
 -r base.txt
 
 coverage==6.4.4
@@ -6,7 +6,7 @@ flake8==5.0.4 # pyup: != 2.6.0
 django-test-plus==2.2.0
 factory-boy==3.2.1
 django-coverage-plugin==2.0.3
-daphne==4.0.0
+daphne==4.1.2
 
 # pytest
 pytest-django

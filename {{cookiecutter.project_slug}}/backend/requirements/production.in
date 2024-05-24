@@ -1,20 +1,18 @@
-# PRECAUTION: avoid production dependencies that aren't in development
-
+# Production development dependencies go here
 -r base.txt
 
-gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
-psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
-uvicorn[standard]
+gunicorn==22.0.0
+psycopg2==2.9.9
+uvicorn[standard]==0.29.0
 
 # Django
 # ------------------------------------------------------------------------------
-django-storages[boto3]==1.14.2  # https://github.com/jschneier/django-storages
-daphne==4.0.0
-
+django-storages[boto3]==1.14.3
+daphne==4.1.2
 {%- if cookiecutter.mail_service == 'Mailgun' %}
-django-anymail[mailgun]==8.6  # https://github.com/anymail/django-anymail
+django-anymail[mailgun]==10.3
 {%- elif cookiecutter.mail_service == 'Amazon SES' %}
-django-anymail[amazon_ses]==8.6  # https://github.com/anymail/django-anymail
+django-anymail[amazon-ses]==10.3
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
-django-anymail==8.6  # https://github.com/anymail/django-anymail
+django-anymail==10.3
 {%- endif %}
