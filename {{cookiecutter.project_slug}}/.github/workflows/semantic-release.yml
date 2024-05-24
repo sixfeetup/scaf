@@ -1,0 +1,31 @@
+name: Semantic release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN_SEMANTIC_RELEASE }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install pnpm to update the lockfile
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+      - name: Install dependencies
+        run: npm install --no-save --package-lock=false @semantic-release/changelog@6.0.3 @semantic-release/git@10.0.1 @semantic-release/github@9.2.3 conventional-changelog-conventionalcommits@7.0.2 semantic-release@22.0.7 semantic-release-replace-plugin@1.2.7 @semantic-release/exec@6.0.3
+      - name: Semantic-Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
