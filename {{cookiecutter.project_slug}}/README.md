@@ -137,7 +137,6 @@ Note: The values for both tokens can be empty if you don't wish to use Sentry.
 For more detailed steps view `./docs/sentry.md`
 
 {% endif %}
-## Install Loki for log aggregation and the Kube Prometheus Stack with Grafana Dashboards
 ### How to monitor logs and the deployed application
 
 Install Loki for log aggregation and the Kube Prometheus Stack with Grafana Dashboards for monitoring.
