@@ -54,6 +54,8 @@ It may take a little bit of time for all the services to start up, and it's poss
 the first run to fail because of timing conflicts. If you do see messages indicating there
 were errors during the first run, stop all the containers using Ctrl-C, and then try it again.
 
+You can type `s` to view the console output as it starts up to confirm that the process isn't hanging.
+
 ## Contributor setup
 
 For subsequent contributors (after the project has been through initial setup and
