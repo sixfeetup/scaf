@@ -8,5 +8,5 @@ output "application_user_secret_key" {
 }
 
 output "static_storage_bucket" {
-  value = aws_s3_bucket.static_storage.bucket_domain_name
+  value = data.aws_s3_bucket.static_storage.bucket_domain_name
 }

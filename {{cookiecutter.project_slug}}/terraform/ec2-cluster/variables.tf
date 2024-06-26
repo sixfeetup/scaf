@@ -73,3 +73,15 @@ locals {
   chunks     = chunklist(local.bitbucket_ipv4_cidrs, var.max_egress_rules)
   chunks_map = { for i in range(length(local.chunks)) : i => local.chunks[i] }
 }
+
+locals {
+  common_tags = merge(var.tags, {
+    automation          = "terraform"
+    application         = module.global_variables.application
+  })
+}
+
+variable "environments" {
+  type    = list(string)
+  default = ["sandbox", "prod"]
+}

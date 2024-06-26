@@ -19,8 +19,8 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
 
   // Django static storage s3 bucket
   origin {
-    domain_name              = aws_s3_bucket.static_storage.bucket_regional_domain_name
-    origin_id                = aws_s3_bucket.static_storage.id
+    domain_name              = data.aws_s3_bucket.static_storage.bucket_regional_domain_name
+    origin_id                = data.aws_s3_bucket.static_storage.id
     origin_access_control_id = aws_cloudfront_origin_access_control.static_storage.id
   }
 
@@ -53,7 +53,7 @@ resource "aws_cloudfront_distribution" "ec2_cluster" {
     path_pattern           = "/static/*"
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = aws_s3_bucket.static_storage.id
+    target_origin_id       = data.aws_s3_bucket.static_storage.id
     viewer_protocol_policy = "redirect-to-https"
     forwarded_values {
       query_string = false
