@@ -1,0 +1,10 @@
+{
+  "name": "scaf",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.6",
+    "semantic-release": "^24.0.0"
+  }
+}
