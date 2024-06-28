@@ -17,8 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          node-version: "lts/*"
 
       - name: Install Dependencies
         run: npm install
