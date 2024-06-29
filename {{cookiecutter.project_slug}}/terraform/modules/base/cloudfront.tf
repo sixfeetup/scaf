@@ -10,6 +10,14 @@ resource "aws_cloudfront_origin_access_identity" "s3_access_identity" {
   comment = "${var.app_name}-${var.environment}"
 }
 
+resource "aws_cloudfront_origin_access_control" "static_storage" {
+  name                              = "static_storage"
+  description                       = "Backend Bucket Access Policy"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 resource "aws_cloudfront_distribution" "cloudfront" {
   enabled             = true
   aliases             = [var.domain_name]
