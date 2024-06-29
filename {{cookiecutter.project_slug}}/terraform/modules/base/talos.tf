@@ -86,16 +86,16 @@ resource "talos_machine_configuration_apply" "controlplane" {
 
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
-  endpoint                    = module.talos_control_plane_nodes[count.index].public_ip
-  node                        = module.talos_control_plane_nodes[count.index].private_ip
+  endpoint                    = module.control_plane_nodes[count.index].public_ip
+  node                        = module.control_plane_nodes[count.index].private_ip
 }
 
 resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoint             = module.talos_control_plane_nodes.0.public_ip
-  node                 = module.talos_control_plane_nodes.0.private_ip
+  endpoint             = module.control_plane_nodes.0.public_ip
+  node                 = module.control_plane_nodes.0.private_ip
 }
 
 resource "null_resource" "check_talosconfig_exists" {
@@ -107,15 +107,15 @@ resource "null_resource" "check_talosconfig_exists" {
 data "talos_client_configuration" "this" {
   cluster_name         = var.cluster_name
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = module.talos_control_plane_nodes.*.public_ip
+  endpoints            = module.control_plane_nodes.*.public_ip
 }
 
 data "talos_cluster_kubeconfig" "this" {
   depends_on = [talos_machine_bootstrap.this]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoint             = module.talos_control_plane_nodes.0.public_ip
-  node                 = module.talos_control_plane_nodes.0.private_ip
+  endpoint             = module.control_plane_nodes.0.public_ip
+  node                 = module.control_plane_nodes.0.private_ip
 }
 
 # disable this check by running `make remove-talos-state`
@@ -129,8 +129,8 @@ data "talos_cluster_health" "this" {
   ]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = module.talos_control_plane_nodes.*.public_ip
-  control_plane_nodes  = module.talos_control_plane_nodes.*.private_ip
+  endpoints            = module.control_plane_nodes.*.public_ip
+  control_plane_nodes  = module.control_plane_nodes.*.private_ip
 }
 
 resource "null_resource" "talosconfig_file" {

@@ -32,7 +32,7 @@ output "cnpg_user_secret_key" {
   value     = aws_iam_access_key.cnpg_user_key.secret
 }
 
-output "talos_node_public_ips" {
+output "control_plane_nodes_public_ips" {
   description = "The public ip addresses of the talos control plane nodes."
-  value       = join(",", module.talos_control_plane_nodes.*.public_ip)
+  value       = join(",", module.control_plane_nodes.*.public_ip)
 }
