@@ -13,7 +13,7 @@ variable "aws_region" {
 variable "app_name" {
   description = "Application Name"
   type        = string
-  default     = "{{ cookiecutter.project_name }}"
+  default     = "{{ cookiecutter.project_dash }}"
 }
 
 variable "environment" {
