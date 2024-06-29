@@ -14,14 +14,17 @@ Run apply in the bootstrap directory first to set up the terraform remote state 
 * If your account is not an organisation account you will need to remove or adjust the assume_role block in the bootstrap/init.tf file.
 
 ### Next steps:
-* `./management`  
-Set up the ECR repositories for the docker images, as well as IAM users and route 53 zone, this should be run after bootstrap.
+# XXX: Only include if provider is GitHub
+* `./github`  
+Set up the GitHub OIDC provider
 
+# XXX: update to skip this step
 * `./ec2-cluster`  
 Sets up an EC2 instance and deploys a k3s cluster on it. For more information follow ./ec2_cluster/README.md  
 Note this will create a t2.medium instance that does not fall under the free tier.  
 This should be set up before attempting to deploy prod/sandbox.
 
+# XXX: update to explain that a Talos cluster is deployed
 * `./prod` and `./sandbox`  
 Sets up route53 for prod and sandbox respectively.
 
