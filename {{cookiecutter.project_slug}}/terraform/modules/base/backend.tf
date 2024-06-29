@@ -13,11 +13,6 @@ provider "aws" {
 # sub-account per envionment
 terraform {
   required_version = ">= 1.4"
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
 
   backend "s3" {
     region         = var.aws_region
