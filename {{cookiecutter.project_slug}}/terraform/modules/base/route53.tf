@@ -4,7 +4,7 @@ resource "aws_route53_zone" "route_zone" {
 }
 
 resource "aws_route53_record" "api" {
-  zone_id = data.aws_route53_zone.route_zone.zone_id
+  zone_id = aws_route53_zone.route_zone.zone_id
   name    = var.api_domain_name
   type    = "CNAME"
   records = [module.elb_k8s_elb.elb_dns_name]
@@ -12,7 +12,7 @@ resource "aws_route53_record" "api" {
 }
 
 resource "aws_route53_record" "k8s" {
-  zone_id = data.aws_route53_zone.route_zone.zone_id
+  zone_id = aws_route53_zone.route_zone.zone_id
   name    = var.cluster_domain_name
   type    = "CNAME"
   records = [module.elb_k8s_elb.elb_dns_name]
@@ -20,7 +20,7 @@ resource "aws_route53_record" "k8s" {
 }
 
 resource "aws_route53_record" "frontend" {
-  zone_id = data.aws_route53_zone.route_zone.zone_id
+  zone_id = aws_route53_zone.route_zone.zone_id
   name    = var.argocd_domain_name
   type    = "A"
 
@@ -32,7 +32,7 @@ resource "aws_route53_record" "frontend" {
 }
 
 resource "aws_route53_record" "frontend-v6" {
-  zone_id = data.aws_route53_zone.route_zone.zone_id
+  zone_id = aws_route53_zone.route_zone.zone_id
   name    = var.domain_name
   type    = "AAAA"
 
