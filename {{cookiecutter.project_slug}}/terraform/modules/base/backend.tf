@@ -8,30 +8,23 @@ provider "aws" {
   alias  = "us_east_1"
 }
 
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.app_name}-${var.environment}-terraform-state"
-  tags = {
-    Name = "S3 Remote Terraform State Store"
+# each environment has has a unique key to isolate state per environment
+# to isolate environments completely, it is recommended to have a separate AWS
+# sub-account per envionment
+terraform {
+  required_version = ">= 1.4"
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+
+  backend "s3" {
+    region         = var.aws_region
+    bucket         = "${var.app_name}-terraform-state"
+    key            = "${var.app_name}-${var.environment}.cluster.json"
+    encrypt        = true
+    dynamodb_table = "${var.app_name}-terraform-state"
   }
 }
 
-resource "aws_s3_bucket_versioning" "tf_state_versioning" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_dynamodb_table" "terraform_state" {
-  name           = "${var.app_name}-${var.environment}-terraform-state"
-  read_capacity  = 5
-  write_capacity = 5
-  hash_key       = "LockID"
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-  tags = {
-    "Name" = "DynamoDB Terraform State Lock Table"
-  }
-}
