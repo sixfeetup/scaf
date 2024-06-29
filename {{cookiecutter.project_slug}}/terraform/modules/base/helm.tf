@@ -37,26 +37,6 @@ resource "helm_release" "argocd" {
   depends_on = [resource.null_resource.kubeconfig_file]
 }
 
-locals {
-  repo_name                = var.repo_name
-  repo_url                 = var.repo_url
-  argocd_github_deploy_key = file("./argocd_github_deploy_key")
-  type_b64                 = base64encode("git")
-  repo_url_b64             = base64encode(local.repo_url)
-  github_deploy_key_b64    = base64encode(local.argocd_github_deploy_key)
-}
-
-data "template_file" "repo_creds" {
-  template = file("${path.module}/repocreds.template.yaml")
-
-  vars = {
-    repo_name             = local.repo_name
-    type_b64              = local.type_b64
-    repo_url_b64          = local.repo_url_b64
-    github_deploy_key_b64 = local.github_deploy_key_b64
-  }
-}
-
 resource "local_file" "repo_creds" {
   content  = data.template_file.repo_creds.rendered
   filename = "${path.module}/repocreds.yaml"
