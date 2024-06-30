@@ -1,20 +1,37 @@
-output "domains" {
-  value = [var.domain, var.api_domain]
+output "talosconfig" {
+  description = "The generated talosconfig"
+  value       = module.cluster.talosconfig
+  sensitive   = true
 }
 
-output "ec2_cluster_public_dns" {
-  value = data.aws_instance.ec2_cluster.public_dns
+output "kubeconfig" {
+  description = "The generated kubeconfig"
+  value       = module.cluster.kubeconfig
+  sensitive   = true
 }
 
-output "static_storage_domain" {
-  value = module.application.static_storage_bucket
+output "machineconfig" {
+  description = "The generated machineconfig"
+  value       = module.cluster.machineconfig
+  sensitive   = true
 }
 
-output "application_user_access_key" {
-  value = module.application.application_user_access_key
+output "cnpg-iam-role-arn" {
+  description = "CloudNativePG iam role arn"
+  value       = module.cluster.cnpg-iam-role-arn
+  sensitive   = false
 }
 
-output "application_user_secret_key" {
+output "cnpg_user_access_key" {
+  value = module.cluster.cnpg_user_access_key
+}
+
+output "cnpg_user_secret_key" {
   sensitive = true
-  value     = module.application.application_user_secret_key
+  value     = module.cluster.cnpg_user_secret_key
+}
+
+output "control_plane_nodes_public_ips" {
+  description = "The public ip addresses of the talos control plane nodes"
+  value       = module.cluster.control_plane_nodes_public_ips
 }

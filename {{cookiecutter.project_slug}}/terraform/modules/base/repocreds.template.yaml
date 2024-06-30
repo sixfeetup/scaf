@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "${repo_name}-github-deploy-key"
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+data:
+  type: "${type_b64}"
+  url: ${repo_url_b64}
+  sshPrivateKey: |
+    ${github_deploy_key_b64}

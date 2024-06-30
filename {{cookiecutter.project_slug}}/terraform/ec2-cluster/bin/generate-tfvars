@@ -1,6 +1,0 @@
-#!/bin/bash
-
-MY_IP=$(./bin/get-my-global-ip)
-MY_AMI_ID=$(terraform output ami_id | tail -n1)
-
-cat terraform.tfvars.template | sed "s/{admin_ip}/$MY_IP/;s/{ami_id}/$MY_AMI_ID/" > terraform.tfvars

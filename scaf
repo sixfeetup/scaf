@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Default repository URL if none is provided
 DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"

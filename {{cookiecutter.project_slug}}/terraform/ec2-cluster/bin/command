@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ssh -i ~/.ssh/{{ cookiecutter.project_slug }}_default_key ubuntu@$(./bin/ip) $@
