@@ -64,6 +64,12 @@ locals {
 
 resource "talos_machine_secrets" "this" {}
 
+data "aws_ami" "talos" {
+  owners      = ["540036508848"] # Sidero Labs
+  most_recent = true
+  name_regex  = "^talos-v\\d+\\.\\d+\\.\\d+-${data.aws_availability_zones.available.id}-amd64$"
+}
+
 data "talos_machine_configuration" "controlplane" {
   cluster_name       = var.cluster_name
   cluster_endpoint   = "https://${module.elb_k8s_elb.elb_dns_name}:6443"

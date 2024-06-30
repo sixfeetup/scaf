@@ -65,7 +65,7 @@ variable "control_plane" {
   description = "Info for control plane that will be created"
   type = object({
     instance_type      = optional(string, "t3a.medium")
-    ami_id             = optional(string, "")
+    ami_id             = optional(string, null)
     num_instances      = optional(number, 3)
     config_patch_files = optional(list(string), [])
     tags               = optional(map(string), {})
@@ -76,11 +76,7 @@ variable "control_plane" {
     error_message = "The ami_id value must be a valid AMI id, starting with \"ami-\"."
   }
 
-  # TODO: add cookiecutter.use_talos check 
-  default = {
-    # curl -sL https://github.com/siderolabs/talos/releases/download/v1.7.4/cloud-images.json | jq -r '.[] | select(.cloud == "aws" and .region == "us-east-1" and .arch == "amd64")'
-    ami_id = "ami-04be44740c9604fa2"
-  }
+  default = {}
 }
 
 variable "cluster_vpc_cidr" {

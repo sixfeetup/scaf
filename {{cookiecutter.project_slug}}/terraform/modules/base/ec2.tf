@@ -5,7 +5,7 @@ module "control_plane_nodes" {
   count = var.control_plane.num_instances
 
   name                        = "${var.cluster_name}-${count.index}"
-  ami                         = var.control_plane.ami_id
+  ami                         = var.control_plane.ami_id == null ? data.aws_ami.talos.id : var.control_plane.ami_id
   monitoring                  = true
   instance_type               = var.control_plane.instance_type
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
