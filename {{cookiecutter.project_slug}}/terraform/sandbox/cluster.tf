@@ -16,3 +16,7 @@ module "cluster" {
     num_instances = 3
   }
 }
+
+module "base" {
+  source = "../modules/base"
+}

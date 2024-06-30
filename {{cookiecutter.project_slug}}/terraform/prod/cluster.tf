@@ -8,3 +8,7 @@ module "cluster" {
   argocd_domain_name     = "argocd.prod.{{ cookiecutter.domain_name }}"
   prometheus_domain_name = "prometheus.prod.{{ cookiecutter.domain_name }}"
 }
+
+module "base" {
+  source = "../modules/base"
+}
