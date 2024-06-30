@@ -117,14 +117,14 @@ variable "backend_ecr_repo" {
 variable "kubectl_allowed_ips" {
   description = "A list of CIDR blocks that are allowed to access the kubernetes api"
   type        = string
-  default     = ""
+  default     = "0.0.0.0/0"
 }
 
 # TODO: add cookiecutter.use_talos check 
 variable "talosctl_allowed_ips" {
   description = "A list of CIDR blocks that are allowed to access the talos api"
   type        = string
-  default     = ""
+  default     = "0.0.0.0/0"
 }
 
 variable "tags" {
