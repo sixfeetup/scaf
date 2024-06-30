@@ -48,31 +48,41 @@ resource "kubectl_manifest" "apply_secret" {
 }
 
 resource "kubectl_manifest" "argocd_root_app" {
-  yaml_body = <<YAML
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: root
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-  labels:
-    app.kubernetes.io/name: root
-spec:
-  destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: argocd/prod/apps
-    repoURL: {{ cookiecutter.repo_url }}
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      allowEmpty: true
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - allowEmpty=true
-YAML
+  yaml_body = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "root"
+      namespace = "argocd"
+      finalizers = [
+        "resources-finalizer.argocd.argoproj.io"
+      ]
+      labels = {
+        "app.kubernetes.io/name" = "root"
+      }
+    }
+    spec = {
+      destination = {
+        namespace = "argocd"
+        server    = "https://kubernetes.default.svc"
+      }
+      project = "default"
+      source = {
+        path           = var.application_path
+        path           = "argocd/${var.environment}/apps"
+        repoURL        = "{{ cookiecutter.repo_url }}"
+        targetRevision = "HEAD"
+      }
+      syncPolicy = {
+        automated = {
+          allowEmpty = true
+          prune      = true
+          selfHeal   = true
+        }
+        syncOptions = [
+          "allowEmpty=true"
+        ]
+      }
+    }
+  })
 }
