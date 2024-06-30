@@ -68,7 +68,6 @@ resource "kubectl_manifest" "argocd_root_app" {
       }
       project = "default"
       source = {
-        path           = var.application_path
         path           = "argocd/${var.environment}/apps"
         repoURL        = "{{ cookiecutter.repo_url }}"
         targetRevision = "HEAD"
