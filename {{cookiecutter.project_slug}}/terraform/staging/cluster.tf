@@ -15,6 +15,9 @@ module "cluster" {
     # changes, eg:
     # ami_id = "ami-09d22b42af049d453"
 
-module "base" {
-  source = "../modules/base"
+    # NB!: limit kubectl_allowed_ips and talos_allowed_ips to a set of trusted
+    # public ip addresses. Both variables are comma separated lists of ips.
+    # kubectl_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
+    # talos_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
+  }
 }
