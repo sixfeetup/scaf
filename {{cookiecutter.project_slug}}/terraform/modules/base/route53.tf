@@ -21,7 +21,7 @@ resource "aws_route53_record" "k8s" {
 
 resource "aws_route53_record" "frontend" {
   zone_id = aws_route53_zone.route_zone.zone_id
-  name    = var.argocd_domain_name
+  name    = var.domain_name
   type    = "A"
 
   alias {
