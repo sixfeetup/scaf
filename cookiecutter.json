@@ -10,7 +10,8 @@
   "timezone": "US/Eastern",
   "aws_region": "us-east-1",
   "aws_account_id": "000000000000",
-  "create_react_frontend": "y",
+  "create_nextjs_frontend": "y",
+  "create_react_frontend": "n",
   "mail_service": [
     "Mailgun",
     "Amazon SES",
