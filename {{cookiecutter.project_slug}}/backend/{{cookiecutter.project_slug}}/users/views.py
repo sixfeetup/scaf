@@ -1,7 +1,3 @@
-from strawberry.django.views import GraphQLView
-
-from .schema import schema
-
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -49,6 +45,3 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
-
-def graphql_view(request):
-    return GraphQLView.as_view(schema=schema)(request)

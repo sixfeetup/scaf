@@ -251,6 +251,14 @@ def remove_graphql_files():
             "queries.py",
         )
     )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "types.py",
+        )
+    )
 
 
 def main():
