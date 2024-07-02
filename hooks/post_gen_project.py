@@ -241,7 +241,7 @@ def remove_graphql_files():
             "backend",
             "{{ cookiecutter.project_slug }}",
             "users",
-            "schema.py",
+            "mutations.py",
         )
     )
     os.remove(

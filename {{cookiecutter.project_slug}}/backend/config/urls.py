@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 {%- endif %}
 {%- if cookiecutter.use_graphql == "y" %}
-from strawberry.django.views import AsyncGraphQLView
+from strawberry.django.views import GraphQLView
 from .schema import schema
 {%- endif %}
 
@@ -41,7 +41,7 @@ urlpatterns += [
 
 {%- if cookiecutter.use_graphql == "y" %}
 urlpatterns += [
-    path("graphql/", view= AsyncGraphQLView.as_view(schema=schema)),
+    path("graphql/", GraphQLView.as_view(schema=schema)),
 ]
 {%- endif %}
 
