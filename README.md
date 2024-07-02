@@ -8,7 +8,7 @@ a new project and streamlines the development experience with Tilt.
 **scaf** generates a new project structure with Kubernetes manifests in
 three Kustomize layers for dev, sandbox, and production. A new project 
 contains the following:
-* React frontend
+* NextJS or React frontend
 * Django backend
 * Postgres database for local development
 * CloudNativePG deployment for production

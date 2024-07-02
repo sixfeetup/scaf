@@ -22,10 +22,17 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
-if not create_react_frontend:
+create_nextjs_frontend = "{{ cookiecutter.create_nextjs_frontend }}" == "y"
+if not create_nextjs_frontend:
     shutil.rmtree("frontend")
 
+create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
+if not create_react_frontend:
+    shutil.rmtree("frontend_react")
+
+# by default we have frontend folder for nextjs. If we want react then we rename react folder to be the frontend folder
+if create_react_frontend:
+    shutil.move("frontend_react", "frontend")
 
 def remove_celery_files():
     file_names = [
