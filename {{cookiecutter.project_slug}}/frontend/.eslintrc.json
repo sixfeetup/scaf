@@ -1,0 +1,42 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:jsx-a11y/recommended"],
+  "plugins": ["jsx-a11y", "unused-imports"],
+  "rules": {
+    "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-unnecessary-condition": "error",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "groups": [
+          "external",
+          "builtin",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "object-shorthand": ["error", "properties"],
+    "react/jsx-no-useless-fragment": "error",
+    "require-await": "error"
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  }
+}
