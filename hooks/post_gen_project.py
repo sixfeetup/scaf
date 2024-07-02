@@ -235,6 +235,7 @@ def remove_sentry_files():
 
 
 def remove_graphql_files():
+    os.remove(os.path.join("backend", "config", "schema.py"))
     os.remove(
         os.path.join(
             "backend",
