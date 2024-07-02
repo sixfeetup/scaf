@@ -79,6 +79,9 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
 {%- endif %}
+{%- if cookiecutter.use_graphql == "y" %}
+    "strawberry.django",
+{%- endif %}
 ]
 
 LOCAL_APPS = [
