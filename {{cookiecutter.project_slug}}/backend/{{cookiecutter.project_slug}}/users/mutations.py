@@ -6,7 +6,7 @@ from .models import User
 class UserMutation:
     @strawberry.mutation
     def updateUser(self, id: int, first_name: str, last_name: str ) -> UserType:
-        user = User.objects.get(id=input.id)
+        user = User.objects.get(id=id)
         if user:
             user.first_name = first_name
             user.last_name = last_name
