@@ -31,5 +31,5 @@ drf-spectacular==0.25.1
 {%- endif %}
 
 {%- if cookiecutter.use_graphql == "y" %}
-strawberry-graphql==0.235.1
+strawberry-graphql-django==0.46.1
 {%- endif %}

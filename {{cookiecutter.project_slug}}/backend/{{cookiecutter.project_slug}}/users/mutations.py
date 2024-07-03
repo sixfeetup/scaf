@@ -1,25 +1,35 @@
 import strawberry
+import strawberry_django
+from django.contrib.auth import get_user_model
+from strawberry_django import mutations
+
 from .types import UserType
-from .models import User
+
+User = get_user_model()
+
+
+@strawberry_django.input(User)
+class UserRegistrationInput:
+    username: strawberry.auto
+    password: strawberry.auto
+
+
+@strawberry_django.partial(User)
+class UserPartialUpdateInput:
+    id: strawberry.auto
+    name: strawberry.auto
+
 
 @strawberry.type
 class UserMutation:
-    @strawberry.mutation
-    def updateUser(self, id: int, first_name: str, last_name: str ) -> UserType:
-        user = User.objects.filter(id=id).first()
-        if user:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save
-            return user
-        else:
-            return f"User Not found for id: {id}" 
+    """
+    User mutations
+    """
 
-    @strawberry.mutation
-    def deleteUser(self, id: int) -> str:
-        user = User.objects.filter(id=id).first()
-        if user:
-            user.delete()
-            return f"User with id: {id} has been deleted."
-        else:
-            return f"User Not found for id: {id}"
+    # Auth mutations
+    login: UserType = strawberry_django.auth.login()
+    logout = strawberry_django.auth.logout()
+    register: UserType = strawberry_django.auth.register(UserRegistrationInput)
+
+    # User mutations
+    update_user: UserType = mutations.update(UserPartialUpdateInput)
