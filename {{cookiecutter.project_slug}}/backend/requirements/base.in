@@ -29,3 +29,7 @@ django-cors-headers==3.13.0
 djangorestframework~=3.14.0
 drf-spectacular==0.25.1
 {%- endif %}
+
+{%- if cookiecutter.use_graphql == "y" %}
+strawberry-graphql-django==0.46.1
+{%- endif %}

@@ -234,6 +234,43 @@ def remove_sentry_files():
     os.remove(os.path.join("docs", "sentry.md"))
 
 
+def remove_graphql_files():
+    os.remove(os.path.join("backend", "config", "schema.py"))
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "mutations.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "queries.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "types.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "tests",
+            "test_graphql_views.py",
+        )
+    )
+
+
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
@@ -258,6 +295,9 @@ def main():
 
     if "{{ cookiecutter.use_sentry }}".lower() == "n":
         remove_sentry_files()
+    
+    if "{{ cookiecutter.use_graphql }}".lower() == "n":
+        remove_graphql_files()
 
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))
