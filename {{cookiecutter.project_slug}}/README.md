@@ -46,7 +46,13 @@ Consult the links below if you prefer to use Minikube or Docker Desktop instead:
 You are now ready to edit the code.
 The app will be automatically reloaded when its files change.
 
-To stop the local kubernetes cluster once you are done working:
+To delete resources created by Tilt once you are done working:
+
+       $ tilt down
+
+This will not delete persistent volumes created by Tilt, and you should be able to start Tilt again with your data intact.
+
+To remove the cluster entirely:
 
        $ kind delete cluster --name {{ cookiecutter.project_slug }}
 
