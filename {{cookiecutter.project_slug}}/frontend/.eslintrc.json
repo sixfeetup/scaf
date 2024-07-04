@@ -21,14 +21,7 @@
           "caseInsensitive": true,
           "order": "asc"
         },
-        "groups": [
-          "external",
-          "builtin",
-          "internal",
-          "parent",
-          "sibling",
-          "index"
-        ],
+        "groups": ["external", "builtin", "internal", "parent", "sibling", "index"],
         "newlines-between": "always"
       }
     ],
