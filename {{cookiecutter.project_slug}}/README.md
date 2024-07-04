@@ -53,8 +53,8 @@ To stop the local kubernetes cluster once you are done working:
 
 ### Update dependencies
 
-To update the backend app dependencies, you must edit the `backend/requirements/*.txt` files.
-Once you have made your changes, you need to regenerate the `backend/requirements/*.txt` files you must run:
+To update the backend app dependencies, you must edit the `backend/requirements/*.in` files.
+Once you have made your changes, you need to regenerate the `backend/requirements/*.txt` files using:
 
        $ make compile
 
