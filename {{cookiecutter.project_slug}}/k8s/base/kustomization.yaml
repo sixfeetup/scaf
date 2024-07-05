@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - ./app.configmap.yaml
 - ./django.yaml
-- ./react.yaml
+- ./frontend.yaml
 - ./redis.yaml
 {%- if cookiecutter.use_celery == "y" %}
 - ./celery.yaml{%- endif %}
