@@ -62,5 +62,11 @@ if env("USE_DOCKER") == "yes":
 CELERY_TASK_EAGER_PROPAGATES = True
 
 {%- endif %}
+
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y"  %}
+# ------------------------------------------------------------------------------
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+{%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------
