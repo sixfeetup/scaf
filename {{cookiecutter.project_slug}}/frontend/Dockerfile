@@ -15,4 +15,3 @@ COPY --chown=node:node . /app
 USER node
 
 CMD ["npm", "run", "dev"]
-ss
