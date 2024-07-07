@@ -83,6 +83,9 @@ THIRD_PARTY_APPS = [
     "strawberry_django",
 {%- endif %}
 ]
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+    "corsheaders",
+{%- endif %}
 
 LOCAL_APPS = [
     "{{ cookiecutter.project_slug }}.users.apps.UsersConfig",
@@ -138,6 +141,9 @@ MIDDLEWARE = [
     "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    {%- if cookiecutter.use_graphql == "y"  or cookiecutter.use_drf == "y"%}
+    "corsheaders.middleware.CorsMiddleware",
+    {%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
