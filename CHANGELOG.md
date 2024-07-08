@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/sixfeetup/scaf/compare/v1.1.0...v1.2.0) (2024-07-08)
+
+### Features
+
+* Update deployment manifest ([#264](https://github.com/sixfeetup/scaf/issues/264)) ([c73a6b9](https://github.com/sixfeetup/scaf/commit/c73a6b96648867038896fddd8a082e01475aeb61))
+
 ## [1.1.0](https://github.com/sixfeetup/scaf/compare/v1.0.0...v1.1.0) (2024-07-08)
 
 ### Features
