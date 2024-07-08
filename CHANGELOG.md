@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/sixfeetup/scaf/compare/v1.3.0...v1.3.1) (2024-07-08)
+
+### Bug Fixes
+
+* run PR lint action in dev environment ([332465a](https://github.com/sixfeetup/scaf/commit/332465afad80ac37fecac1dce546c18d0c68b774))
+
 ## [1.3.0](https://github.com/sixfeetup/scaf/compare/v1.2.0...v1.3.0) (2024-07-08)
 
 ### Features
