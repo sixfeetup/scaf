@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0](https://github.com/sixfeetup/scaf/compare/v1.0.0...v1.1.0) (2024-07-08)
+
+### Features
+
+* validate PR title ([6511d39](https://github.com/sixfeetup/scaf/commit/6511d39e00d91ef4d0a3c690fc94ad7ef3f3bb2d))
+
 ## 1.0.0 (2024-06-28)
 
 ### Features
