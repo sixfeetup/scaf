@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.1](https://github.com/sixfeetup/scaf/compare/v1.7.0...v1.7.1) (2024-07-08)
+
+### Bug Fixes
+
+* keep postgres pvc across tilt restarts ([#274](https://github.com/sixfeetup/scaf/issues/274)) ([9d66187](https://github.com/sixfeetup/scaf/commit/9d66187b1deafc2fb9d153fcc74106e528979939))
+
 ## [1.7.0](https://github.com/sixfeetup/scaf/compare/v1.6.0...v1.7.0) (2024-07-08)
 
 ### Features
