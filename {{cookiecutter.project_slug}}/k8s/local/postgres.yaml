@@ -65,6 +65,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    tilt.dev/down-policy: keep
   name: postgres-pvc
   labels:
     type: local
