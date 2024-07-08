@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.0](https://github.com/sixfeetup/scaf/compare/v1.6.0...v1.7.0) (2024-07-08)
+
+### Features
+
+* upgrade to postgres 16 ([#271](https://github.com/sixfeetup/scaf/issues/271)) ([92bf493](https://github.com/sixfeetup/scaf/commit/92bf4939e2de918194e8e65d0f2121d4f20ef4b3))
+
 ## [1.6.0](https://github.com/sixfeetup/scaf/compare/v1.5.0...v1.6.0) (2024-07-08)
 
 ### Features
