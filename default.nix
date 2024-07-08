@@ -1,7 +1,10 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  # Use the version from the package.json file
+  lib = pkgs.lib;
+  stdenv = pkgs.stdenv;
+  makeWrapper = pkgs.makeWrapper;
+
   packageJson = builtins.fromJSON (builtins.readFile ./package.json);
   scafVersion = packageJson.version;
   maintainers = {
@@ -12,7 +15,7 @@ let
   };
 in
 
-pkgs.stdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "scaf";
   version = scafVersion;
 
@@ -22,6 +25,10 @@ pkgs.stdenv.mkDerivation rec {
     rev = "v${version}";
     sha256 = "1qgd8wy25vfnwi6hg1dkaary1897qgfwhz8jgbjspsidh7bzlmd1";
   };
+
+  nativeBuildInputs = [
+    makeWrapper
+  ];
 
   buildInputs = [
     pkgs.argocd
@@ -47,7 +54,26 @@ pkgs.stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    cp scaf $out/bin/
+    install -m 755 ${src}/scaf $out/bin/scaf
+
+    makeWrapper $out/bin/scaf $out/bin/scaf \
+      --set PATH ${lib.makeBinPath [
+        pkgs.argocd
+        pkgs.envsubst
+        pkgs.jq
+        pkgs.kind
+        pkgs.kubectl
+        pkgs.kubernetes-helm
+        pkgs.kubeseal
+        pkgs.podman
+        pkgs.podman-compose
+        pkgs.python3
+        pkgs.python3.pkgs.black
+        pkgs.python3.pkgs.cookiecutter
+        pkgs.python3.pkgs.isort
+        pkgs.python3.pkgs.pip-tools
+        pkgs.tilt
+      ]}
   '';
 
   meta = with pkgs.lib; {
