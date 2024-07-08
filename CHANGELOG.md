@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/sixfeetup/scaf/compare/v1.3.1...v1.4.0) (2024-07-08)
+
+### Features
+
+* Add credentials allow settings for CORS ([#272](https://github.com/sixfeetup/scaf/issues/272)) ([841c73e](https://github.com/sixfeetup/scaf/commit/841c73edec3faaab6d09131eb759c78eb59d6f22))
+
 ## [1.3.1](https://github.com/sixfeetup/scaf/compare/v1.3.0...v1.3.1) (2024-07-08)
 
 ### Bug Fixes
