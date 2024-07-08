@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/sixfeetup/scaf/compare/v1.4.0...v1.5.0) (2024-07-08)
+
+### Features
+
+* migrate to talos linux ([#252](https://github.com/sixfeetup/scaf/issues/252)) ([6437c73](https://github.com/sixfeetup/scaf/commit/6437c73242b02d8f6e00525d46ca0432e46f9f16))
+
 ## [1.4.0](https://github.com/sixfeetup/scaf/compare/v1.3.1...v1.4.0) (2024-07-08)
 
 ### Features
