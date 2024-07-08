@@ -8,7 +8,7 @@ data:
   DJANGO_ADMIN_URL: "admin/"
   DJANGO_SETTINGS_MODULE: "config.settings.local"
   DJANGO_SECRET_KEY: "CHANGEME"
-  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,django,.{{ cookiecutter.domain_name }}"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend,.{{ cookiecutter.domain_name }}"
   DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost,https://{{ cookiecutter.domain_name }}"
   DJANGO_SECURE_SSL_REDIRECT: "False"
   PGDATA: "/var/lib/postgresql/data/pgdata"
