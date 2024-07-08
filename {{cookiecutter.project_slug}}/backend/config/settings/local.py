@@ -67,6 +67,7 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # ------------------------------------------------------------------------------
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 {%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------
