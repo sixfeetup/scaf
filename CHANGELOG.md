@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/sixfeetup/scaf/compare/v1.2.0...v1.3.0) (2024-07-08)
+
+### Features
+
+* Add Django Cors Headers ([#269](https://github.com/sixfeetup/scaf/issues/269)) ([641d5dc](https://github.com/sixfeetup/scaf/commit/641d5dcf227dc54789c89b782f7d98ec145bb639))
+
 ## [1.2.0](https://github.com/sixfeetup/scaf/compare/v1.1.0...v1.2.0) (2024-07-08)
 
 ### Features
