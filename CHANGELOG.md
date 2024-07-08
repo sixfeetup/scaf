@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.0](https://github.com/sixfeetup/scaf/compare/v1.7.1...v1.8.0) (2024-07-08)
+
+### Features
+
+* Adds apollo graphql ([#275](https://github.com/sixfeetup/scaf/issues/275)) ([c3d4f20](https://github.com/sixfeetup/scaf/commit/c3d4f200efbcfaa17774e793b25cd6b6bd958df9))
+
 ## [1.7.1](https://github.com/sixfeetup/scaf/compare/v1.7.0...v1.7.1) (2024-07-08)
 
 ### Bug Fixes
