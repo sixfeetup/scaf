@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0](https://github.com/sixfeetup/scaf/compare/v1.5.0...v1.6.0) (2024-07-08)
+
+### Features
+
+* use dynamic volume provisioning for postgres pvc ([#270](https://github.com/sixfeetup/scaf/issues/270)) ([c9566fd](https://github.com/sixfeetup/scaf/commit/c9566fd42eccd339a143c049b05a511d7d360d5a))
+
 ## [1.5.0](https://github.com/sixfeetup/scaf/compare/v1.4.0...v1.5.0) (2024-07-08)
 
 ### Features
