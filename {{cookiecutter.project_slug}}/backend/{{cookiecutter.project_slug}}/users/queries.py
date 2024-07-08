@@ -11,3 +11,4 @@ class UserQuery:
     """
 
     me: UserType = strawberry_django.auth.current_user()
+    users = list[UserType] = strawberry_django.field()
