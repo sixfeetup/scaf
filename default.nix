@@ -31,6 +31,11 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    pkgs.python3
+    pkgs.python3.pkgs.cookiecutter
+  ];
+
+  propagatedBuildInputs = [
     pkgs.argocd
     pkgs.envsubst
     pkgs.jq
@@ -58,21 +63,8 @@ stdenv.mkDerivation rec {
 
     makeWrapper $out/bin/scaf $out/bin/scaf \
       --set PATH ${lib.makeBinPath [
-        pkgs.argocd
-        pkgs.envsubst
-        pkgs.jq
-        pkgs.kind
-        pkgs.kubectl
-        pkgs.kubernetes-helm
-        pkgs.kubeseal
-        pkgs.podman
-        pkgs.podman-compose
         pkgs.python3
-        pkgs.python3.pkgs.black
         pkgs.python3.pkgs.cookiecutter
-        pkgs.python3.pkgs.isort
-        pkgs.python3.pkgs.pip-tools
-        pkgs.tilt
       ]}
   '';
 
