@@ -18,6 +18,7 @@
           buildInputs = [
             pkgs.cookiecutter
             pkgs.nodejs
+            pkgs.nix-prefetch-git
             pkgs.python3
             pkgs.python3.pkgs.black
             pkgs.python3.pkgs.diagrams
