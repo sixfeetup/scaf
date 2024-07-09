@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/sixfeetup/scaf/compare/v1.8.0...v1.8.1) (2024-07-09)
+
+### Bug Fixes
+
+* add missing semantic-release-replace-plugin ([4f99fa2](https://github.com/sixfeetup/scaf/commit/4f99fa28ee82402b11807a97aff2ae28ebe3a4fe))
+* semantic release not updating version in package.json ([70cea4b](https://github.com/sixfeetup/scaf/commit/70cea4b82c8ff55eaa8e918eb2c97021ab908b01))
+
 ## [1.8.0](https://github.com/sixfeetup/scaf/compare/v1.7.1...v1.8.0) (2024-07-08)
 
 ### Features
