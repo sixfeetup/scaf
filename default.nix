@@ -43,6 +43,7 @@ stdenv.mkDerivation rec {
     pkgs.kubectl
     pkgs.kubernetes-helm
     pkgs.kubeseal
+    pkgs.opentofu
     pkgs.podman
     pkgs.podman-compose
     pkgs.python3
