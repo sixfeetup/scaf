@@ -5,7 +5,7 @@ DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
+  echo "Usage: scaf project_slug [OPTIONS] [TEMPLATE]"
   exit 1
 fi
 
@@ -49,14 +49,24 @@ echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
-  -e HOST_UID="$(id -u)" \
-  -e HOST_GID="$(id -g)" \
-  sixfeetup/scaf:$IMAGE_TAG \
-  cookiecutter \
-  $COOKIECUTTER_OPTIONS \
-  $REPO_URL \
-  project_slug="$PROJECT_SLUG"
+
+# cookiecutter will be available on the path if we installed the Scaf Nix
+# package
+if command -v cookiecutter &> /dev/null
+then
+    echo "Using cookiecutter from the path"
+    cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL project_slug="$PROJECT_SLUG"
+else
+    echo "Running cookiecutter in a Docker container"
+    docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
+      -e HOST_UID="$(id -u)" \
+      -e HOST_GID="$(id -g)" \
+      sixfeetup/scaf:$IMAGE_TAG \
+      cookiecutter \
+      $COOKIECUTTER_OPTIONS \
+      $REPO_URL \
+      project_slug="$PROJECT_SLUG"
+fi
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
