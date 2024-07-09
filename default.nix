@@ -60,9 +60,9 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m 755 ${src}/scaf $out/bin/scaf
+    install -m 755 ${src}/scaf $out/bin/scaf.sh
 
-    makeWrapper $out/bin/scaf $out/bin/scaf \
+    makeWrapper $out/bin/scaf.sh $out/bin/scaf \
       --set PATH ${lib.makeBinPath [
         pkgs.python3
         pkgs.python3.pkgs.cookiecutter
