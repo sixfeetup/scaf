@@ -385,3 +385,6 @@ dist
 *.tfvars.json
 
 .direnv
+
+# nix-build output
+result
