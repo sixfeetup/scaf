@@ -22,10 +22,17 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
-if not create_react_frontend:
+create_nextjs_frontend = "{{ cookiecutter.create_nextjs_frontend }}" == "y"
+if not create_nextjs_frontend:
     shutil.rmtree("frontend")
 
+create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
+if not create_react_frontend:
+    shutil.rmtree("frontend_react")
+
+# by default we have frontend folder for nextjs. If we want react then we rename react folder to be the frontend folder
+if create_react_frontend:
+    shutil.move("frontend_react", "frontend")
 
 def remove_celery_files():
     file_names = [
@@ -227,6 +234,43 @@ def remove_sentry_files():
     os.remove(os.path.join("docs", "sentry.md"))
 
 
+def remove_graphql_files():
+    os.remove(os.path.join("backend", "config", "schema.py"))
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "mutations.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "queries.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "types.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "tests",
+            "test_graphql_views.py",
+        )
+    )
+
+
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
@@ -251,6 +295,9 @@ def main():
 
     if "{{ cookiecutter.use_sentry }}".lower() == "n":
         remove_sentry_files()
+    
+    if "{{ cookiecutter.use_graphql }}".lower() == "n":
+        remove_graphql_files()
 
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))

@@ -1,31 +1,118 @@
-### Terraform is an infrastructure as code tool that manages provisioning AWS resources.
-https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli 
+# Terraform
 
-The terraform directory handles all infrastructure provisioning using terraform.
+This directory contains the Terraform configurations for the Scaf project. The
+configurations are organized into several directories, each serving a specific
+purpose. Below is a brief overview of each directory and instructions on how to
+run the Terraform configurations.
 
-### Commands:
-* `terraform init`: needs to be run first for every directory, installs the terraform providers
-* `terraform plan`: shows changes that will be done by the manifests, no changes will be applied yet
-* `terraform apply`: applies the changes shown by the plan output
+## Directory Structure
 
-### First step:
-* `./bootstrap`  
-Run apply in the bootstrap directory first to set up the terraform remote state used in all other manifests.
-* If your account is not an organisation account you will need to remove or adjust the assume_role block in the bootstrap/init.tf file.
+- **bootstrap**: Bootstraps the Terraform state in an S3 bucket and a DynamoDB
+  table. This configuration contains the states for all environments and only
+  needs to be run once.
 
-### Next steps:
-* `./management`  
-Set up the ECR repositories for the docker images, as well as IAM users and route 53 zone, this should be run after bootstrap.
+- **github**: Sets up a GitHub OIDC provider to allow GitHub to push container
+  images to ECR repositories.
 
-* `./ec2-cluster`  
-Sets up an EC2 instance and deploys a k3s cluster on it. For more information follow ./ec2_cluster/README.md  
-Note this will create a t2.medium instance that does not fall under the free tier.  
-This should be set up before attempting to deploy prod/sandbox.
+- **modules**: Contains a base module that is used by all environments.
 
-* `./prod` and `./sandbox`  
-Sets up route53 for prod and sandbox respectively.
+- **prod**: Contains the configuration for the production environment.
 
-### After terraform has initialised the deployment process will need to be updated with its outputs:
-* update CI/CD with the AWS access keys of the IAM `cicd_user`.
-* update kubernetes manifests and any CI/CD making calls to the ECR images with the ECR url.
-* update CloudNativePG manifest to set the backup with S3 `cloudnative_pg` bucket url.
+- **sandbox**: Contains the configuration for the sandbox environment.
+
+- **staging**: Contains the configuration for the staging environment.
+
+## Setup Instructions
+
+### Step 1: Bootstrap
+
+The first step is to bootstrap the Terraform state. This involves creating an S3
+bucket and a DynamoDB table to manage the state and locking.
+
+1. Navigate to the `bootstrap` directory:
+    ```bash
+    cd bootstrap
+    ```
+
+2. Initialize the Terraform configuration:
+    ```bash
+    terraform init
+    ```
+
+3. Plan the Terraform configuration:
+    ```bash
+    terraform plan -out="tfplan.out"
+    ```
+
+4. Apply the Terraform configuration:
+    ```bash
+    terraform apply tfplan.out
+    ```
+
+### Step 2: GitHub OIDC Provider
+
+After bootstrapping the state, the next step is to set up the GitHub OIDC
+provider.
+
+1. Navigate to the `github` directory:
+    ```bash
+    cd ../github
+    ```
+
+2. Initialize the Terraform configuration:
+    ```bash
+    terraform init
+    ```
+
+3. Plan the Terraform configuration:
+    ```bash
+    terraform plan -out="tfplan.out"
+    ```
+
+4. Apply the Terraform configuration:
+    ```bash
+    terraform apply tfplan.out
+    ```
+
+### Step 3: Environment Configurations
+
+The final step is to set up the respective environment configurations (prod,
+sandbox, staging).
+
+1. Navigate to the desired environment directory (e.g., `prod`, `sandbox`,
+   `staging`):
+
+    ```bash
+    cd ../<environment>
+    ```
+
+2. Initialize the Terraform configuration:
+    ```bash
+    terraform init
+    ```
+
+3. Plan the Terraform configuration:
+    ```bash
+    terraform plan -out="tfplan.out"
+    ```
+
+4. Apply the Terraform configuration:
+    ```bash
+    terraform apply tfplan.out
+    ```
+
+## Summary
+
+The order of operations is critical for the correct setup of the Terraform
+configurations:
+
+1. Bootstrap the Terraform state (`bootstrap` directory).
+2. Set up the GitHub OIDC provider (`github` directory).
+3. Configure the desired environment (`prod`, `sandbox`, or `staging` directory).
+
+
+Each step involves running `terraform init`, `terraform plan -out="tfplan.out"`,
+and `terraform apply tfplan.out`.
+
+Following these steps ensures that your infrastructure is set up correctly and
+efficiently.

@@ -79,6 +79,12 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
 {%- endif %}
+{%- if cookiecutter.use_graphql == "y" %}
+    "strawberry_django",
+{%- endif %}
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+    "corsheaders",
+{%- endif %}
 ]
 
 LOCAL_APPS = [
@@ -135,6 +141,9 @@ MIDDLEWARE = [
     "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    {%- if cookiecutter.use_graphql == "y"  or cookiecutter.use_drf == "y"%}
+    "corsheaders.middleware.CorsMiddleware",
+    {%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -330,6 +339,17 @@ sentry_sdk.init(
     release=env.str("RELEASE", default="dev"),
 )
 {% endif %}
+
+{%- if cookiecutter.use_graphql == "y" %}
+# ------------------------------------------------------------------------------
+# GraphQL settings
+STRAWBERRY_DJANGO = {
+    "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
+    "TYPE_DESCRIPTION_FROM_MODEL_DOCSTRING": True,
+    "MUTATIONS_DEFAULT_ARGUMENT_NAME": "input",
+    "MUTATIONS_DEFAULT_HANDLE_ERRORS": True,
+}
+{%- endif %}
 
 # Your stuff...
 # ------------------------------------------------------------------------------

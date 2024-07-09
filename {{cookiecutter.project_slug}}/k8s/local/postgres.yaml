@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:12.7
+          image: postgres:16
           ports:
             - containerPort: 5432
           envFrom:
@@ -63,31 +63,16 @@ spec:
             claimName: postgres-pvc
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/postgres-data
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    tilt.dev/down-policy: keep
   name: postgres-pvc
   labels:
     type: local
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi
-  volumeName: postgres-pv

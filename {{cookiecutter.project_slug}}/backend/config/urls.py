@@ -8,6 +8,10 @@ from django.views.generic import TemplateView
 {%- if cookiecutter.use_drf == 'y' %}
 from rest_framework.authtoken.views import obtain_auth_token
 {%- endif %}
+{%- if cookiecutter.use_graphql == "y" %}
+from strawberry.django.views import GraphQLView
+from .schema import schema
+{%- endif %}
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -31,6 +35,13 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+]
+{%- endif %}
+
+
+{%- if cookiecutter.use_graphql == "y" %}
+urlpatterns += [
+    path("graphql/", GraphQLView.as_view(schema=schema)),
 ]
 {%- endif %}
 

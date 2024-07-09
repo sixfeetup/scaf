@@ -1,37 +1,39 @@
-# Vite + React + Typescript + Eslint + Prettier + Jest(Testing Library)
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-A starter for React with Typescript with the fast Vite and all static code testing with Eslint,formatting with Prettier and basic unit test template with Jest.
+## Getting Started
 
+Running the development server:
 
-## Installation
+Tilt will automatically deploy a NextJS container for development, and it is recommended not to run NextJS locally.
 
-run `npm install`
+Update the .env.local.example file to .env.local
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Start
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-After the successfull installation of the packages: `npm run dev`
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This project uses GraphQL for the backend, and Apollo Client for the frontend. The Apollo Client is set up in the `lib/apolloClient.ts` file.
 
-Whenever you want to lint all the source 
+## Environment Variables
 
-run `npm run lint`
+| Variable Name                | Explanation                                                |
+| ---------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
+| IS_PRE_PUSH_HOOKS_ENABLED    | Controls husky pre-push hooks for frontend folder          | {% if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %} |
+| NEXT_PUBLIC_GRAPHQL_ENDPOINT | The public graphql endpoint url                            |
+| NEXT_GRAPHQL_ENDPOINT        | The graphql endpoint url to be used for serverside queries | {% endif %}                                                             |
 
-If you want to lint and stage changes combine
+## Suggested Tools
 
-run `lint-staged-fix`
+[Apollo Client Devtools](https://chromewebstore.google.com/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm)
+[GraphQL Network Inspector](https://chromewebstore.google.com/detail/graphql-network-inspector/ndlbedplllcgconngcnfmkadhokfaaln)
 
-## Build
+## Learn More
 
-run `npm run build`
+To learn more about Next.js, take a look at the following resources:
 
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Steps in Vscode
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-#### (works with better with this template)
-
-1. Install Eslint and prettier extension for vs code.
-2. Make Sure Both are enabled
-3. Make sure all packages are Installed. (Mostly Eslint and prettier in node_modules)
-4. Enable formatOnSave of vs code
-5. Open a .tsx file and check if the bottom right corners of vs code have Eslint and Prettier with a double tick
-
-
+Check out the official [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

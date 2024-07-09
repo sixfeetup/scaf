@@ -8,7 +8,7 @@ a new project and streamlines the development experience with Tilt.
 **scaf** generates a new project structure with Kubernetes manifests in
 three Kustomize layers for dev, sandbox, and production. A new project 
 contains the following:
-* React frontend
+* NextJS or React frontend
 * Django backend
 * Postgres database for local development
 * CloudNativePG deployment for production
@@ -48,7 +48,61 @@ Note that you will need:
 - an AWS account where you have access to the `OrganizationAccountAccessRole`
 - terraform, and AWS CLI installed and configured 
 
-## Development on scaf
+## Development on Scaf
+
+### Nix Flake
+
+Scaf provides a Nix Flake to install all the required packages for development.
+The Nix Flake ensures all developers are using the same versions of all packages
+to develop on Scaf in an isolated environment.
+
+Follow the instructions to install
+[Nix](https://nixos.org/download/#download-nix) for your OS. 
+
+Nix Flakes are a feature that comes with Nix, but they are considered
+experimental and are not enabled by default in stable releases of Nix. To use
+Nix Flakes, you need to enable them by configuring your Nix installation to
+allow experimental features.
+
+1. Ensure you have a recent version of Nix installed:
+
+Nix Flakes are available in recent versions of Nix. You can check your Nix
+version using:
+
+```sh
+nix --version
+```
+
+If you need to install or update Nix, you can follow the instructions on the Nix
+installation page.
+
+2. Enable experimental features:
+
+You need to enable the experimental features in your Nix configuration. To do
+this, add the following lines to your ~/.config/nix/nix.conf file. If the file
+doesn't exist, you can create it:
+
+```ini
+experimental-features = nix-command flakes
+```
+
+3. Using Nix Flakes:
+
+Once you have enabled the experimental features, you can use Nix Flakes with the
+nix command. For example:
+
+```sh
+nix flake show
+```
+
+This command will display information about the flake in the current directory
+if you have a flake.nix file.
+
+Finally, install [Direnv](https://direnv.net/) and run `direnv allow`. The
+direnv configuration in `.envrc` will use the flake to install the required
+packages.
+
+### Django version updates
 
 When making changes to scaf, keep the following in mind:
 

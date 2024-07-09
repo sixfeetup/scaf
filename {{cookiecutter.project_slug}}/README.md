@@ -41,7 +41,14 @@ Consult the links below if you prefer to use Minikube or Docker Desktop instead:
        $ kubectl config current-context
 
 4. To spin up the app and all the services such as the database, use
+
        $ tilt up
+
+:information_source: It may take a little bit of time for all the services to start up, and it's possible for
+the first run to fail because of timing conflicts. If you do see messages indicating there
+were errors during the first run, stop all the containers using Ctrl-C, and then try it again.
+
+:information_source: You can type `s` to view the console output as it starts up to confirm that the process isn't hanging.
 
 You are now ready to edit the code.
 The app will be automatically reloaded when its files change.

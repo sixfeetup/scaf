@@ -383,3 +383,5 @@ dist
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+
+.direnv
