@@ -4,6 +4,7 @@ metadata:
   name: app-config
 data:
   DJANGO_DEBUG: "False"
+  DEBUGGER_IDE: ""  # "pycharm" or empty
   USE_DOCKER: "yes"
   DJANGO_ADMIN_URL: "admin/"
   DJANGO_SETTINGS_MODULE: "config.settings.local"
