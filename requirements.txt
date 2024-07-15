@@ -314,3 +314,4 @@ virtualenv==20.16.3 \
     --hash=sha256:4193b7bc8a6cd23e4eb251ac64f29b4398ab2c233531e66e40b19a6b7b0d30c1 \
     --hash=sha256:d86ea0bb50e06252d79e6c241507cb904fcd66090c3271381372d6221a3970f9
     # via tox
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
