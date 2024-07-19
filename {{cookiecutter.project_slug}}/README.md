@@ -141,7 +141,7 @@ Update `k8s/base/app.configmap.yaml` with `data` field `DEBUGGER_IDE: "pycharm"`
 
 In PyCharm:
 
-1. got to Run in the toolbar
+1. Go to 'Run' in the toolbar
 2. Click on 'Edit Configurations'
 3. Click '+' in the top left of the dialog
 4. Select 'Python Debug Server'
