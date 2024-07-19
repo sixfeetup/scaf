@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Use the version below while working on cookiecutter itself
+# cd ./{{ cookiecutter.project_slug }}/frontend && npx lint-staged
+cd ./frontend && npx lint-staged

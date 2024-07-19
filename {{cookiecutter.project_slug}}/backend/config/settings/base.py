@@ -4,6 +4,9 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+{% if cookiecutter.use_sentry == 'y' %}
+import sentry_sdk
+{% endif %}
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # {{ cookiecutter.project_slug }}/
@@ -76,6 +79,12 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
 {%- endif %}
+{%- if cookiecutter.use_graphql == "y" %}
+    "strawberry_django",
+{%- endif %}
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+    "corsheaders",
+{%- endif %}
 ]
 
 LOCAL_APPS = [
@@ -129,8 +138,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    {%- if cookiecutter.use_graphql == "y"  or cookiecutter.use_drf == "y"%}
+    "corsheaders.middleware.CorsMiddleware",
+    {%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -228,7 +241,7 @@ EMAIL_TIMEOUT = 5
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""{{cookiecutter.author_name}}""", "{{cookiecutter.email}}")]
+ADMINS = [("""{{ cookiecutter.author_name }}""", "{{ cookiecutter.email }}")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
@@ -292,9 +305,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.SocialAccountAdapter"
 {% if cookiecutter.use_compressor == "y" -%}
 # django-compressor
 # ------------------------------------------------------------------------------
@@ -316,6 +329,27 @@ REST_FRAMEWORK = {
 {%- endif %}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+{% if cookiecutter.use_sentry == 'y' %}
+# ------------------------------------------------------------------------------
+# Sentry
+sentry_sdk.init(
+    dsn=env.str("SENTRY_DSN_BACKEND", default=""),
+    environment=env.str("ENVIRONMENT", default="production"),
+    release=env.str("RELEASE", default="dev"),
+)
+{% endif %}
+
+{%- if cookiecutter.use_graphql == "y" %}
+# ------------------------------------------------------------------------------
+# GraphQL settings
+STRAWBERRY_DJANGO = {
+    "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
+    "TYPE_DESCRIPTION_FROM_MODEL_DOCSTRING": True,
+    "MUTATIONS_DEFAULT_ARGUMENT_NAME": "input",
+    "MUTATIONS_DEFAULT_HANDLE_ERRORS": True,
+}
+{%- endif %}
 
 # Your stuff...
 # ------------------------------------------------------------------------------

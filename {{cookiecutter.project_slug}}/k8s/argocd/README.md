@@ -16,7 +16,7 @@ Find your cluster context (set your KUBECONFIG file if neccessary)
 
 Add your cluster to ArgoCD. This will also output the `CLUSTER_IP` you will use in the application.
 
-    $ argocd cluster add {{cookiecutter.project_slug}}-ec2-cluster
+    $ argocd cluster add {{ cookiecutter.project_slug }}-ec2-cluster
 
 ### Creating the ArgoCD application manifests
 
@@ -36,10 +36,10 @@ Create the `application.yaml` manifest and `repocred.yaml` secret and seal it
 
     $ make argocd-app
 
-If you are working in the SFU environment move your application and repocreds manifest to `sixfeetup/controlplane.git/argocd/applications/{{cookiecutter.project_slug}}/`
+If you are working in the SFU environment move your application and repocreds manifest to `sixfeetup/controlplane.git/argocd/applications/{{ cookiecutter.project_slug }}/`
 
 Apply the manifests
 
-    $ kubectl apply -f argocd/applications/{{cookiecutter.project_slug}}
+    $ kubectl apply -f argocd/applications/{{ cookiecutter.project_slug }}
 
 Your ArgoCD application should be visible on the ArgoCD dashboard. Check the repository and cluster connection.

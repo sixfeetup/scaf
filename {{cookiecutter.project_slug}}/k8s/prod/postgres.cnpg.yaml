@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  instances: 1
+  envFrom:
+  - configMapRef:
+      name: app-config
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 2Gi

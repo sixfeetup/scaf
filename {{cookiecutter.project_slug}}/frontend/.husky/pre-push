@@ -1,0 +1,9 @@
+cd frontend
+if test -f ./.env.local; then
+  source ./.env.local
+  if [ "$IS_PRE_PUSH_HOOKS_ENABLED" = "true" ] || [ "$IS_PRE_PUSH_HOOKS_ENABLED" = "1" ]; then
+    npm run format-check
+    npm run lint-src
+    npm run typecheck
+  fi
+fi

@@ -11,7 +11,10 @@ SECRET_KEY = env(
     default="!!!SET DJANGO_SECRET_KEY!!!",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # nosec
+ALLOWED_HOSTS = env(
+    "DJANGO_ALLOWED_HOSTS",
+    default=["backend", "localhost", "127.0.0.1"],
+)
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -61,6 +64,13 @@ if env("USE_DOCKER") == "yes":
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
 CELERY_TASK_EAGER_PROPAGATES = True
 
+{%- endif %}
+
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y"  %}
+# ------------------------------------------------------------------------------
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 {%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------

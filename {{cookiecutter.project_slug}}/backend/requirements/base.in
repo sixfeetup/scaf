@@ -9,6 +9,9 @@ django-redis==5.2.0
 Pillow==9.4.0
 # urllib3<1.27,>=1.25.4 (from botocore==1.29.133), see #60 
 urllib3<1.27
+{% if cookiecutter.use_sentry == 'y' %}
+sentry-sdk[django]==1.40.0
+{% endif %}
 
 {%- if cookiecutter.use_compressor == "y" %}
 django-compressor==4.1
@@ -25,4 +28,12 @@ redis~=4.4.0
 django-cors-headers==3.13.0
 djangorestframework~=3.14.0
 drf-spectacular==0.25.1
+{%- endif %}
+
+{%- if cookiecutter.use_graphql == "y" %}
+strawberry-graphql-django==0.46.1
+{%- endif %}
+
+{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+django-cors-headers==3.13.0
 {%- endif %}

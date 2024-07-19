@@ -8,6 +8,5 @@ COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN addgroup -S scaf && adduser -s /bin/ash -S scaf -G scaf
 WORKDIR /home/scaf/out
-RUN chown scaf:scaf /home/scaf/out
 
 ENTRYPOINT [ "entrypoint.sh" ]
