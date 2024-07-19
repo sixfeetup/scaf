@@ -136,7 +136,7 @@ You can also manually export the variables to your environment using `source .en
 
 The steps below describe how to set up interactive debugging with PyCharm.
 
-#### Debugging Setup
+#### PyCharm Debugging Setup
 Update `k8s/base/app.configmap.yaml` with `data` field `DEBUGGER_IDE: "pycharm"`
 
 In PyCharm:
