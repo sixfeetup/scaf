@@ -143,7 +143,7 @@ In PyCharm:
 
 1. Go to 'Run' in the toolbar
 2. Click on 'Edit Configurations'
-3. Click '+' in the top left of the dialog
+3. Click on '+' in the top left of the dialog
 4. Select 'Python Debug Server'
 5. Set the host to 0.0.0.0 and the port to 6400, and the name as you see fit.
 6. Click 'Ok'
