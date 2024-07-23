@@ -16,7 +16,7 @@ Consult the links below if you prefer to use Minikube or Docker Desktop instead:
 
 1. Get the repository
 
-       $ git clone git@github.com:Love-My-Delta-Inc/{{ cookiecutter.project_slug }}.git
+       $ git clone {{ cookiecutter.repo_url }}
        $ cd {{ cookiecutter.project_slug }}
 
 2. Prepare the environment variables. Edit the `.envrc` file to work for your environment.
