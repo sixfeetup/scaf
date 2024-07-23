@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.0](https://github.com/sixfeetup/scaf/compare/v1.8.1...v1.9.0) (2024-07-23)
+
+### Features
+
+* added support for debuggers, with initial support for pycharm (close [#277](https://github.com/sixfeetup/scaf/issues/277)) ([c2392cb](https://github.com/sixfeetup/scaf/commit/c2392cb63c8d960f8f89b38171465039ed26a9ae))
+
+### Documentation
+
+* Make the generated README more contributor oriented ([#230](https://github.com/sixfeetup/scaf/issues/230)) ([3b3e63d](https://github.com/sixfeetup/scaf/commit/3b3e63df7655b070c50265f7f5e6a87aa56acacc))
+
 ## [1.8.1](https://github.com/sixfeetup/scaf/compare/v1.8.0...v1.8.1) (2024-07-09)
 
 ### Bug Fixes
