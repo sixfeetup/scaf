@@ -20,3 +20,12 @@ patches:
   target:
     kind: Deployment
     name: backend
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: DOCKER_GATEWAY_IP # used for debugger to reach out to host machine
+          value: "172.17.0.1"
+  target:
+    kind: Deployment
+    name: backend
