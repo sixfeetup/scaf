@@ -4,8 +4,10 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+
 {% if cookiecutter.use_sentry == 'y' %}
 import sentry_sdk
+
 {% endif %}
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -69,6 +71,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
+    "crispy_bootstrap5",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -137,6 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -209,7 +213,9 @@ TEMPLATES = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
