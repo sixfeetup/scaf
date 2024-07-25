@@ -1,37 +1,10 @@
 locals {
   common_machine_config_patch = {
     machine = {
-      install = {
-        image : "factory.talos.dev/installer/10e276a06c1f86b182757a962258ac00655d3425e5957f617bdc82f06894e39b:v1.7.4"
-      }
       kubelet = {
         # The registerWithFQDN field is used to force kubelet to use the node
         # FQDN for registration. This is required in clouds like AWS.
         registerWithFQDN = true
-
-        # # Required for Metrics Server
-        extraArgs = {
-          rotate-server-certificates : true
-        }
-
-        credentialProviderConfig : {
-          apiVersion : "kubelet.config.k8s.io/v1",
-          kind : "CredentialProviderConfig",
-          providers : [
-            {
-              name : "ecr-credential-provider",
-              matchImages : [
-                "*.dkr.ecr.*.amazonaws.com",
-                "*.dkr.ecr.*.amazonaws.com.cn",
-                "*.dkr.ecr-fips.*.amazonaws.com",
-                "*.dkr.ecr.us-iso-east-1.c2s.ic.gov",
-                "*.dkr.ecr.us-isob-east-1.sc2s.sgov.gov"
-              ],
-              defaultCacheDuration : "12h",
-              apiVersion : "credentialprovider.kubelet.k8s.io/v1"
-            }
-          ]
-        }
       }
     }
   }
@@ -41,13 +14,6 @@ locals {
       # Allow scheduling work loads on the control plane since we don't have a
       # separate control plane
       allowSchedulingOnControlPlanes = true
-
-      # Install Kubelet Serving Certificate Approver and metrics-server during
-      # bootstrap
-      extraManifests = [
-        "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
-        "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-      ]
     }
   }
 
@@ -126,8 +92,6 @@ data "talos_cluster_kubeconfig" "this" {
 
 # disable this check by running `make remove-talos-state`
 data "talos_cluster_health" "this" {
-  count = fileexists("./talosconfig") ? 1 : 0
-
   depends_on = [
     data.talos_client_configuration.this,
     data.talos_cluster_kubeconfig.this,
@@ -137,20 +101,4 @@ data "talos_cluster_health" "this" {
   client_configuration = talos_machine_secrets.this.client_configuration
   endpoints            = module.control_plane_nodes.*.public_ip
   control_plane_nodes  = module.control_plane_nodes.*.private_ip
-}
-
-resource "null_resource" "talosconfig_file" {
-  depends_on = [data.talos_client_configuration.this]
-
-  provisioner "local-exec" {
-    command = "echo '${data.talos_client_configuration.this.talos_config}' > ./talosconfig"
-  }
-}
-
-resource "null_resource" "kubeconfig_file" {
-  depends_on = [talos_machine_bootstrap.this]
-
-  provisioner "local-exec" {
-    command = "echo '${data.talos_cluster_kubeconfig.this.kubeconfig_raw}' > ./kubeconfig"
-  }
 }

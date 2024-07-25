@@ -1,0 +1,83 @@
+- name: Bootstrap Talos on EC2 Hosts
+  hosts: localhost
+  gather_facts: no
+  vars:
+    control_plane_endpoint: "https://k8s.{{ environ }}.{{ cookiecutter.domain_name }}:6443"
+    cluster_name: "{{ cookiecutter.project_dash }}-{{ environ }}"
+    secret_prefix: "{{ environ }}_"
+  tasks:
+    - name: Check if 'environ' variable is set
+      assert:
+        that:
+          - environ is defined
+          - environ | length > 0
+        fail_msg: "The 'environ' variable is required but not set."
+        success_msg: "The 'environ' variable is set to {{ environ }}."
+
+    - name: Retrieve public IPs of EC2 hosts
+      command: tofu -chdir=../terraform/{{ environ }} output -raw control_plane_nodes_public_ips
+      register: ec2_hosts_output
+
+    - name: Set EC2 hosts IPs
+      set_fact:
+        ec2_hosts: "{{ ec2_hosts_output.stdout.split() }}"
+
+    - name: Generate Talos machine configurations
+      command: >
+        talosctl gen config {{ cluster_name }} {{ control_plane_endpoint }}
+          --output-types controlplane,talosconfig
+          --config-patch @patch-machine.yaml
+          --config-patch-control-plane @patch-control-plane.yaml
+          --with-examples=false
+          --with-docs=false
+
+    - name: Set endpoints
+      command: >
+        talosctl config endpoint {{ ec2_hosts }}
+      environment:
+        TALOSCONFIG: ./talosconfig
+
+    - name: Read generated controlplane config
+      slurp:
+        src: ./controlplane.yaml
+      register: controlplane_config
+
+    - name: Store controlplane config in AWS Secrets Manager
+      community.aws.secretsmanager_secret:
+        name: "{{ secret_prefix }}_talos_controlplane_yaml"
+        secret: "{{ controlplane_config.content | b64decode }}"
+        state: present
+
+    - name: Read generated talosconfig
+      slurp:
+        src: ./config
+      register: ./talosconfig
+
+    - name: Store talosconfig in AWS Secrets Manager
+      community.aws.secretsmanager_secret:
+        name: "{{ secret_prefix }}_talosconfig_yaml"
+        secret: "{{ talosconfig.content | b64decode }}"
+        state: present
+
+    - name: Apply Talos configuration
+      command: >
+        talosctl apply-config --insecure --nodes {{ ec2_hosts | join(',') }} --file controlplane.yaml
+      environment:
+        TALOSCONFIG: ./talosconfig
+
+    - name: Bootstrap Kubernetes on the first control plane node
+      command: talosctl bootstrap --nodes {{ ec2_hosts[0] }}
+      environment:
+        TALOSCONFIG: ./talosconfig
+
+    - name: Retrieve kubeconfig
+      command: talosctl kubeconfig --nodes {{ ec2_hosts[0] }} --talosconfig
+      register: kubeconfig_output
+      environment:
+        TALOSCONFIG: ./talosconfig
+
+    - name: Store kubeconfig in AWS Secrets Manager
+      community.aws.secretsmanager_secret:
+        name: "{{ secret_prefix }}_kubeconfig"
+        secret: "{{ kubeconfig_output.stdout }}"
+        state: present
