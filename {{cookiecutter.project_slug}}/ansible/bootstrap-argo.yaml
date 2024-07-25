@@ -1,0 +1,53 @@
+---
+- name: Setup ArgoCD
+  hosts: control
+  gather_facts: false
+  vars:
+    ansible_connection: local
+    repos:
+      - url: "{{ repo_url }}"
+        deploy_key: "{{ lookup('env', 'GITHUB_ARGOCD_DEPLOY_KEY') }}"
+  tasks:
+    - name: Deploy ArgoCD
+      run_once: true
+      kubernetes.core.helm:
+        name: argocd
+        chart_ref: argo-cd
+        chart_repo_url: https://argoproj.github.io/argo-helm
+        chart_version: 7.3.6
+        create_namespace: true
+        release_namespace: argocd
+        values:
+          configs:
+            params:
+              server.insecure: true
+
+    - name: Create and apply repo credentials secret for each repo
+      run_once: true
+      no_log: true
+      vars:
+        repo_url: "{{ repo_url }}"
+        github_deploy_key: "{{ lookup('env', 'GITHUB_ARGOCD_DEPLOY_KEY') }}"
+        repo_name: "{{ repo_url | basename }}"
+      shell: |
+        cat <<EOF | kubectl apply -f -
+        {{ lookup('template', 'repocreds.template.yaml', combine({
+          'repo_url': repo_url,
+          'github_deploy_key': github_deploy_key,
+          'repo_name': repo_name
+        })) }}
+        EOF
+
+    - name: Create GitHub webhook secret and apply
+      run_once: true
+      shell: |
+        kubectl -n argocd create secret generic github-token \
+          --from-literal=token="{{ lookup('env', 'ARGOCD_GITHUB_ACCESS_TOKEN') }}" \
+          --dry-run=client -o yaml | \
+        kubectl apply -f -
+
+    - name: Bootstrap the Cluster
+      run_once: true
+      kubernetes.core.k8s:
+        state: present
+        src: ./root-apps.yaml

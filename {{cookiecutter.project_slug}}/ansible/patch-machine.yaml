@@ -1,0 +1,23 @@
+machine:
+  install:
+    image: 'factory.talos.dev/installer/10e276a06c1f86b182757a962258ac00655d3425e5957f617bdc82f06894e39b:v1.7.4'
+  kubelet:
+    # The registerWithFQDN field is used to force kubelet to use the node
+    # FQDN for registration. This is required in clouds like AWS.
+    registerWithFQDN: true
+    # # Required for Metrics Server
+    extraArgs:
+      rotate-server-certificates: true
+    credentialProviderConfig:
+      apiVersion: 'kubelet.config.k8s.io/v1'
+      kind: 'CredentialProviderConfig'
+      providers:
+        - name: 'ecr-credential-provider'
+          matchImages:
+            - '*.dkr.ecr.*.amazonaws.com'
+            - '*.dkr.ecr.*.amazonaws.com.cn'
+            - '*.dkr.ecr-fips.*.amazonaws.com'
+            - '*.dkr.ecr.us-iso-east-1.c2s.ic.gov'
+            - '*.dkr.ecr.us-isob-east-1.sc2s.sgov.gov'
+          defaultCacheDuration: '12h'
+          apiVersion: 'credentialprovider.kubelet.k8s.io/v1'
