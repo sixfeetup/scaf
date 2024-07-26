@@ -19,6 +19,7 @@ docker_build(
     ],
 )
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 docker_build(
     "frontend",
     context="frontend",
@@ -26,6 +27,7 @@ docker_build(
         sync("./frontend", "/app"),
     ],
 )
+{% endif %}
 
 k8s_yaml(
     kustomize("./k8s/local/")
@@ -39,6 +41,7 @@ syncback(
     rsync_path='/app/bin/rsync.tilt',
 )
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 syncback(
     "frontend-sync",
     "deploy/frontend",
@@ -46,8 +49,11 @@ syncback(
     target_dir="./frontend",
     rsync_path='/app/rsync.tilt',
 )
+{% endif %}
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 k8s_resource(workload='frontend', port_forwards=3000)
+{% endif %}
 k8s_resource(workload='backend', port_forwards=8000)
 k8s_resource(workload='mailhog', port_forwards=8025)
 k8s_resource(workload='postgres', port_forwards=5432)
