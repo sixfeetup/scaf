@@ -1,10 +1,10 @@
 import os
 import random
+import shlex
 import shutil
 import string
-import zipfile
 import subprocess
-import shlex
+import zipfile
 
 try:
     # Inspired by
@@ -26,13 +26,6 @@ create_nextjs_frontend = "{{ cookiecutter.create_nextjs_frontend }}" == "y"
 if not create_nextjs_frontend:
     shutil.rmtree("frontend")
 
-create_react_frontend = "{{ cookiecutter.create_react_frontend }}" == "y"
-if not create_react_frontend:
-    shutil.rmtree("frontend_react")
-
-# by default we have frontend folder for nextjs. If we want react then we rename react folder to be the frontend folder
-if create_react_frontend:
-    shutil.move("frontend_react", "frontend")
 
 def remove_celery_files():
     file_names = [
@@ -295,7 +288,7 @@ def main():
 
     if "{{ cookiecutter.use_sentry }}".lower() == "n":
         remove_sentry_files()
-    
+
     if "{{ cookiecutter.use_graphql }}".lower() == "n":
         remove_graphql_files()
 

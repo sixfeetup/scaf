@@ -12,7 +12,7 @@ check-lint-and-formatting:  ## Execute check of lint and formatting using existi
 	pre-commit install; \
 	pre-commit run -a
 
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
 check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 	cd frontend/; \
 	npm install --legacy-peer-deps; \
@@ -34,7 +34,7 @@ else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
 endif
 
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
 frontend-test: ## Execute frontend tests
 ifeq ($(CI),true)
 	cd frontend/; \

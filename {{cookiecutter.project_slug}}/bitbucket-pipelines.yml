@@ -41,7 +41,7 @@ definitions:
         script:
           - make check-lint-and-formatting
 
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
     - step: &check-lint-and-test-frontend
         name: Frontend Lint & Typecheck & Test
         image: node:16-bullseye
@@ -63,7 +63,7 @@ pipelines:
   default:
     - parallel:
       - step: *check-lint-and-formatting
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
       - step: *check-lint-and-test-frontend
 {% endif %}
       - step: *backend-tests

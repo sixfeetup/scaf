@@ -5,15 +5,12 @@
   "description": "Behold My Awesome Project!",
   "author_name": "Joe Sixie",
   "domain_name": "sixfeetup.com",
-  "repo_name": "{{ cookiecutter.project_name }}",
-  "repo_url": "git@github.com:sixfeetup/{{ cookiecutter.project_slug }}.git",
-  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
+  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@{{ cookiecutter.domain_name }}",
   "version": "0.1.0",
   "timezone": "US/Eastern",
   "aws_region": "us-east-1",
   "aws_account_id": "000000000000",
   "create_nextjs_frontend": "y",
-  "create_react_frontend": "n",
   "mail_service": [
     "Mailgun",
     "Amazon SES",
@@ -27,16 +24,20 @@
   "use_sentry": "n",
   "debug": "n",
   "source_control_provider": [
-    "bitbucket",
-    "github",
+    "bitbucket.org",
+    "github.com",
     "none"
   ],
+  "source_control_organization_slug": "sixfeetup",
   "__prompts__": {
+    "source_control_organization_slug": "What is the organization slug for the source control provider?",
     "source_control_provider": {
       "__prompt__": "Which source control provider do you want to use?",
       "bitbucket": "Bitbucket",
       "github": "Github",
       "none": "No source control provider"
     }
-  }
+  },
+  "repo_name": "{{ cookiecutter.project_slug }}",
+  "repo_url": "git@{{ cookiecutter.source_control_provider }}:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_slug }}.git"
 }

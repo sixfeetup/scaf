@@ -1,8 +1,0 @@
-node_modules/
-dist/
-.prettierrc.json
-.eslintrc.cjs
-vite.config.ts
-env.d.ts
-config/
-src/__mocks__/styleMock.js
