@@ -1,5 +1,5 @@
 # Build all of the dependencies then we will build the actual application image
-FROM python:3.10-slim-bullseye as build
+FROM python:3.12-slim-bullseye as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -9,16 +9,16 @@ ARG DEVEL=no
 ARG TEST=no
 
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y \
+    && apt-get install --no-install-recommends -y \
     build-essential \
     ca-certificates \
     curl \
     gettext \
     gnupg \
-  && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-  && apt-get update \
-  && apt-get install --no-install-recommends -y \
+    && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y \
     libffi-dev \
     libpq-dev \
     libssl-dev \
@@ -52,15 +52,15 @@ RUN set -x \
 
 RUN set -x \
     && pip --no-cache-dir --disable-pip-version-check install --no-deps \
-        -r /tmp/requirements/production.txt \
-        -r /tmp/requirements/base.txt
+    -r /tmp/requirements/production.txt \
+    -r /tmp/requirements/base.txt
 
 RUN set -x \
     && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
-        -r /tmp/requirements/tests.txt; fi
+    -r /tmp/requirements/tests.txt; fi
 
 # Now we can build the application image
-FROM python:3.10-slim-bullseye
+FROM python:3.12-slim-bullseye
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
@@ -80,27 +80,27 @@ RUN set -x \
     && mkdir -p /usr/share/man/man7
 
 RUN apt-get update \
-  # psycopg2 dependencies
-  && apt-get install --no-install-recommends -y \
+    # psycopg2 dependencies
+    && apt-get install --no-install-recommends -y \
     ca-certificates \
     curl \
     gettext \
     gnupg \
-  && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-  && apt-get update \
-  && apt-get install --no-install-recommends -y \
+    && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install --no-install-recommends -y \
     libpq5 \
     $(if [ "$DEVEL" = "yes" ]; then echo 'bash postgresql-client-14'; fi) \
-  # awscli
-  && apt-get install -y \
+    # awscli
+    && apt-get install -y \
     awscli \
-  # cleaning up unused files
-  && apt-get remove -y \
+    # cleaning up unused files
+    && apt-get remove -y \
     curl \
     gnupg \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN adduser --system --no-create-home django
 COPY --chown=django:django --from=build /app/ /app/

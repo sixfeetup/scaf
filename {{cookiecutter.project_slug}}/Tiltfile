@@ -14,6 +14,7 @@ docker_build(
     context="backend",
     build_args={"DEVEL": "yes", "TEST": "yes"},
     live_update=[
+        sync("./backend/config", "/app/src/config"),
         sync("./backend/{{ cookiecutter.project_slug }}", "/app/src/{{ cookiecutter.project_slug }}"),
     ],
 )

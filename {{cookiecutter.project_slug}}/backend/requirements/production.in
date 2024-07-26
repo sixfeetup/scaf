@@ -2,19 +2,19 @@
 
 -r base.txt
 
-gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
-psycopg2==2.9.3  # https://github.com/psycopg/psycopg2
+gunicorn
+psycopg2
 uvicorn[standard]
 
 # Django
 # ------------------------------------------------------------------------------
-django-storages[boto3]==1.14.2  # https://github.com/jschneier/django-storages
-daphne==4.0.0
+django-storages[boto3] # https://github.com/jschneier/django-storages
+daphne
 
 {%- if cookiecutter.mail_service == 'Mailgun' %}
-django-anymail[mailgun]==8.6  # https://github.com/anymail/django-anymail
+django-anymail[mailgun] # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Amazon SES' %}
-django-anymail[amazon_ses]==8.6  # https://github.com/anymail/django-anymail
+django-anymail[amazon_ses] # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
-django-anymail==8.6  # https://github.com/anymail/django-anymail
+django-anymail # https://github.com/anymail/django-anymail
 {%- endif %}
