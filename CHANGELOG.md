@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.0](https://github.com/sixfeetup/scaf/compare/v1.9.0...v1.10.0) (2024-07-26)
+
+### Features
+
+* upgrade django and python to latest stable versions ([116f41b](https://github.com/sixfeetup/scaf/commit/116f41b4ef827fe088e4ef4884eaf921a742288b))
+
+### Documentation
+
+* use repo_url variable for git clone example ([#288](https://github.com/sixfeetup/scaf/issues/288)) ([e12e06f](https://github.com/sixfeetup/scaf/commit/e12e06ffd5e0c44ad58a59367fc971ab65cb0df1))
+
 ## [1.9.0](https://github.com/sixfeetup/scaf/compare/v1.8.1...v1.9.0) (2024-07-23)
 
 ### Features
