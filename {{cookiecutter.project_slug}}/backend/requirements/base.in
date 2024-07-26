@@ -24,16 +24,10 @@ flower
 redis
 {%- endif %}
 
-{%- if cookiecutter.use_drf == "y" %}
-django-cors-headers
-djangorestframework
-drf-spectacular
-{%- endif %}
-
 {%- if cookiecutter.use_graphql == "y" %}
 strawberry-graphql-django
 {%- endif %}
 
-{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+{%- if cookiecutter.use_graphql == "y" %}
 django-cors-headers
 {%- endif %}

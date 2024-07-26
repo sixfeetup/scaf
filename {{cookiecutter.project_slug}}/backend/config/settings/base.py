@@ -78,14 +78,10 @@ THIRD_PARTY_APPS = [
 {%- if cookiecutter.use_celery == "y" %}
     "django_celery_beat",
 {%- endif %}
-{%- if cookiecutter.use_drf == "y" %}
-    "rest_framework",
-    "rest_framework.authtoken",
-{%- endif %}
 {%- if cookiecutter.use_graphql == "y" %}
     "strawberry_django",
 {%- endif %}
-{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+{%- if cookiecutter.use_graphql == "y" %}
     "corsheaders",
 {%- endif %}
 ]
@@ -145,7 +141,7 @@ MIDDLEWARE = [
     "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    {%- if cookiecutter.use_graphql == "y"  or cookiecutter.use_drf == "y"%}
+    {%- if cookiecutter.use_graphql == "y" %}
     "corsheaders.middleware.CorsMiddleware",
     {%- endif %}
     "django.middleware.common.CommonMiddleware",
@@ -320,18 +316,6 @@ SOCIALACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.SocialAc
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
 INSTALLED_APPS += ["compressor"]
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
-{%- endif %}
-{% if cookiecutter.use_drf == "y" -%}
-# django-rest-framework
-# -------------------------------------------------------------------------------
-# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-}
 {%- endif %}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

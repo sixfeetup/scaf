@@ -182,7 +182,7 @@ LOGGING = {
     },
 }
 
-{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y"  %}
+{%- if cookiecutter.use_graphql == "y" %}
 # ------------------------------------------------------------------------------
 # CORS settings
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")

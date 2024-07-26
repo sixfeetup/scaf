@@ -198,31 +198,6 @@ def set_flags_in_settings_files():
     set_django_secret_key(os.path.join("backend", "config", "settings", "test.py"))
 
 
-def remove_drf_starter_files():
-    os.remove(os.path.join("backend", "config", "api_router.py"))
-    shutil.rmtree(
-        os.path.join("backend", "{{ cookiecutter.project_slug }}", "users", "api")
-    )
-    os.remove(
-        os.path.join(
-            "backend",
-            "{{ cookiecutter.project_slug }}",
-            "users",
-            "tests",
-            "test_drf_urls.py",
-        )
-    )
-    os.remove(
-        os.path.join(
-            "backend",
-            "{{ cookiecutter.project_slug }}",
-            "users",
-            "tests",
-            "test_drf_views.py",
-        )
-    )
-
-
 def remove_sentry_files():
     os.remove(os.path.join("docs", "sentry.md"))
 
@@ -282,9 +257,6 @@ def main():
 
     if "{{ cookiecutter.source_control_provider }}" != "github":
         remove_github_files()
-
-    if "{{ cookiecutter.use_drf }}".lower() == "n":
-        remove_drf_starter_files()
 
     if "{{ cookiecutter.use_sentry }}".lower() == "n":
         remove_sentry_files()
