@@ -12,7 +12,7 @@ jobs:
           python-version: "3.10"
       - name: Check lint and formatting
         run: make check-lint-and-formatting
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
   check-lint-and-test-frontend:
     runs-on: ubuntu-latest
     steps:
