@@ -66,7 +66,7 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 {%- endif %}
 
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 # ------------------------------------------------------------------------------
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True

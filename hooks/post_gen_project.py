@@ -261,7 +261,7 @@ def main():
     if "{{ cookiecutter.use_sentry }}".lower() == "n":
         remove_sentry_files()
 
-    if "{{ cookiecutter.use_graphql }}".lower() == "n":
+    if "{{ cookiecutter.create_nextjs_frontend }}".lower() == "n":
         remove_graphql_files()
 
     subprocess.run(shlex.split("black ./backend"))

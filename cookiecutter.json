@@ -16,7 +16,6 @@
     "Amazon SES",
     "Other SMTP"
   ],
-  "use_graphql": "y",
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",

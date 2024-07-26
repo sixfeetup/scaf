@@ -78,10 +78,8 @@ THIRD_PARTY_APPS = [
 {%- if cookiecutter.use_celery == "y" %}
     "django_celery_beat",
 {%- endif %}
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
     "strawberry_django",
-{%- endif %}
-{%- if cookiecutter.use_graphql == "y" %}
     "corsheaders",
 {%- endif %}
 ]
@@ -141,7 +139,7 @@ MIDDLEWARE = [
     "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    {%- if cookiecutter.use_graphql == "y" %}
+    {%- if cookiecutter.create_nextjs_frontend == "y" %}
     "corsheaders.middleware.CorsMiddleware",
     {%- endif %}
     "django.middleware.common.CommonMiddleware",
@@ -330,7 +328,7 @@ sentry_sdk.init(
 )
 {% endif %}
 
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 # ------------------------------------------------------------------------------
 # GraphQL settings
 STRAWBERRY_DJANGO = {
