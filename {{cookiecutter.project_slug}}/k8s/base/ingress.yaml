@@ -1,3 +1,4 @@
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -17,6 +18,7 @@ spec:
   tls:
     certResolver: letsencrypt
 ---
+{% endif %}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:

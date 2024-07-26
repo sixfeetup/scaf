@@ -1,5 +1,7 @@
 KUBECTL_EXEC_BACKEND = kubectl exec -it $$(kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}") -- bash
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") -- bash
+{% endif %}
 
 ## Release/Deployment Targets
 
@@ -74,8 +76,10 @@ compile: backend/requirements/base.in backend/requirements/tests.in ## compile l
 shell-backend:  ## Shell into the running Django container
 	$(KUBECTL_EXEC_BACKEND)
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 shell-frontend:
 	$(KUBECTL_EXEC_FRONTEND)
+{% endif %}
 
 .PHONY: secure
 secure:  ## Analyze dependencies for security issues

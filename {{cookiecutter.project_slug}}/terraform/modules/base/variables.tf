@@ -102,11 +102,13 @@ variable "repo_url" {
   default = "{{ cookiecutter.repo_url }}"
 }
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 variable "frontend_ecr_repo" {
   description = "The Frontend ECR repository name"
   type        = string
   default     = "{{ cookiecutter.project_dash }}-sandbox-frontend"
 }
+{% endif %}
 
 variable "backend_ecr_repo" {
   description = "The backend ECR repository name"

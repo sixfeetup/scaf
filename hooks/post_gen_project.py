@@ -25,6 +25,12 @@ DEBUG_VALUE = "debug"
 create_nextjs_frontend = "{{ cookiecutter.create_nextjs_frontend }}" == "y"
 if not create_nextjs_frontend:
     shutil.rmtree("frontend")
+    file_names = [
+        os.path.join("k8s", "base", "frontend.yaml"),
+        os.path.join("k8s", "prod", "patch-react.yaml"),
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
 
 
 def remove_celery_files():
