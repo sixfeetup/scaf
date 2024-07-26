@@ -13,10 +13,6 @@ urllib3
 sentry-sdk[django]
 {% endif %}
 
-{%- if cookiecutter.use_compressor == "y" %}
-django-compressor
-{%- endif %}
-
 {%- if cookiecutter.use_celery == "y" %}
 celery
 django-celery-beat

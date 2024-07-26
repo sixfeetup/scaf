@@ -17,7 +17,6 @@
     "Other SMTP"
   ],
   "custom_bootstrap_compilation": "n",
-  "use_compressor": "n",
   "use_celery": "n",
   "use_sentry": "n",
   "debug": "n",
