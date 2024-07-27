@@ -61,6 +61,11 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
     kind create cluster --name $PROJECT_SLUG
+    cd $PROJECT_SLUG
+    git init .
+    git add .
+    git commit -m "Initial commit"
+    make compile
 else
     echo "Failed to create project."
     exit 1
