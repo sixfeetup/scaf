@@ -20,7 +20,7 @@ def debugger_connect_vscode():
 
 
 def connect_debugger():
-    host_ip = os.getenv("DOCKER_GATEWAY_IP", None)
+    host_ip = "host.docker.internal"
     ide = os.getenv("DEBUGGER_IDE", None)
     if host_ip and ide:
         debuggers = {

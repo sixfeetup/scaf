@@ -39,9 +39,6 @@ ENV PATH="/app/bin:${PATH}"
 # environment to ensure that we have the latest versions of them.
 RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel
 
-RUN set -x \
-    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install pydevd-pycharm~=203.5981.165 ; fi
-
 COPY requirements /tmp/requirements
 
 RUN set -x \
