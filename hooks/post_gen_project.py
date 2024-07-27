@@ -119,7 +119,7 @@ def set_flag(file_path, flag, value=None, formatted=None, *args, **kwargs):
 def set_django_secret_key(file_path):
     django_secret_key = set_flag(
         file_path,
-        "!!!SET DJANGO_SECRET_KEY!!!",
+        "__DJANGO_SECRET_KEY__",
         length=64,
         using_digits=True,
         using_ascii_letters=True,
@@ -155,7 +155,7 @@ def set_postgres_user(file_path, value):
 def set_postgres_password(file_path, value=None):
     postgres_password = set_flag(
         file_path,
-        "!!!SET POSTGRES_PASSWORD!!!",
+        "__POSTGRES_PASSWORD__",
         value=value,
         length=64,
         using_digits=True,
@@ -189,19 +189,16 @@ def append_to_gitignore_file(s):
         gitignore_file.write(os.linesep)
 
 
-def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
-    local_env_path = os.path.join("backend", "local", "environment")
+def set_flags_in_secrets(postgres_user, celery_flower_user, debug=False):
+    local_secrets_path = os.path.join("k8s", "local", "secrets.yaml")
 
-    set_postgres_user(local_env_path, value=postgres_user)
-    set_postgres_password(local_env_path, value=DEBUG_VALUE if debug else None)
+    set_django_secret_key(os.path.join("k8s", "local", "secrets.yaml"))
 
-    set_celery_flower_user(local_env_path, value=celery_flower_user)
-    set_celery_flower_password(local_env_path, value=DEBUG_VALUE if debug else None)
+    set_postgres_user(local_secrets_path, value=postgres_user)
+    set_postgres_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
 
-
-def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join("backend", "config", "settings", "local.py"))
-    set_django_secret_key(os.path.join("backend", "config", "settings", "test.py"))
+    set_celery_flower_user(local_secrets_path, value=celery_flower_user)
+    set_celery_flower_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
 
 
 def remove_sentry_files():
@@ -248,12 +245,11 @@ def remove_graphql_files():
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
-    set_flags_in_envs(
+    set_flags_in_secrets(
         DEBUG_VALUE if debug else generate_random_user(),
         DEBUG_VALUE if debug else generate_random_user(),
         debug=debug,
     )
-    set_flags_in_settings_files()
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
