@@ -78,14 +78,8 @@ THIRD_PARTY_APPS = [
 {%- if cookiecutter.use_celery == "y" %}
     "django_celery_beat",
 {%- endif %}
-{%- if cookiecutter.use_drf == "y" %}
-    "rest_framework",
-    "rest_framework.authtoken",
-{%- endif %}
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
     "strawberry_django",
-{%- endif %}
-{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
     "corsheaders",
 {%- endif %}
 ]
@@ -142,10 +136,10 @@ AUTH_PASSWORD_VALIDATORS = [
 MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    {%- if cookiecutter.use_graphql == "y"  or cookiecutter.use_drf == "y"%}
+    {%- if cookiecutter.create_nextjs_frontend == "y" %}
     "corsheaders.middleware.CorsMiddleware",
     {%- endif %}
     "django.middleware.common.CommonMiddleware",
@@ -314,26 +308,6 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.SocialAccountAdapter"
-{% if cookiecutter.use_compressor == "y" -%}
-# django-compressor
-# ------------------------------------------------------------------------------
-# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
-INSTALLED_APPS += ["compressor"]
-STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
-{%- endif %}
-{% if cookiecutter.use_drf == "y" -%}
-# django-rest-framework
-# -------------------------------------------------------------------------------
-# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-}
-{%- endif %}
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 {% if cookiecutter.use_sentry == 'y' %}
@@ -346,7 +320,7 @@ sentry_sdk.init(
 )
 {% endif %}
 
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 # ------------------------------------------------------------------------------
 # GraphQL settings
 STRAWBERRY_DJANGO = {

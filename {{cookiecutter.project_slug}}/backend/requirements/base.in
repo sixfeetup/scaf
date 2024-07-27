@@ -13,10 +13,6 @@ urllib3
 sentry-sdk[django]
 {% endif %}
 
-{%- if cookiecutter.use_compressor == "y" %}
-django-compressor
-{%- endif %}
-
 {%- if cookiecutter.use_celery == "y" %}
 celery
 django-celery-beat
@@ -24,16 +20,10 @@ flower
 redis
 {%- endif %}
 
-{%- if cookiecutter.use_drf == "y" %}
-django-cors-headers
-djangorestframework
-drf-spectacular
-{%- endif %}
-
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 strawberry-graphql-django
 {%- endif %}
 
-{%- if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 django-cors-headers
 {%- endif %}

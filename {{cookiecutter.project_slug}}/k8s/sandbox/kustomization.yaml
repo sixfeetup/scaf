@@ -56,5 +56,6 @@ configMapGenerator:
 images:
   - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-backend
     newTag: latest
+{% if cookiecutter.create_nextjs_frontend == "y" %}
   - name: {{ cookiecutter.aws_account_id }}.dkr.ecr.{{ cookiecutter.aws_region }}.amazonaws.com/{{ cookiecutter.project_dash }}-frontend
-    newTag: latest
+    newTag: latest{% endif %}

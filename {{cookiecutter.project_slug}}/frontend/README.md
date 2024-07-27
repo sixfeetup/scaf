@@ -18,9 +18,9 @@ This project uses GraphQL for the backend, and Apollo Client for the frontend. T
 
 | Variable Name                | Explanation                                                |
 | ---------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
-| IS_PRE_PUSH_HOOKS_ENABLED    | Controls husky pre-push hooks for frontend folder          | {% if cookiecutter.use_graphql == "y" or cookiecutter.use_drf == "y" %} |
+| IS_PRE_PUSH_HOOKS_ENABLED    | Controls husky pre-push hooks for frontend folder          |  |
 | NEXT_PUBLIC_GRAPHQL_ENDPOINT | The public graphql endpoint url                            |
-| NEXT_GRAPHQL_ENDPOINT        | The graphql endpoint url to be used for serverside queries | {% endif %}                                                             |
+| NEXT_GRAPHQL_ENDPOINT        | The graphql endpoint url to be used for serverside queries |  |
 
 ## Suggested Tools
 

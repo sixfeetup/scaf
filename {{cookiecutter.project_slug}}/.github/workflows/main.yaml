@@ -12,14 +12,14 @@ jobs:
           python-version: "3.10"
       - name: Check lint and formatting
         run: make check-lint-and-formatting
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
   check-lint-and-test-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
       - name: Frontend Lint & Typecheck & Test
         run: make check-lint-and-test-frontend
   test-frontend:
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
       - name: Frontend Unit Tests
         run: CI=true make frontend-test
 {% endif %}
@@ -37,7 +37,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:16
         env:
           POSTGRES_DB: {{ cookiecutter.project_slug }}
           POSTGRES_USER: {{ cookiecutter.project_slug }}

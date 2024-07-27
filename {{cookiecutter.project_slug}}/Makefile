@@ -1,5 +1,7 @@
 KUBECTL_EXEC_BACKEND = kubectl exec -it $$(kubectl get pods -l app=backend -o jsonpath="{.items[0].metadata.name}") -- bash
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") -- bash
+{% endif %}
 
 ## Release/Deployment Targets
 
@@ -12,7 +14,7 @@ check-lint-and-formatting:  ## Execute check of lint and formatting using existi
 	pre-commit install; \
 	pre-commit run -a
 
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
 check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 	cd frontend/; \
 	npm install --legacy-peer-deps; \
@@ -26,7 +28,6 @@ ifeq ($(CI),true)
 	cd backend; \
 	pip install \
 		-r requirements/production.txt \
-		-r requirements/base.txt \
 		-r requirements/tests.txt; \
 	cd {{ cookiecutter.project_slug }}; \
 	pytest --cov=./ --cov-report html --ds=config.settings.test
@@ -34,7 +35,7 @@ else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
 endif
 
-{% if cookiecutter.create_react_frontend == 'y' %}
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
 frontend-test: ## Execute frontend tests
 ifeq ($(CI),true)
 	cd frontend/; \
@@ -62,9 +63,9 @@ pipdeptree: ## Show the dependencies of installed packages as a tree structure
 	$(KUBECTL_EXEC_BACKEND) -c "pipdeptree"
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.12-slim-bullseye /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.12-slim /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
-		 pip install pip-tools; \
+		 PIP_ROOT_USER_ACTION=ignore pip install --disable-pip-version-check pip-tools; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
@@ -74,8 +75,10 @@ compile: backend/requirements/base.in backend/requirements/tests.in ## compile l
 shell-backend:  ## Shell into the running Django container
 	$(KUBECTL_EXEC_BACKEND)
 
+{% if cookiecutter.create_nextjs_frontend == "y" %}
 shell-frontend:
 	$(KUBECTL_EXEC_FRONTEND)
+{% endif %}
 
 .PHONY: secure
 secure:  ## Analyze dependencies for security issues

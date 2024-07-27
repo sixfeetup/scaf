@@ -21,15 +21,21 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-config
+            - secretRef:
+                name: secrets-config
         - name: celerybeat
           image: backend:latest
           command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "beat"]
           envFrom:
             - configMapRef:
                 name: app-config
+            - secretRef:
+                name: secrets-config
         - name: flower
           image: backend:latest
           command: ["celery", "-A", "{{ cookiecutter.project_slug }}", "flower"]
           envFrom:
             - configMapRef:
                 name: app-config
+            - secretRef:
+                name: secrets-config

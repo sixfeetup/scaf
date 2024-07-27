@@ -81,8 +81,8 @@ To create a superuser use the following commands:
 
     $ make shell-backend
     $ ./manage.py createsuperuser
-{% if cookiecutter.create_react_frontend == 'y' %}
-This project has a React frontend configured. You can access it at [http://localhost:3000/](http://localhost:3000/).
+{% if cookiecutter.create_nextjs_frontend == 'y' %}
+This project has a NextJS frontend configured. You can access it at [http://localhost:3000/](http://localhost:3000/).
 {% endif %}
 ## Infrastructure provisioning
 

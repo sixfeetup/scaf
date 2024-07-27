@@ -22,7 +22,7 @@ resource "aws_iam_policy" "ecr_push_policy" {
           "ecr:CompleteLayerUpload"
         ],
         Resource = [
-          "arn:aws:ecr:${var.aws_region}:${var.account_id}:repository/${var.frontend_ecr_repo}",
+          {% if cookiecutter.create_nextjs_frontend == "y" %}"arn:aws:ecr:${var.aws_region}:${var.account_id}:repository/${var.frontend_ecr_repo}",{% endif %}
           "arn:aws:ecr:${var.aws_region}:${var.account_id}:repository/${var.backend_ecr_repo}",
         ]
       },

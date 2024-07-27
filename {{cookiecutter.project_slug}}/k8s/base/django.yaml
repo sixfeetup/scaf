@@ -65,7 +65,7 @@ spec:
             successThreshold: 1
       initContainers:
         - name: check-db-ready
-          image: postgres:12.7
+          image: postgres:16
           command: [
               "sh",
               "-c",

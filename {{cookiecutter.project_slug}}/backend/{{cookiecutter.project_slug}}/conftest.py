@@ -1,5 +1,5 @@
 import pytest
-{%- if cookiecutter.use_graphql == "y" %}
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 from strawberry_django.test.client import TestClient
 {%- endif %}
 
@@ -17,7 +17,7 @@ def user() -> User:
     return UserFactory()
 
 
-{% if cookiecutter.use_graphql == "y" -%}
+{% if cookiecutter.create_nextjs_frontend == "y" -%}
 @pytest.fixture
 def graphql_client() -> TestClient:
     return TestClient("/graphql/")

@@ -13,10 +13,13 @@ patches:
       path: /spec/template/spec/initContainers/0/env
       value:
         - name: POSTGRES_HOST
-          valueFrom:
-            secretKeyRef:
-              name: secrets-config
-              key: POSTGRES_HOST
+          value: postgres
+    - op: replace
+      path: /spec/template/spec/containers/0/livenessProbe
+      value: null
+    - op: replace
+      path: /spec/template/spec/containers/0/readinessProbe
+      value: null
   target:
     kind: Deployment
     name: backend
