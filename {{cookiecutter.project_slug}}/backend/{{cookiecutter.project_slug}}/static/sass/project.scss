@@ -1,7 +1,9 @@
+@import "bootstrap";
+
 // project specific CSS goes here
 
 ////////////////////////////////
-		//Variables//
+//Variables//
 ////////////////////////////////
 
 // Alert colors
@@ -14,20 +16,20 @@ $dark-pink: #eed3d7;
 $red: #b94a48;
 
 ////////////////////////////////
-		//Alerts//
+//Alerts//
 ////////////////////////////////
 
 // bootstrap alert CSS, translated to the django-standard levels of
 // debug, info, success, warning, error
 
 .alert-debug {
-  background-color: $white;
-  border-color: $mint-green;
-  color: $black;
+	background-color: $white;
+	border-color: $mint-green;
+	color: $black;
 }
 
 .alert-error {
-  background-color: $pink;
-  border-color: $dark-pink;
-  color: $red;
+	background-color: $pink;
+	border-color: $dark-pink;
+	color: $red;
 }
