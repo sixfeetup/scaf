@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.0](https://github.com/sixfeetup/scaf/compare/v1.10.0...v1.11.0) (2024-07-27)
+
+### Features
+
+* simplify config options ([4b2f31e](https://github.com/sixfeetup/scaf/commit/4b2f31e1d00c5cfec9a7f4ae1ba310a89709958a))
+
 ## [1.10.0](https://github.com/sixfeetup/scaf/compare/v1.9.0...v1.10.0) (2024-07-26)
 
 ### Features
