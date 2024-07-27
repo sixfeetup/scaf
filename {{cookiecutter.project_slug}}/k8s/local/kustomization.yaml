@@ -14,6 +14,12 @@ patches:
       value:
         - name: POSTGRES_HOST
           value: postgres
+    - op: replace
+      path: /spec/template/spec/containers/0/livenessProbe
+      value: null
+    - op: replace
+      path: /spec/template/spec/containers/0/readinessProbe
+      value: null
   target:
     kind: Deployment
     name: backend
