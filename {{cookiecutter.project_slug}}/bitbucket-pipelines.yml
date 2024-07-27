@@ -52,7 +52,7 @@ definitions:
 
     - step: &check-test-frontend
         name: Frontend Unit Tests
-        image: node:16
+        image: node:20
         caches:
           - node
         script:
