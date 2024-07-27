@@ -28,7 +28,6 @@ ifeq ($(CI),true)
 	cd backend; \
 	pip install \
 		-r requirements/production.txt \
-		-r requirements/base.txt \
 		-r requirements/tests.txt; \
 	cd {{ cookiecutter.project_slug }}; \
 	pytest --cov=./ --cov-report html --ds=config.settings.test
