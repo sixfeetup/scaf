@@ -64,9 +64,9 @@ pipdeptree: ## Show the dependencies of installed packages as a tree structure
 	$(KUBECTL_EXEC_BACKEND) -c "pipdeptree"
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
-	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.12-slim-bullseye /bin/bash -c \
+	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.12-slim /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
-		 pip install pip-tools; \
+		 PIP_ROOT_USER_ACTION=ignore pip install --disable-pip-version-check pip-tools; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
 		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \

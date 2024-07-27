@@ -136,8 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     {%- if cookiecutter.create_nextjs_frontend == "y" %}
     "corsheaders.middleware.CorsMiddleware",

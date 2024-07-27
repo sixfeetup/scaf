@@ -258,10 +258,10 @@ def main():
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
 
-    if "{{ cookiecutter.source_control_provider }}" != "bitbucket":
+    if "{{ cookiecutter.source_control_provider }}" != "bitbucket.org":
         remove_bitbucket_files()
 
-    if "{{ cookiecutter.source_control_provider }}" != "github":
+    if "{{ cookiecutter.source_control_provider }}" != "github.com":
         remove_github_files()
 
     if "{{ cookiecutter.use_sentry }}".lower() == "n":

@@ -6,7 +6,7 @@ definitions:
       memory: 3072
 
     postgres:
-      image: postgres:latest
+      image: postgres:16
       environment:
         POSTGRES_DB: {{ cookiecutter.project_slug }}
         POSTGRES_USER: {{ cookiecutter.project_slug }}
@@ -44,7 +44,7 @@ definitions:
 {% if cookiecutter.create_nextjs_frontend == 'y' %}
     - step: &check-lint-and-test-frontend
         name: Frontend Lint & Typecheck & Test
-        image: node:16-bullseye
+        image: node:16
         caches:
           - node
         script:
@@ -52,7 +52,7 @@ definitions:
 
     - step: &check-test-frontend
         name: Frontend Unit Tests
-        image: node:16-bullseye
+        image: node:16
         caches:
           - node
         script:
