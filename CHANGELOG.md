@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.12.0](https://github.com/sixfeetup/scaf/compare/v1.11.0...v1.12.0) (2024-07-29)
+
+### Features
+
+* add compilation step after cluster creation ([027dfb2](https://github.com/sixfeetup/scaf/commit/027dfb22e1126c10781cc1b28f2569cab81a9a4a))
+
 ## [1.11.0](https://github.com/sixfeetup/scaf/compare/v1.10.0...v1.11.0) (2024-07-27)
 
 ### Features
