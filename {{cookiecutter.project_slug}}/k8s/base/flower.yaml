@@ -4,18 +4,15 @@ metadata:
   name: flower
   labels:
     app: {{ cookiecutter.project_slug }}
-    tier: flower
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ cookiecutter.project_slug }}
-      tier: flower
   template:
     metadata:
       labels:
         app: {{ cookiecutter.project_slug }}
-        tier: flower
     spec:
       containers:
         - name: flower
