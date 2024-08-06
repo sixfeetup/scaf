@@ -5,6 +5,11 @@ from pathlib import Path
 
 import environ
 
+{% if cookiecutter.use_sentry == 'y' %}
+import sentry_sdk
+
+{% endif %}
+
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # {{ cookiecutter.project_slug }}/
 APPS_DIR = ROOT_DIR / "{{ cookiecutter.project_slug }}"
@@ -66,15 +71,16 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
+    "crispy_bootstrap5",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
 {%- if cookiecutter.use_celery == "y" %}
     "django_celery_beat",
 {%- endif %}
-{%- if cookiecutter.use_drf == "y" %}
-    "rest_framework",
-    "rest_framework.authtoken",
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
+    "strawberry_django",
+    "corsheaders",
 {%- endif %}
 ]
 
@@ -128,9 +134,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "{{ cookiecutter.project_slug }}.utils.healthcheck.HealthCheckMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    {%- if cookiecutter.create_nextjs_frontend == "y" %}
+    "corsheaders.middleware.CorsMiddleware",
+    {%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -196,7 +207,9 @@ TEMPLATES = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
@@ -228,7 +241,7 @@ EMAIL_TIMEOUT = 5
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""{{cookiecutter.author_name}}""", "{{cookiecutter.email}}")]
+ADMINS = [("""{{ cookiecutter.author_name }}""", "{{ cookiecutter.email }}")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
@@ -292,30 +305,31 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.SocialAccountAdapter"
-{% if cookiecutter.use_compressor == "y" -%}
-# django-compressor
+SOCIALACCOUNT_ADAPTER = "{{ cookiecutter.project_slug }}.users.adapters.SocialAccountAdapter"
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+{% if cookiecutter.use_sentry == 'y' %}
 # ------------------------------------------------------------------------------
-# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
-INSTALLED_APPS += ["compressor"]
-STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
-{%- endif %}
-{% if cookiecutter.use_drf == "y" -%}
-# django-rest-framework
-# -------------------------------------------------------------------------------
-# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+# Sentry
+sentry_sdk.init(
+    dsn=env.str("SENTRY_DSN_BACKEND", default=""),
+    environment=env.str("ENVIRONMENT", default="production"),
+    release=env.str("RELEASE", default="dev"),
+)
+{% endif %}
+
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
+# ------------------------------------------------------------------------------
+# GraphQL settings
+STRAWBERRY_DJANGO = {
+    "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
+    "TYPE_DESCRIPTION_FROM_MODEL_DOCSTRING": True,
+    "MUTATIONS_DEFAULT_ARGUMENT_NAME": "input",
+    "MUTATIONS_DEFAULT_HANDLE_ERRORS": True,
 }
 {%- endif %}
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Your stuff...
 # ------------------------------------------------------------------------------

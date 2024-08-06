@@ -1,4 +1,4 @@
-FROM node:16-bullseye-slim as base
+FROM node:iron as base
 FROM base AS build
 
 WORKDIR /app

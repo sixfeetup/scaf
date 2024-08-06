@@ -3,46 +3,41 @@ kind: Service
 metadata:
   name: postgres
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
-    environment: dev
+    app: postgres
 spec:
   ports:
     - port: 5432
       targetPort: 5432
   selector:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
+    app: postgres
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: db
-    environment: dev
+    app: postgres
 spec:
   serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: db
+      app: postgres
   template:
     metadata:
       labels:
-        app: {{ cookiecutter.project_slug }}
-        tier: db
+        app: postgres
     spec:
       containers:
         - name: postgres
-          image: postgres:12.7
+          image: postgres:16
           ports:
             - containerPort: 5432
           envFrom:
           - configMapRef:
-              name: django-config
+              name: app-config
+          - secretRef:
+              name: secrets-config
           volumeMounts:
             - name: postgres-volume-mount
               mountPath: /var/lib/postgresql/data
@@ -68,33 +63,16 @@ spec:
             claimName: postgres-pvc
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv
-  labels:
-    type: local
-    environment: dev
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/postgres-data
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    tilt.dev/down-policy: keep
   name: postgres-pvc
   labels:
     type: local
-    environment: dev
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi
-  volumeName: postgres-pv

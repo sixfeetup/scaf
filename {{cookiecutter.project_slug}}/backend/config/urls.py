@@ -5,8 +5,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
-{%- if cookiecutter.use_drf == 'y' %}
-from rest_framework.authtoken.views import obtain_auth_token
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
+from strawberry.django.views import GraphQLView
+from .schema import schema
 {%- endif %}
 
 urlpatterns = [
@@ -24,13 +25,10 @@ urlpatterns = [
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
     urlpatterns += staticfiles_urlpatterns()
-{% if cookiecutter.use_drf == 'y' %}
-# API URLS
+
+{%- if cookiecutter.create_nextjs_frontend == "y" %}
 urlpatterns += [
-    # API base url
-    path("api/", include("config.api_router")),
-    # DRF auth token
-    path("auth-token/", obtain_auth_token),
+    path("graphql/", GraphQLView.as_view(schema=schema)),
 ]
 {%- endif %}
 

@@ -1,10 +1,10 @@
 import os
 import random
+import shlex
 import shutil
 import string
-import zipfile
 import subprocess
-import shlex
+import zipfile
 
 try:
     # Inspired by
@@ -22,9 +22,15 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
-create_react_frontend = '{{cookiecutter.create_react_frontend}}' == 'y'
-if not create_react_frontend:
+create_nextjs_frontend = "{{ cookiecutter.create_nextjs_frontend }}" == "y"
+if not create_nextjs_frontend:
     shutil.rmtree("frontend")
+    file_names = [
+        os.path.join("k8s", "base", "frontend.yaml"),
+        os.path.join("k8s", "prod", "patch-react.yaml"),
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
 
 
 def remove_celery_files():
@@ -43,6 +49,18 @@ def remove_celery_files():
     ]
     for file_name in file_names:
         os.remove(file_name)
+
+
+def remove_bitbucket_files():
+    # If 'source_control_provider' is not 'bitbucket' remove related files
+    file_names = ["bitbucket-pipelines.yml"]
+    for file_name in file_names:
+        os.remove(file_name)
+
+
+def remove_github_files():
+    # If 'source_control_provider' is not 'github' remove related files
+    shutil.rmtree(".github")
 
 
 def append_to_project_gitignore(path):
@@ -102,7 +120,7 @@ def set_flag(file_path, flag, value=None, formatted=None, *args, **kwargs):
 def set_django_secret_key(file_path):
     django_secret_key = set_flag(
         file_path,
-        "!!!SET DJANGO_SECRET_KEY!!!",
+        "__DJANGO_SECRET_KEY__",
         length=64,
         using_digits=True,
         using_ascii_letters=True,
@@ -138,7 +156,7 @@ def set_postgres_user(file_path, value):
 def set_postgres_password(file_path, value=None):
     postgres_password = set_flag(
         file_path,
-        "!!!SET POSTGRES_PASSWORD!!!",
+        "__POSTGRES_PASSWORD__",
         value=value,
         length=64,
         using_digits=True,
@@ -172,36 +190,55 @@ def append_to_gitignore_file(s):
         gitignore_file.write(os.linesep)
 
 
-def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
-    local_env_path = os.path.join("backend", "local", "environment")
+def set_flags_in_secrets(postgres_user, celery_flower_user, debug=False):
+    local_secrets_path = os.path.join("k8s", "local", "secrets.yaml")
 
-    set_postgres_user(local_env_path, value=postgres_user)
-    set_postgres_password(
-        local_env_path, value=DEBUG_VALUE if debug else None
-    )
+    set_django_secret_key(os.path.join("k8s", "local", "secrets.yaml"))
 
-    set_celery_flower_user(local_env_path, value=celery_flower_user)
-    set_celery_flower_password(
-        local_env_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_user(local_secrets_path, value=postgres_user)
+    set_postgres_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
+
+    set_celery_flower_user(local_secrets_path, value=celery_flower_user)
+    set_celery_flower_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
 
 
-def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join("backend", "config", "settings", "local.py"))
-    set_django_secret_key(os.path.join("backend", "config", "settings", "test.py"))
+def remove_sentry_files():
+    os.remove(os.path.join("docs", "sentry.md"))
 
 
-def remove_drf_starter_files():
-    os.remove(os.path.join("backend", "config", "api_router.py"))
-    shutil.rmtree(os.path.join("backend", "{{cookiecutter.project_slug}}", "users", "api"))
+def remove_graphql_files():
+    os.remove(os.path.join("backend", "config", "schema.py"))
     os.remove(
         os.path.join(
-            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "mutations.py",
         )
     )
     os.remove(
         os.path.join(
-            "backend", "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "queries.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "types.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "backend",
+            "{{ cookiecutter.project_slug }}",
+            "users",
+            "tests",
+            "test_graphql_views.py",
         )
     )
 
@@ -209,18 +246,26 @@ def remove_drf_starter_files():
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
-    set_flags_in_envs(
+    set_flags_in_secrets(
         DEBUG_VALUE if debug else generate_random_user(),
         DEBUG_VALUE if debug else generate_random_user(),
         debug=debug,
     )
-    set_flags_in_settings_files()
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
 
-    if "{{ cookiecutter.use_drf }}".lower() == "n":
-        remove_drf_starter_files()
+    if "{{ cookiecutter.source_control_provider }}" != "bitbucket.org":
+        remove_bitbucket_files()
+
+    if "{{ cookiecutter.source_control_provider }}" != "github.com":
+        remove_github_files()
+
+    if "{{ cookiecutter.use_sentry }}".lower() == "n":
+        remove_sentry_files()
+
+    if "{{ cookiecutter.create_nextjs_frontend }}".lower() == "n":
+        remove_graphql_files()
 
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))

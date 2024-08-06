@@ -8,8 +8,8 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 pv = sys.version_info
 assert (
-    pv.major == 3 and pv.minor in [8,9,10]
-), "Django 4.1 only supports Python 3.8, 3.9, or 3.10."
+    pv.major == 3 and pv.minor in [8,9,10,11,12]
+), "Django 4.1 only supports Python 3.8, 3.9, 3.10, 3.11, or 3.12."
 
 project_slug = "{{ cookiecutter.project_slug }}"
 if hasattr(project_slug, "isidentifier"):

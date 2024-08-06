@@ -1,4 +1,4 @@
-{% raw %}{% load static i18n {% endraw %}{% if cookiecutter.use_compressor == "y" %}compress{% endif %}{% raw %}%}<!DOCTYPE html>
+{% raw %}{% load static i18n {% endraw %}{% raw %}%}<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -16,16 +16,15 @@
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
 
     {% block css %}
-    {% endraw %}{% if cookiecutter.custom_bootstrap_compilation == "n" %}{% raw %}
+    {% endraw %}{% raw %}
     <!-- Latest compiled and minified Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    {% endraw %}{% endif %}{% raw %}
+    {% endraw %}{% raw %}
 
     <!-- Your stuff: Third-party CSS libraries go here -->
-    {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% compress css %}{% endraw %}{% endif %}{% raw %}
+ 
     <!-- This file stores project-specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
     {% endblock %}
 
   </head>
@@ -100,10 +99,7 @@
       <!-- Your stuff: Third-party javascript libraries go here -->
 
       <!-- place project specific Javascript in this file -->
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% compress js %}{% endraw %}{% endif %}{% raw %}
       <script src="{% static 'js/project.js' %}"></script>
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
-
     {% endblock javascript %}
   </body>
 </html>

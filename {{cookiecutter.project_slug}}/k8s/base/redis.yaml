@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: redis
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: caching
-    environment: dev
+    app: redis
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
-    app: {{ cookiecutter.project_slug }}
-    tier: caching
+    app: redis
   ports:
     - port: 6379
       targetPort: redis-server
@@ -20,20 +17,16 @@ kind: Deployment
 metadata:
   name: redis
   labels:
-    app: {{ cookiecutter.project_slug }}
-    tier: caching
-    environment: dev
+    app: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ cookiecutter.project_slug }}
-      tier: caching
+      app: redis
   template:
     metadata:
       labels:
-        app: {{ cookiecutter.project_slug }}
-        tier: caching
+        app: redis
     spec:
       containers:
         - name: redis
