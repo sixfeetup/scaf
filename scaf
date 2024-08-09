@@ -52,7 +52,7 @@ IMAGE_TAG=${IMAGE_TAG:-latest}
 docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
-  sixfeetup/scaf:$IMAGE_TAG \
+  docker.io/sixfeetup/scaf:$IMAGE_TAG \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
