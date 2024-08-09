@@ -39,9 +39,8 @@ jobs:
     - name: Create Project with Scaf
       shell: bash
       run: |
-        export GIT_AUTHOR_NAME="GitHub Actions"
-        export GIT_AUTHOR_EMAIL="github-actions-scaf-noreply@sixfeetup.com"
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions-scaf-noreply@sixfeetup.com"
         IMAGE_TAG=$GITHUB_SHA
         echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
         /usr/local/bin/scaf myproject --no-input
-
