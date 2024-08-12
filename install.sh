@@ -9,6 +9,91 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
+check_top_level_dependencies() {
+    local dependencies=("bash" "curl" "make" "python3" "docker")
+    local missing=()
+
+    for dep in "${dependencies[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing+=("$dep")
+        fi
+    done
+
+    if [ ${#missing[@]} -eq 0 ]; then
+        echo "All top-level dependencies are installed."
+        return 0
+    fi
+
+    echo "The following dependencies are missing:"
+    for dep in "${missing[@]}"; do
+        echo "- $dep"
+    done
+
+    os=$(uname -s 2>/dev/null || echo "Unknown")
+    if [[ "$os" == "Linux" && -f /proc/version ]] && grep -qi microsoft /proc/version; then
+        os="WSL"
+    elif [[ "$os" == "Unknown" && "$OSTYPE" == "msys" ]]; then
+        os="Windows"
+    fi
+
+    # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
+    #       for those rather then strictly by OS.
+    for dep in "${missing[@]}"; do
+        case $dep in
+            "bash")
+                echo "Please install bash for consistent shell execution."
+                ;;
+            "curl")
+                echo "Please install curl:"
+                echo "  - Ubuntu/Debian: sudo apt-get install curl"
+                echo "  - CentOS/Fedora: sudo yum install curl"
+                echo "  - macOS: brew install curl"
+                echo "  - Windows: Download from https://curl.se/windows/"
+                ;;
+            "make")
+                echo "Please install make:"
+                echo "  - Ubuntu/Debian: sudo apt-get install make"
+                echo "  - CentOS/Fedora: sudo yum install make"
+                echo "  - macOS: xcode-select --install"
+                echo "    or: brew install make"
+                echo "  - Windows: Install MinGW or use WSL"
+                ;;
+            "python3")
+                echo "Please install python3:"
+                echo "  - Ubuntu/Debian: sudo apt-get install python3"
+                echo "  - CentOS/Fedora: sudo yum install python3"
+                echo "  - macOS: brew install python"
+                echo "  - Windows: Download from https://www.python.org/downloads/windows/"
+                ;;
+            "docker")
+                case $os in
+                    "Darwin")
+                        echo "Please install Docker Desktop for macOS:"
+                        echo "Download from https://www.docker.com/products/docker-desktop"
+                        ;;
+                    "Linux")
+                        echo "Please install Docker:"
+                        echo "Ubuntu: sudo apt-get update && sudo apt-get install docker.io"
+                        echo "CentOS: sudo yum install -y docker && sudo systemctl start docker"
+                        ;;
+                    "Windows"|"WSL")
+                        echo "Please install Docker Desktop for Windows:"
+                        echo "Download from https://docs.docker.com/desktop/install/windows-install/"
+                        ;;
+                    *)
+                        echo "Please install Docker. Visit https://docs.docker.com/engine/install/ for instructions."
+                        ;;
+                esac
+                ;;
+            *)
+                echo "Please install $dep."
+                ;;
+        esac
+        echo
+    done
+    return 1
+}
+
 detect_os_and_arch() {
     os=$(uname -s)
     arch=$(uname -m)
@@ -100,6 +185,8 @@ install_scaf() {
         exit 1
     fi
 }
+
+check_top_level_dependencies
 
 for tool in kubectl kind tilt; do
     if ! command_exists $tool; then
