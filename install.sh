@@ -10,8 +10,8 @@ command_exists() {
 }
 
 check_top_level_dependencies() {
-    local dependencies=("bash" "curl" "make" "python3" "docker")
-    local missing=()
+    dependencies=("bash" "curl" "make" "python3" "docker")
+    missing=()
 
     for dep in "${dependencies[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
