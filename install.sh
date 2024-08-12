@@ -11,34 +11,34 @@ command_exists() {
 
 check_top_level_dependencies() {
     dependencies="bash curl make python3 docker"
-    missing=()
+    missing=""
 
-    for dep in "${dependencies[@]}"; do
+    for dep in $dependencies; do
         if ! command -v "$dep" &> /dev/null; then
-            missing+=("$dep")
+            missing="$missing $dep"
         fi
     done
 
-    if [ ${#missing[@]} -eq 0 ]; then
+    if [ -z "$missing" ]; then
         echo "All top-level dependencies are installed."
         return 0
     fi
 
     echo "The following dependencies are missing:"
-    for dep in "${missing[@]}"; do
+    for dep in $missing; do
         echo "- $dep"
     done
 
     os=$(uname -s 2>/dev/null || echo "Unknown")
-    if [[ "$os" == "Linux" && -f /proc/version ]] && grep -qi microsoft /proc/version; then
+    if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
         os="WSL"
-    elif [[ "$os" == "Unknown" && "$OSTYPE" == "msys" ]]; then
+    elif [ "$os" = "Unknown" ] && [ "${OSTYPE#msys}" != "$OSTYPE" ]; then
         os="Windows"
     fi
 
     # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
     #       for those rather then strictly by OS.
-    for dep in "${missing[@]}"; do
+    for dep in $missing; do
         case $dep in
             "bash")
                 echo "Please install bash for consistent shell execution."
