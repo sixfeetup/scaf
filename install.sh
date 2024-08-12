@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
@@ -10,7 +10,7 @@ command_exists() {
 }
 
 check_top_level_dependencies() {
-    dependencies=("bash" "curl" "make" "python3" "docker")
+    dependencies="bash curl make python3 docker"
     missing=()
 
     for dep in "${dependencies[@]}"; do
@@ -113,7 +113,7 @@ detect_os_and_arch() {
                 *)      os_arch="darwin-unknown" ;;
             esac
             ;;
-        *)          
+        *)
             os_arch="unknown"
             ;;
     esac
