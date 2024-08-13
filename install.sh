@@ -10,6 +10,7 @@ command_exists() {
 }
 
 check_top_level_dependencies() {
+    # these are dependencies that we depend on the user to have installed
     dependencies="bash curl make python3 docker git"
     missing=""
 
