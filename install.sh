@@ -10,7 +10,7 @@ command_exists() {
 }
 
 check_top_level_dependencies() {
-    dependencies="bash curl make python3 docker"
+    dependencies="bash curl make python3 docker git"
     missing=""
 
     for dep in $dependencies; do
@@ -91,7 +91,23 @@ check_top_level_dependencies() {
         esac
         echo
     done
-    return 1
+    exit 1
+}
+
+check_git_config() {
+    git config --get user.name > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Git user.name is not set. Please run:"
+        echo "  git config --global user.name \"Your Name\""
+        exit 1
+    fi
+
+    git config --get user.email > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Git user.email is not set. Please run:"
+        echo "  git config --global user.email \"your@email.com\""
+        exit 1
+    fi
 }
 
 detect_os_and_arch() {
@@ -187,6 +203,7 @@ install_scaf() {
 }
 
 check_top_level_dependencies
+check_git_config
 
 for tool in kubectl kind tilt; do
     if ! command_exists $tool; then
