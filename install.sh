@@ -11,7 +11,7 @@ command_exists() {
 
 check_top_level_dependencies() {
     # these are dependencies that we depend on the user to have installed
-    dependencies="bash curl make python3 docker git"
+    dependencies="bash curl make python3 docker git rsync"
     missing=""
 
     for dep in $dependencies; do
@@ -65,6 +65,14 @@ check_top_level_dependencies() {
                 echo "  - CentOS/Fedora: sudo yum install python3"
                 echo "  - macOS: brew install python"
                 echo "  - Windows: Download from https://www.python.org/downloads/windows/"
+                ;;
+            "rsync")
+                echo "Please install rsync:"
+                echo "  - Ubuntu/Debian: sudo apt-get install rsync"
+                echo "  - CentOS/Fedora: sudo yum install rsync"
+                echo "  - macOS: brew install rsync"
+                echo "  - Windows: Can be obtained from https://www.itefix.net/cwrsync"
+                echo "    or: Install WSL and usesudo apt-get install rsync"
                 ;;
             "docker")
                 case $os in
