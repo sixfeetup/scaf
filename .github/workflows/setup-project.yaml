@@ -33,6 +33,9 @@ jobs:
       run: |
         INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
         export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
+        git config --global init.defaultBranch main
+        git config --global user.email "setup-project--install@example.com"
+        git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
         curl -sSL $INSTALL_URL | sh
 
@@ -41,5 +44,8 @@ jobs:
       run: |
         IMAGE_TAG=$GITHUB_SHA
         echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
-        $HOME/.local/bin/scaf myproject --no-input
+        git config --global init.defaultBranch main
+        git config --global user.email "setup-project--create@example.com"
+        git config --global user.name "CI CD Setup Project"
+        /usr/local/bin/scaf myproject --no-input
 
