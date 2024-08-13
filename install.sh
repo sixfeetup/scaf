@@ -171,8 +171,8 @@ install_kind() {
     os_arch=$(detect_os_and_arch)
 
     case $os_arch in
-        "linux-amd64"|"darwin-amd64"|"darwin-arm64"|"linux-arm64")
-        curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.11.1/kind-$os_arch"
+        "linux-amd64"|"darwin-amd64"|"darwin-arm64"|"linux-arm64"|"windows-amd64")
+        curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.23.0/kind-$os_arch"
         chmod +x ./kind
         sudo mv ./kind /usr/local/bin/kind
         ;;
