@@ -15,7 +15,7 @@ check_top_level_dependencies() {
     missing=""
 
     for dep in $dependencies; do
-        if ! command -v "$dep" &> /dev/null; then
+        if ! command_exists $dep ; then
             missing="$missing $dep"
         fi
     done
