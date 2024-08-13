@@ -3,7 +3,30 @@
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
 TEMP_DOWNLOAD="./scaf"
-DESTINATION="/usr/local/bin/scaf"
+PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
+DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
+
+
+ensure_bin_folder() {
+  if [ ! -d "$PREFERRED_BIN_FOLDER" ]; then
+      echo "Creating $PREFERRED_BIN_FOLDER..."
+      mkdir -p $PREFERRED_BIN_FOLDER
+  fi
+  if [ ! -w "$PREFERRED_BIN_FOLDER" ]; then
+      echo "You don't have write permission to $PREFERRED_BIN_FOLDER."
+      echo "Please run the script as a user who has write permission to $PREFERRED_BIN_FOLDER"
+      echo "Or set PREFERRED_BIN_FOLDER to a writable directory."
+      exit 1
+  fi
+  # verify if PREFERRED_BIN_FOLDER is in PATH or exit with advice.
+  if ! [ -n "$PATH" ] && [ -n "$HOME" ] && echo "$PATH" | grep -q ":$HOME/.local/bin:"; then
+      echo "Your PATH is missing $PREFERRED_BIN_FOLDER."
+      echo "Please add the following line to your shell profile file (e.g. ~/.bashrc, ~/.zshrc, etc.)"
+      echo "export PATH=\$PATH:$PREFERRED_BIN_FOLDER"
+      echo "Or you can set PREFERRED_BIN_FOLDER to a writable directory that is already in your PATH."
+      exit 1
+  fi
+}
 
 command_exists() {
     command -v "$1" > /dev/null 2>&1
@@ -156,7 +179,7 @@ install_kubectl() {
             url="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${os}/${arch}/kubectl"
             curl -LO $url
             chmod +x ./kubectl
-            sudo mv ./kubectl /usr/local/bin/kubectl
+            sudo mv ./kubectl $PREFERRED_BIN_FOLDER/kubectl
             ;;
         *)
             echo "Unsupported OS or architecture: $os_arch"
@@ -174,7 +197,7 @@ install_kind() {
         "linux-amd64"|"darwin-amd64"|"darwin-arm64"|"linux-arm64"|"windows-amd64")
         curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.23.0/kind-$os_arch"
         chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
+        sudo mv ./kind $PREFERRED_BIN_FOLDER/kind
         ;;
     *)
         echo "Unsupported OS or architecture: $os_arch"
@@ -211,6 +234,8 @@ install_scaf() {
     fi
 }
 
+# Start the installation process
+ensure_bin_folder
 check_top_level_dependencies
 check_git_config
 
