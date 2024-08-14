@@ -232,7 +232,7 @@ install_scaf() {
     if [ -f "$TEMP_DOWNLOAD" ]; then
         chmod +x $TEMP_DOWNLOAD
         echo "Moving scaf to $DESTINATION..."
-        move_to_bin_folder $TEMP_DOWNLOAD $DESTINATION
+        move_to_bin_folder $TEMP_DOWNLOAD `dirname $DESTINATION`
         if [ -f "$DESTINATION" ]; then
             echo "scaf installed successfully at $DESTINATION"
         else
