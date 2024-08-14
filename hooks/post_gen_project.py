@@ -294,7 +294,7 @@ def main():
     init_git_repo()
     configure_git_remote()
 
-    print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
+    print(SUCCESS + "Project initialized, keep up the good work!!" + TERMINATOR)
 
 
 if __name__ == "__main__":
