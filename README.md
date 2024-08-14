@@ -153,3 +153,22 @@ rm -rf $OUTPUT_FOLDER && cookiecutter $SCAF_ROOT --no-input --config-file $TEST_
 ```
 
 Run the script and check the output folder for the generated project.
+
+To test run the project using your branch for scaf and the cookiecutter you have to tell it
+which branch and repo to use. Here is an example script to do that: 
+
+(You will need to adjust the paths and branch name to match your setup):
+```bash
+#! /bin/bash
+
+SCAF_ROOT=/Users/gfranxman/sfu/ScafDev/scaf
+OUTPUT_FOLDER=./scaf-test
+TEST_CONFIG=./scaf-cookiecutter.yaml
+
+BRANCH_NAME=gfranxman/configure-git-remote
+BASE_REPO=https://github.com/sixfeetup/scaf.git
+
+
+rm -rf $OUTPUT_FOLDER && \
+$SCAF_ROOT/scaf myproject --no-input --checkout $BRANCH_NAME ${BASE_REPO} 
+```
