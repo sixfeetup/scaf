@@ -63,6 +63,9 @@ if [ $? -eq 0 ]; then
     kind create cluster --name $PROJECT_SLUG
     cd $PROJECT_SLUG
     make compile
+    echo "Dependencies compiled successfully."
+    pwd
+    echo "Performing initial commit."
     git add .
     git commit -m "Initial commit"
 else
