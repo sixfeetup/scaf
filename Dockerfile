@@ -1,7 +1,7 @@
 FROM python:3.10-alpine
 
 RUN apk add git shadow su-exec && \
-  pip install uv \
+  pip install uv && \
   uv pip install black isort cookiecutter
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
