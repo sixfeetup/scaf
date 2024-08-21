@@ -86,10 +86,12 @@ secure:  ## Analyze dependencies for security issues
 
 sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
+	source \{\{cookiecutter.project_slug\}\}/.envrc.sandbox && \
 	NAMESPACE={{ cookiecutter.project_dash }}-sandbox envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
 
 prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
 	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
+	source \{\{cookiecutter.project_slug\}\}/.envrc.production && \
 	NAMESPACE={{ cookiecutter.project_dash }}-prod envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
 
 argocd-app:
