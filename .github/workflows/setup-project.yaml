@@ -38,7 +38,7 @@ jobs:
         git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
         rm -f $HOME/.local/bin/scaf
-        curl -sSL $INSTALL_URL | sh
+        curl -sSL $INSTALL_URL | bash
 
     - name: Create Project with Scaf
       shell: bash

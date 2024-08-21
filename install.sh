@@ -1,4 +1,12 @@
-#!/bin/sh
+#!/bin/bash
+
+# This script installs scaf and its dependencies.
+# It is meant to be run on a new machine to ensure that all the necessary tools are installed.
+# It can be run with the following command:
+#   curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
+# or
+#   curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | DEBUG=True bash
+
 
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
@@ -6,6 +14,28 @@ TEMP_DOWNLOAD="./scaf"
 PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
 DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
+# These are dependencies that we depend on the user to have installed.
+# The format is "name>=version" where version is optional.
+# Only >= is supported for version comparison.
+dependencies=(
+    "bash>=5.2"
+    "curl>=8.6"
+    "make>=4.4"
+    "python3>=3.11"
+    "docker>=25.0"
+    "git>=2.39"
+    "rsync>=3.2.0"
+)
+
+get_os() {
+    os=$(uname -s 2>/dev/null || echo "Unknown")
+    if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
+        os="WSL"
+    elif [ "$os" = "Unknown" ] && [ "${OSTYPE#msys}" != "$OSTYPE" ]; then
+        os="Windows"
+    fi
+    echo $os
+}
 
 ensure_bin_folder() {
   if [ ! -d "$PREFERRED_BIN_FOLDER" ]; then
@@ -32,38 +62,76 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
-check_top_level_dependencies() {
-    # these are dependencies that we depend on the user to have installed
-    dependencies="bash curl make python3 docker git rsync"
-    missing=""
+version_satisfies() {
+    local name="$1"
+    local required="$2"
+    [ -n "$DEBUG" ] && echo "Checking '$name' for required version: $required"
 
-    for dep in $dependencies; do
-        if ! command_exists $dep ; then
-            missing="$missing $dep"
+    local installed_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+    [ -n "$DEBUG" ] && echo "Installed version: $installed_version"
+    if [ -z "$installed_version" ]; then
+        return 1
+    fi
+
+    if ! version_compare "$installed_version" "$required"; then
+        return 1
+    fi
+
+    return 0
+}
+
+version_compare() {
+    local installed="$1"
+    local required="$2"
+
+    IFS='.' read -ra installed_parts <<< "$installed"
+    IFS='.' read -ra required_parts <<< "$required"
+
+    for i in "${!required_parts[@]}"; do
+        if [[ "${installed_parts[$i]:-0}" -lt "${required_parts[$i]}" ]]; then
+            return 1
+        elif [[ "${installed_parts[$i]:-0}" -gt "${required_parts[$i]}" ]]; then
+            return 0
         fi
     done
 
-    if [ -z "$missing" ]; then
-        echo "All top-level dependencies are installed."
+    return 0
+}
+
+function check_top_level_dependencies() {
+    local missing=()
+    local os=$(get_os)
+    for dep in "${dependencies[@]}"; do
+        if [[ "$dep" =~ ^([^>=]+)(>=(.+))? ]]; then
+            name="${BASH_REMATCH[1]}"
+            version="${BASH_REMATCH[3]:-}"
+
+            if ! command_exists "$name"; then
+                missing+=("$name")
+            elif [ -n "$version" ]; then
+                detected_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+                if ! version_satisfies "$name" "$version"; then
+                    missing+=("$name>=$version required but found $detected_version")
+                else
+                    [ -n "$DEBUG" ] && echo "$name version $detected_version satisfies the required version $version"
+                fi
+            fi
+        else
+            echo "Invalid dependency format: $dep" >&2
+        fi
+    done
+
+    if [ ${#missing[@]} -eq 0 ]; then
+        echo "All top-level dependencies are installed and meet the required versions."
         return 0
     fi
 
-    echo "The following dependencies are missing:"
-    for dep in $missing; do
+    echo "The following dependencies are missing or do not meet the required versions:"
+    for dep in "${missing[@]}"; do
         echo "- $dep"
-    done
-
-    os=$(uname -s 2>/dev/null || echo "Unknown")
-    if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
-        os="WSL"
-    elif [ "$os" = "Unknown" ] && [ "${OSTYPE#msys}" != "$OSTYPE" ]; then
-        os="Windows"
-    fi
-
-    # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
-    #       for those rather then strictly by OS.
-    for dep in $missing; do
-        case $dep in
+        tool_name=$(echo $dep | cut -d'>' -f1)
+        [ -n "$DEBUG" ] && echo Tool name: $tool_name
+        case $tool_name in
             "bash")
                 echo "Please install bash for consistent shell execution."
                 ;;
@@ -123,8 +191,9 @@ check_top_level_dependencies() {
         esac
         echo
     done
-    exit 1
+    return 1
 }
+
 
 check_git_config() {
     git config --get user.name > /dev/null 2>&1
@@ -245,7 +314,7 @@ for tool in kubectl kind tilt; do
         echo "$tool is not installed."
         install_$tool
     else
-        echo "$tool is already installed."
+        [ -n "$DEBUG" ] && echo "$tool is already installed."
     fi
 done
 
