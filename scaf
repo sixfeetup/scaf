@@ -46,6 +46,21 @@ if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
   DOCKER_RUN_OPTIONS="-it"
 fi
 
+party_popper() {
+    for i in {1..4}; do
+        echo -ne "\r🎉 POP! 💥"
+        sleep 0.3
+        echo -ne "\r💥 POP! 🎉"
+        sleep 0.3
+    done
+    echo -e "\r🎊 Congrats! Your $PROJECT_SLUG project is ready! 🎉"
+    echo
+    echo "To get started, run:"
+    echo "cd $PROJECT_SLUG"
+    echo "tilt up"
+    echo
+}
+
 echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
@@ -68,7 +83,10 @@ if [ $? -eq 0 ]; then
     git init .
     git add .
     git commit -m "Initial commit"
+    echo
+    party_popper
 else
     echo "Failed to create project."
     exit 1
 fi
+
