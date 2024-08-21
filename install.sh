@@ -235,6 +235,7 @@ install_scaf() {
 }
 
 # Start the installation process
+echo "Installing scaf from $SCAF_SCRIPT_URL for the $BRANCH branch..."
 ensure_bin_folder
 check_top_level_dependencies
 check_git_config

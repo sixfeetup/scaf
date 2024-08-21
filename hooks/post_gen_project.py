@@ -242,6 +242,28 @@ def remove_graphql_files():
     )
 
 
+def init_git_repo():
+    print(INFO + "Initializing git repository..." + TERMINATOR)
+    print(INFO + f"Current working directory: {os.getcwd()}" + TERMINATOR)
+    subprocess.run(shlex.split("git init ."))
+    print(SUCCESS + "Git repository initialized." + TERMINATOR)
+
+
+def configure_git_remote():
+    repo_url = "{{ cookiecutter.repo_url }}"
+    if repo_url:
+        print(INFO + f"repo_url: {repo_url}" + TERMINATOR)
+        command = f"git remote add origin {repo_url}"
+        subprocess.run(shlex.split(command))
+        print(SUCCESS + f"Remote origin={repo_url} added." + TERMINATOR)
+    else:
+        print(
+            WARNING
+            + "No repo_url provided. Skipping git remote configuration."
+            + TERMINATOR
+        )
+
+
 def main():
     debug = "{{ cookiecutter.debug }}".lower() == "y"
 
@@ -269,7 +291,10 @@ def main():
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))
 
-    print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
+    init_git_repo()
+    configure_git_remote()
+
+    print(SUCCESS + "Project initialized, keep up the good work!!" + TERMINATOR)
 
 
 if __name__ == "__main__":

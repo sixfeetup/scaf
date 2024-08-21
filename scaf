@@ -80,7 +80,9 @@ if [ $? -eq 0 ]; then
     kind create cluster --name $CLUSTER_SLUG
     cd $COOKIECUTTER_SLUG
     make compile
-    git init .
+    echo "Dependencies compiled successfully."
+    pwd
+    echo "Performing initial commit."
     git add .
     git commit -m "Initial commit"
     echo

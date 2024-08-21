@@ -109,3 +109,66 @@ When making changes to scaf, keep the following in mind:
 - update pins in requirements/*.in files but *don't\* commit the compiled requirements.txt
   files to the repo.
 - update to the latest Python supported by Django. For Django 4.1, this is 3.8, 3.9, and 3.10.
+
+### Testing
+To test the cookiecutter portion of scaf, create virtual environment ad install black, isort and cookiecutter.
+Create a test cookiecutter.yaml file with the following content:
+```yaml
+---
+default_context:
+  author_name: Joe Sixie
+  aws_account_id: "000000000000"
+  aws_region: us-east-1
+  create_nextjs_frontend: y
+  debug: n
+  description: Behold My Awesome Project!
+  domain_name: sixfeetup.com
+  email: joe-sixie@sixfeetup.com
+  mail_service: Mailgun
+  project_dash: my-awesome-sixie-project
+  project_name: My Awesome Sixie Project
+  project_slug: my_awesome_sixie_project
+  repo_name: my_awesome_sixie_project
+  repo_url: git@github.com:sixfeetup/my_awesome_sixie_project.git
+  source_control_organization_slug: sixfeetup
+  source_control_provider: github.com
+  timezone: US/Eastern
+  use_celery: n
+  use_graphql: y
+  use_sentry: n
+  version: 0.1.0
+
+```
+
+Then create a helper script to run the tests:
+```bash
+#! /bin/bash
+
+SCAF_ROOT=/Users/gfranxman/sfu/ScafDev/scaf
+OUTPUT_FOLDER=./scaf-test
+TEST_CONFIG=./scaf-cookiecutter.yaml
+
+rm -rf $OUTPUT_FOLDER && cookiecutter $SCAF_ROOT --no-input --config-file $TEST_CONFIG -o $OUTPUT_FOLDER -v
+
+```
+
+Run the script and check the output folder for the generated project.
+
+To test run the project using your branch for scaf and the cookiecutter you have to tell it
+which branch and repo to use. Here is an example script to do that: 
+
+(You will need to adjust the paths and branch name to match your setup):
+```bash
+#! /bin/bash
+
+SCAF_ROOT=/Users/gfranxman/sfu/ScafDev/scaf
+OUTPUT_FOLDER=./scaf-test
+TEST_CONFIG=./scaf-cookiecutter.yaml
+
+BRANCH_NAME=gfranxman/configure-git-remote
+BASE_REPO=https://github.com/sixfeetup/scaf.git
+
+
+rm -rf $OUTPUT_FOLDER && \
+$SCAF_ROOT/scaf myproject --no-input --checkout $BRANCH_NAME ${BASE_REPO} 
+```

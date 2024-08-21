@@ -37,6 +37,7 @@ jobs:
         git config --global user.email "setup-project--install@example.com"
         git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
+        rm -f $HOME/.local/bin/scaf
         curl -sSL $INSTALL_URL | sh
 
     - name: Create Project with Scaf
@@ -47,5 +48,6 @@ jobs:
         git config --global init.defaultBranch main
         git config --global user.email "setup-project--create@example.com"
         git config --global user.name "CI CD Setup Project"
-        $HOME/.local/bin/scaf myproject --no-input
-
+        
+        REPO_URL="https://github.com/sixfeetup/scaf.git"
+        $HOME/.local/bin/scaf myproject --no-input --checkout $GITHUB_REF_NAME $REPO_URL
