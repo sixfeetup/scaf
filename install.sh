@@ -122,7 +122,7 @@ function check_top_level_dependencies() {
     done
 
     if [ ${#missing[@]} -eq 0 ]; then
-        echo "All top-level dependencies are installed and meet the required versions."
+        echo "🎉 All top-level dependencies are installed and meet the required versions. 🎉"
         return 0
     fi
 
@@ -292,7 +292,7 @@ install_scaf() {
         echo "Moving scaf to $DESTINATION..."
         sudo mv $TEMP_DOWNLOAD $DESTINATION
         if [ -f "$DESTINATION" ]; then
-            echo "scaf installed successfully at $DESTINATION"
+            echo "🎉 scaf installed successfully at $DESTINATION 🎉"
         else
             echo "Failed to move scaf to the destination."
             exit 1
