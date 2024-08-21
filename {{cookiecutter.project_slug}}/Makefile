@@ -26,7 +26,7 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 backend-test: ## Execute backend tests
 ifeq ($(CI),true)
 	cd backend; \
-	pip install \
+	uv pip install \
 		-r requirements/production.txt \
 		-r requirements/tests.txt; \
 	cd {{ cookiecutter.project_slug }}; \
@@ -60,17 +60,17 @@ outdated: ## Show all the outdated packages with their latest versions in the co
 	$(KUBECTL_EXEC_BACKEND) -c "pip list --outdated"
 
 pipdeptree: ## Show the dependencies of installed packages as a tree structure
-	$(KUBECTL_EXEC_BACKEND) -c "pipdeptree"
+	$(KUBECTL_EXEC_BACKEND) -c "uv pip tree --no-cache"
 
 compile: backend/requirements/base.in backend/requirements/tests.in ## compile latest requirements to be built into the docker image
 	@docker run --rm -v $(shell pwd)/backend/requirements:/local python:3.12-slim /bin/bash -c \
 		"apt-get update; apt-get install -y libpq-dev; \
-		 PIP_ROOT_USER_ACTION=ignore pip install --disable-pip-version-check pip-tools; \
+		 pip install uv; \
 		 touch /local/base.txt; touch /local/production.txt; touch /local/tests.txt; touch /local/local.txt; \
-		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/base.txt /local/base.in; \
-		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/production.txt /local/production.in; \
-		 python -m piptools compile --upgrade --allow-unsafe --generate-hashes --output-file /local/tests.txt /local/tests.in; \
-		 python -m piptools compile --upgrade --allow-unsafe --output-file /local/local.txt /local/local.in"
+		 uv pip compile --upgrade --generate-hashes --output-file /local/base.txt /local/base.in; \
+		 uv pip compile --upgrade --generate-hashes --output-file /local/production.txt /local/production.in; \
+		 uv pip compile --upgrade --generate-hashes --output-file /local/tests.txt /local/tests.in; \
+		 uv pip compile --upgrade --output-file /local/local.txt /local/local.in"
 
 shell-backend:  ## Shell into the running Django container
 	$(KUBECTL_EXEC_BACKEND)

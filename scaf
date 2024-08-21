@@ -13,13 +13,15 @@ fi
 PROJECT_SLUG="$1"
 
 # Validate the project slug
-if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9]+$ ]]; then
-    echo "Error: PROJECT_SLUG should only contain alphanumeric characters."
+if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    echo "Error: PROJECT_SLUG should only contain alphanumeric characters, underscores and hyphens."
     exit 1
 fi
 
 # Remove the project_slug from the argument list
 shift
+CLUSTER_SLUG=${PROJECT_SLUG//_/-}
+COOKIECUTTER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
 if [ $# -gt 0 ]; then
@@ -71,12 +73,12 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
-  project_slug="$PROJECT_SLUG"
+  project_slug="$COOKIECUTTER_SLUG"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
-    kind create cluster --name $PROJECT_SLUG
-    cd $PROJECT_SLUG
+    kind create cluster --name $CLUSTER_SLUG
+    cd $COOKIECUTTER_SLUG
     make compile
     git init .
     git add .
