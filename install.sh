@@ -137,31 +137,31 @@ function check_top_level_dependencies() {
                 ;;
             "curl")
                 echo "Please install curl:"
-                echo "  - Ubuntu/Debian: sudo apt-get install curl"
-                echo "  - CentOS/Fedora: sudo yum install curl"
-                echo "  - macOS: brew install curl"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade curl"
+                echo "  - CentOS/Fedora: sudo yum install curl || sudo yum upgrade curl"
+                echo "  - macOS: brew install curl || brew upgrade curl"
                 echo "  - Windows: Download from https://curl.se/windows/"
                 ;;
             "make")
                 echo "Please install make:"
-                echo "  - Ubuntu/Debian: sudo apt-get install make"
-                echo "  - CentOS/Fedora: sudo yum install make"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade make"
+                echo "  - CentOS/Fedora: sudo yum install make || sudo yum upgrade make"
                 echo "  - macOS: xcode-select --install"
                 echo "    or: brew install make"
                 echo "  - Windows: Install MinGW or use WSL"
                 ;;
             "python3")
                 echo "Please install python3:"
-                echo "  - Ubuntu/Debian: sudo apt-get install python3"
-                echo "  - CentOS/Fedora: sudo yum install python3"
-                echo "  - macOS: brew install python"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade python3"
+                echo "  - CentOS/Fedora: sudo yum install python3 || sudo yum upgrade python3"
+                echo "  - macOS: brew install python || brew upgrade python"
                 echo "  - Windows: Download from https://www.python.org/downloads/windows/"
                 ;;
             "rsync")
                 echo "Please install rsync:"
-                echo "  - Ubuntu/Debian: sudo apt-get install rsync"
-                echo "  - CentOS/Fedora: sudo yum install rsync"
-                echo "  - macOS: brew install rsync"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade rsync"
+                echo "  - CentOS/Fedora: sudo yum install rsync || sudo yum upgrade rsync"
+                echo "  - macOS: brew install rsync || brew upgrade rsync"
                 echo "  - Windows: Can be obtained from https://www.itefix.net/cwrsync"
                 echo "    or: Install WSL and usesudo apt-get install rsync"
                 ;;
