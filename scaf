@@ -13,13 +13,15 @@ fi
 PROJECT_SLUG="$1"
 
 # Validate the project slug
-if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9]+$ ]]; then
-    echo "Error: PROJECT_SLUG should only contain alphanumeric characters."
+if ! [[ $PROJECT_SLUG =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    echo "Error: PROJECT_SLUG should only contain alphanumeric characters, underscores and hyphens."
     exit 1
 fi
 
 # Remove the project_slug from the argument list
 shift
+CLUSTER_SLUG=${PROJECT_SLUG//_/-}
+COOKIECUTTER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
 if [ $# -gt 0 ]; then
@@ -44,6 +46,21 @@ if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
   DOCKER_RUN_OPTIONS="-it"
 fi
 
+party_popper() {
+    for i in {1..4}; do
+        echo -ne "\r🎉 POP! 💥"
+        sleep 0.3
+        echo -ne "\r💥 POP! 🎉"
+        sleep 0.3
+    done
+    echo -e "\r🎊 Congrats! Your $PROJECT_SLUG project is ready! 🎉"
+    echo
+    echo "To get started, run:"
+    echo "cd $PROJECT_SLUG"
+    echo "tilt up"
+    echo
+}
+
 echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
@@ -56,19 +73,22 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
-  project_slug="$PROJECT_SLUG"
+  project_slug="$COOKIECUTTER_SLUG"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
-    kind create cluster --name $PROJECT_SLUG
-    cd $PROJECT_SLUG
+    kind create cluster --name $CLUSTER_SLUG
+    cd $COOKIECUTTER_SLUG
     make compile
     echo "Dependencies compiled successfully."
     pwd
     echo "Performing initial commit."
     git add .
     git commit -m "Initial commit"
+    echo
+    party_popper
 else
     echo "Failed to create project."
     exit 1
 fi
+

@@ -37,23 +37,21 @@ ENV PATH="/app/bin:${PATH}"
 
 # Next, we want to update pip, setuptools, and wheel inside of this virtual
 # environment to ensure that we have the latest versions of them.
-RUN pip --no-cache-dir --disable-pip-version-check install --upgrade pip setuptools wheel
+RUN pip --no-cache-dir install --upgrade uv
+RUN uv pip --no-cache install --upgrade setuptools wheel
 
 COPY requirements /tmp/requirements
 
 RUN set -x \
-    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --upgrade pip-tools; fi
+    && if [ "$DEVEL" = "yes" ]; then uv pip --no-cache install -r /tmp/requirements/local.txt; fi
 
 RUN set -x \
-    && if [ "$DEVEL" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install -r /tmp/requirements/local.txt; fi
-
-RUN set -x \
-    && pip --no-cache-dir --disable-pip-version-check install --no-deps \
+    && uv pip --no-cache install --no-deps \
     -r /tmp/requirements/production.txt \
     -r /tmp/requirements/base.txt
 
 RUN set -x \
-    && if [ "$TEST" = "yes" ]; then pip --no-cache-dir --disable-pip-version-check install --no-deps \
+    && if [ "$TEST" = "yes" ]; then uv pip --no-cache install --no-deps \
     -r /tmp/requirements/tests.txt; fi
 
 # Now we can build the application image
