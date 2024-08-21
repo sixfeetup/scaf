@@ -31,6 +31,9 @@ jobs:
     - name: Install Requirements
       shell: bash
       run: |
+        sudo apt-get update && sudo apt-get install --only-upgrade curl
+        sudo apt-get update && sudo apt-get install --only-upgrade make
+        sudo apt-get update && sudo apt-get install --only-upgrade python3       
         INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
         export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
         git config --global init.defaultBranch main
