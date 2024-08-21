@@ -191,7 +191,7 @@ function check_top_level_dependencies() {
         esac
         echo
     done
-    return 1
+    exit 1
 }
 
 
