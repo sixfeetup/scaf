@@ -41,8 +41,8 @@ jobs:
         git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
         rm -f $HOME/.local/bin/scaf
-        #curl -sSL $INSTALL_URL | DEBUG=True bash
-        DEBUG=True install.sh
+        echo "Installing scaf from $INSTALL_URL"
+        curl -sSL $INSTALL_URL | DEBUG=True bash
 
     - name: Create Project with Scaf
       shell: bash
