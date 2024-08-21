@@ -3,7 +3,5 @@ debugpy
 django-debug-toolbar
 django-extensions
 ipdb
-pip-tools
-pipdeptree
 pydevd-pycharm~=233.13135.95
 Werkzeug
