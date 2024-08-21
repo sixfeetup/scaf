@@ -36,10 +36,10 @@ spec:
             - name: http-server
               containerPort: 8000
           envFrom:
-            - secretRef:
-                name: secrets-config
             - configMapRef:
                 name: app-config
+            - secretRef:
+                name: secrets-config
           livenessProbe:
             httpGet:
               path: /healthz
