@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -28,4 +28,6 @@ jobs:
       - name: Run Semantic Release
         run: npx semantic-release
         env:
+          CI_VERSION_WORKAROUND_APP_ID: ${{ vars.CI_VERSION_WORKAROUND_APP_ID }}
+          CI_VERSION_WORKAROUND_APP_PRIVATE_KEY: ${{ secrets.CI_VERSION_WORKAROUND_APP_PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
