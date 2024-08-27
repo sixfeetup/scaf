@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.13.0](https://github.com/sixfeetup/scaf/compare/v1.12.0...v1.13.0) (2024-08-27)
+
+### Features
+
+* add automatic git remote configuration ([#336](https://github.com/sixfeetup/scaf/issues/336)) ([23e39af](https://github.com/sixfeetup/scaf/commit/23e39af0ef5bd0eaf2f808d4204d1a1cfde73e18))
+* add function to check for necessary dependencies in install.sh ([#320](https://github.com/sixfeetup/scaf/issues/320)) ([4da9d4f](https://github.com/sixfeetup/scaf/commit/4da9d4fb6b9e23cf6ca3ae2720698d224c44cc66))
+* add party_popper function to enhance project initiation experience ([#340](https://github.com/sixfeetup/scaf/issues/340)) ([61da47b](https://github.com/sixfeetup/scaf/commit/61da47bf8939e8824e413af5e30669138c2c0e24))
+* added make setup target ([#359](https://github.com/sixfeetup/scaf/issues/359)) ([31a835b](https://github.com/sixfeetup/scaf/commit/31a835bf5815351fe35938c232c438c0deb5e6f1))
+* allow hyphens and underscores in project slugs ([#341](https://github.com/sixfeetup/scaf/issues/341)) ([2d51499](https://github.com/sixfeetup/scaf/commit/2d51499dbcf09ecaf79e73a19d6bb8d4e1425392))
+* improve installation script to handle preferred bin folder ([#321](https://github.com/sixfeetup/scaf/issues/321)) ([0ed6ac1](https://github.com/sixfeetup/scaf/commit/0ed6ac1dab2b419a5eda1219292f24149530729f))
+
 ## [1.12.0](https://github.com/sixfeetup/scaf/compare/v1.11.0...v1.12.0) (2024-07-29)
 
 ### Features
