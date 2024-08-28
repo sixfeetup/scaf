@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.1](https://github.com/sixfeetup/scaf/compare/v1.13.0...v1.13.1) (2024-08-28)
+
+### Bug Fixes
+
+* move flower to its own deployment refs [#89](https://github.com/sixfeetup/scaf/issues/89) ([#105](https://github.com/sixfeetup/scaf/issues/105)) ([8ff7033](https://github.com/sixfeetup/scaf/commit/8ff7033f115c4a79792c1cf0883798ef3d792c3a))
+
 ## [1.13.0](https://github.com/sixfeetup/scaf/compare/v1.12.0...v1.13.0) (2024-08-27)
 
 ### Features
