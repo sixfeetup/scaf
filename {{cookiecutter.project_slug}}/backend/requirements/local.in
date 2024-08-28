@@ -1,4 +1,6 @@
 # Local development dependencies go here
+-r base.txt
+
 debugpy
 django-debug-toolbar
 django-extensions
