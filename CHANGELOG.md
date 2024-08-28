@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.2](https://github.com/sixfeetup/scaf/compare/v1.13.1...v1.13.2) (2024-08-28)
+
+### Bug Fixes
+
+* local.txt should include stuff from base ([#361](https://github.com/sixfeetup/scaf/issues/361)) ([33fbac5](https://github.com/sixfeetup/scaf/commit/33fbac5d63ff2e2fd79a8f0495eb5bc4488fd759))
+
 ## [1.13.1](https://github.com/sixfeetup/scaf/compare/v1.13.0...v1.13.1) (2024-08-28)
 
 ### Bug Fixes
