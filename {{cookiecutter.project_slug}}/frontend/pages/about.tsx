@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client'
 
-import { addApolloState, initializeApollo } from '@/lib/apolloClient'
-
 import { GET_ME } from '.'
+
+import { addApolloState, initializeApollo } from '@/lib/apolloClient'
 
 export default function About() {
   const { loading, error, data } = useQuery(GET_ME)
