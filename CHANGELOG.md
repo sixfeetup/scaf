@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.14.0](https://github.com/sixfeetup/scaf/compare/v1.13.2...v1.14.0) (2024-09-04)
+
+### Features
+
+* update docker build-push-action to v5 and utilize github's ([#352](https://github.com/sixfeetup/scaf/issues/352)) ([cf0b2e4](https://github.com/sixfeetup/scaf/commit/cf0b2e4d0a47c6d584bcc4d76dac40bf7c538175))
+
 ## [1.13.2](https://github.com/sixfeetup/scaf/compare/v1.13.1...v1.13.2) (2024-08-28)
 
 ### Bug Fixes
