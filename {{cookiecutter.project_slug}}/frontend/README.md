@@ -17,10 +17,10 @@ This project uses GraphQL for the backend, and Apollo Client for the frontend. T
 ## Environment Variables
 
 | Variable Name                | Explanation                                                |
-| ---------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
-| IS_PRE_PUSH_HOOKS_ENABLED    | Controls husky pre-push hooks for frontend folder          |  |
+| ---------------------------- | ---------------------------------------------------------- | --- |
+| IS_PRE_PUSH_HOOKS_ENABLED    | Controls husky pre-push hooks for frontend folder          |     |
 | NEXT_PUBLIC_GRAPHQL_ENDPOINT | The public graphql endpoint url                            |
-| NEXT_GRAPHQL_ENDPOINT        | The graphql endpoint url to be used for serverside queries |  |
+| NEXT_GRAPHQL_ENDPOINT        | The graphql endpoint url to be used for serverside queries |     |
 
 ## Suggested Tools
 

@@ -42,6 +42,11 @@
             "name": "@apollo/client/core",
             "importNames": ["gql"],
             "message": "Use the @/__generated__/gql to get proper typings!"
+          },
+          {
+            "name": "@testing-library/react",
+            "importNames": ["*"],
+            "message": "Use the imports from @/__tests__/test-utils instead!"
           }
         ]
       }
