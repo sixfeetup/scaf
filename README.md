@@ -8,8 +8,11 @@ a new project and streamlines the development experience with Tilt.
 **scaf** generates a new project structure with Kubernetes manifests in
 three Kustomize layers for dev, sandbox, and production. A new project 
 contains the following:
-* NextJS or React frontend
 * Django backend
+* NextJS or React frontend
+  * Strawberry GraphQL (if NextJS frontend is chosen)
+  * Apollo Client (if NextJS frontend is chosen)
+  * _TODO: REST alternative to GraphQL_
 * Postgres database for local development
 * CloudNativePG deployment for production
 * Redis
@@ -134,7 +137,6 @@ default_context:
   source_control_provider: github.com
   timezone: US/Eastern
   use_celery: n
-  use_graphql: y
   use_sentry: n
   version: 0.1.0
 
