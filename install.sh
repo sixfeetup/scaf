@@ -225,6 +225,10 @@ install_tilt() {
 }
 
 install_scaf() {
+    # Install/re-install scaf
+    if [ -f "$TEMP_DOWNLOAD" ]; then
+        rm $TEMP_DOWNLOAD
+    fi
     # Download and install scaf
     echo "Downloading scaf from $SCAF_SCRIPT_URL..."
     curl -L $SCAF_SCRIPT_URL -o $TEMP_DOWNLOAD
@@ -260,8 +264,4 @@ for tool in kubectl kind tilt; do
     fi
 done
 
-if ! command_exists scaf; then
-    install_scaf
-else
-    echo "scaf is already installed."
-fi
+install_scaf
