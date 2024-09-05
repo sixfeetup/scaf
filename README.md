@@ -9,9 +9,10 @@ a new project and streamlines the development experience with Tilt.
 three Kustomize layers for dev, sandbox, and production. A new project 
 contains the following:
 * Django backend
-* NextJS or React frontend
-  * Strawberry GraphQL (if NextJS frontend is chosen)
-  * Apollo Client (if NextJS frontend is chosen)
+* Celery (optional)
+* Next.js frontend (optional)
+  * Strawberry GraphQL (if frontend is chosen)
+  * Apollo Client (if frontend is chosen)
   * _TODO: REST alternative to GraphQL_
 * Postgres database for local development
 * CloudNativePG deployment for production
@@ -26,6 +27,7 @@ contains the following:
 * GitHub and Bitbucket pipelines to build and push images, run security,
 formatting and linting checks
 * Terraform config to set up a k3s cluster on AWS
+* Sentry (optional)
 
 ## Installation
 
