@@ -1,4 +1,7 @@
 # {{ cookiecutter.project_name }}
+
+## :information_source: About the {{ cookiecutter.project_name }} project
+
 ## How to set up your local environment for development
 
 ### Requirements
