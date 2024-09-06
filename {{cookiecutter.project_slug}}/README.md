@@ -14,71 +14,13 @@ See [docs/development.md](/docs/development.md)
 
 See [docs/deployment.md](/docs/deployment.md)
 
-## How to manage passwords and sensitive values
+## :shushing_face: How to manage passwords and sensitive values
 
-### Using SealedSecrets
+See [docs/secrets.md](/docs/secrets.md)
 
-SealedSecrets can be used to encrypt passwords for the values to be safely checked in.
-Creating a new secret involves encrypting the secret using kubeseal. [Installing kubeseal](https://github.com/bitnami-labs/sealed-secrets#kubeseal).
+## :bug: How to debug the application
 
-Configure kubernetes to your current project config and context, making sure you are in the correct prod/sandbox environment
-
-    $ export KUBECONFIG=~/.kube/config:~/.kube/{{ cookiecutter.project_slug }}.ec2.config
-    $ kubectl config use-context {{ cookiecutter.project_slug }}-ec2-cluster
-
-Add the secrets to your manifest using the secrets template file, and run kubeseal on the unencrypted values. The makefile target `sandbox-secrets` will replace the variables in `./k8s/templates/secrets.yaml.template` with the encoded variables from the environment, and copy the manifest with the encrypted values to `.k8s/overlays/sandbox/secrets.yaml`. The same can be done for the prod environment using the `prod-secrets` target
-
-    $ make sandbox-secrets
-
-    $ make prod-secrets
-
-The `k8s/*/secrets.yaml` file can now be safely checked in. The passwords will be unencrypted by SealedSecrets in the cluster.
-When a secret is added/removed update the `k8s/templates` files, update the environment variables in .envrc and rerun the make commands.
-
-The decrypted values can be retrieved running:
-
-    $ kubectl get secret secrets-config -n {{ cookiecutter.project_dash }} -o yaml > unsealed_secrets.yaml
-
-### Using .envrc file
-
-To ease managing your passwords and secrets you can store the values in 1Password.
-You will need to install and configure [1Password cli](https://developer.1password.com/docs/cli/get-started/)
-
-You can automatically source from the `.envrc` file using [direnv](https://direnv.net/docs/installation.html)
-
-You can also manually export the variables to your environment using `source .envrc`
-
-
-
-### Debugging
-
-The steps below describe how to set up interactive debugging with PyCharm.
-
-#### PyCharm Debugging Setup
-Update `k8s/base/app.configmap.yaml` with `data` field `DEBUGGER_IDE: "pycharm"`
-
-In PyCharm:
-
-1. Go to 'Run' in the toolbar
-2. Click on 'Edit Configurations'
-3. Click on '+' in the top left of the dialog
-4. Select 'Python Debug Server'
-5. Set the host to 0.0.0.0 and the port to 6400, and the name as you see fit.
-6. Click 'Ok'
-
-#### Debugging in development
-Before the code you want to debug, add the following lines:
-
-```python
-from {{ cookiecutter.project_slug }}.utils.debugger import connect_debugger
-connect_debugger()
-``` 
-You can then set break points in your IDE and call the code as usual to hit them.
-
-When the debugger is first connected, you will see a screen pop up about mapping - Click 'auto-detect' path mapping settings and choose the file that matches `backend/{{ cookiecutter.project_slug }}/utils/debugger.py` 
-
-#### Troubleshooting
-If the debugger is connected early on, such as in `manage.py`, standard django functionality such the admin interface may break. For that reason connecting in proximity to the code you want to test is recommended.
+See [docs/debug.md](/docs/debug.md)
 
 ## How to monitor the application
 
