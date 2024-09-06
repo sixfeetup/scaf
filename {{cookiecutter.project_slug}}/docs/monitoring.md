@@ -14,7 +14,7 @@ Note: The values for both tokens can be empty if you don't wish to use Sentry.
 3. Add team members in Sentry 
 4. Update `k8s/base/app.configmap.yaml` `SENTRY_DSN_BACKEND`, `VITE_SENTRY_DSN_FRONTEND` with the DSNs appropriate for the relevant Sentry projects. 
 
-For more detailed steps view `./docs/sentry.md`
+For more detailed steps view [Sentry specific documentation](/docs/sentry.md)
 
 {% endif %}
 ### How to monitor logs and the deployed application
