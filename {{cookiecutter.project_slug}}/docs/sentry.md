@@ -8,7 +8,7 @@
 4. Assign a team (create a team, if needed, with the plus icon next to the team dropdown). Teams should be based around the people involved in a project or projects that need to know about errors, not just the client.
 5. Click the Create Project button
 6. Repeat the above steps with the following changes:
-7. Choose React
+7. Choose Next.js
 8. Name the Project with client-frontend naming convention (ex. {{ cookiecutter.project_dash }}-frontend)
 9. Assign a team (create a team, if needed, with the plus icon next to the team dropdown). Teams should be based around the people involved in a project or projects that need to know about errors, not just the client.
 10. Click the Create Project button
