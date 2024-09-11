@@ -15,7 +15,7 @@ resource "aws_cloudfront_origin_access_identity" "s3_access_identity" {
 }
 
 resource "aws_cloudfront_origin_access_control" "static_storage" {
-  name                              = "${var.app_name}-${var.environment}-static_storage"
+  name                              = "${var.app_name}-${var.environment}-static-storage"
   description                       = "Backend Bucket Access Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
@@ -50,16 +50,24 @@ resource "aws_cloudfront_distribution" "cloudfront" {
     }
   }
 
-  default_cache_behavior {
-    # Using the CachingOptimized policy:
-    cache_policy_id = data.aws_cloudfront_cache_policy.caching_disabled.id
-    # Using the AllViewerExceptHostHeader origin policy
+  // Cache behavior for /api paths
+  ordered_cache_behavior {
+    path_pattern             = "/api/*"
+    target_origin_id         = var.cluster_name
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    viewer_protocol_policy   = "redirect-to-https"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
+  }
 
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    viewer_protocol_policy = "redirect-to-https"
-    target_origin_id       = var.cluster_name
+  default_cache_behavior {
+    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer_except_host.id
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    viewer_protocol_policy   = "redirect-to-https"
+    target_origin_id         = var.cluster_name
   }
 
   viewer_certificate {
