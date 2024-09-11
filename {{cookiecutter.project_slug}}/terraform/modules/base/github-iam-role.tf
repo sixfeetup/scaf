@@ -4,7 +4,7 @@ data "aws_iam_role" "github_oidc_role" {
 
 # Define the IAM policy for ECR
 resource "aws_iam_policy" "ecr_push_policy" {
-  name        = "ecr-push-policy"
+  name        = "${var.app_name}-${var.repo_name}-ecr-push-policy"
   description = "Policy to allow pushing images to ECR"
 
   policy = jsonencode({
