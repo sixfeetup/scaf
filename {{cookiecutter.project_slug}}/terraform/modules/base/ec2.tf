@@ -27,11 +27,5 @@ module "control_plane_nodes" {
   tags                        = merge(local.common_tags, local.cluster_required_tags)
 
   vpc_security_group_ids = [module.cluster_sg.security_group_id]
-
-  root_block_device = [
-    {
-      volume_size = 100
-    }
-  ]
 }
 
