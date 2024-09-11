@@ -1,3 +1,15 @@
+data "aws_ami" "talos" {
+  owners      = ["540036508848"] # Sidero Labs
+  most_recent = true
+  name_regex  = "^talos-v\\d+\\.\\d+\\.\\d+-${data.aws_availability_zones.available.id}-amd64$"
+}
+
+locals {
+  cluster_required_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+  }
+}
+
 module "control_plane_nodes" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
