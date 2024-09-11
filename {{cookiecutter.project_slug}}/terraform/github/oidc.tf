@@ -50,7 +50,7 @@ resource "aws_iam_role" "github_oidc_role" {
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:sixfeetup/best:*"
+          "token.actions.githubusercontent.com:sub": "repo:sixfeetup/{{ cookiecutter.project_dash }}:*"
         }
       }
     }
