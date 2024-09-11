@@ -50,7 +50,9 @@ resource "aws_iam_role" "github_oidc_role" {
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:sixfeetup/{{ cookiecutter.project_dash }}:*"
+          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:sandbox"
+          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:staging"
+          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:prod"
         }
       }
     }
