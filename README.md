@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/sixfeetup/cookiecutter-sixiedjango/assets/784273/4e378983-c351-4656-95b9-b5c38d70991d" width="450px">
+  <img src="{{cookiecutter.project_slug}}/frontend/public/scaf-logo.png" width="250px">
 </p>
 
 **scaf** provides developers and DevOps engineers with a complete blueprint for
