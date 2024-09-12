@@ -1,5 +1,5 @@
 resource "aws_iam_user" "cnpg_user" {
-  name = "cnpg-user-prod"
+  name = "${var.app_name}-${var.environment}-cnpg-user"
 
   tags = local.common_tags
 }
