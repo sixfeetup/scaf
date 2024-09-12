@@ -122,13 +122,21 @@ shell-frontend:
 secure:  ## Analyze dependencies for security issues
 	$(KUBECTL_EXEC_BACKEND) -c "safety check"
 
-sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
-	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
-	NAMESPACE={{ cookiecutter.project_dash }}-sandbox envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
+sandbox-secrets: ## Create sealed secrets for sandbox
+	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
+	ENVIRONMENT=sandbox envsubst < k8s/templates/secrets.yaml.template | \
+		op inject -i -f - | \
+		kubeseal \
+		--namespace {{ cookiecutter.project_dash }}-sandbox \
+		--format yaml > k8s/sandbox/secrets.yaml
 
-prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
-	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
-	NAMESPACE={{ cookiecutter.project_dash }}-prod envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
+prod-secrets: ## Create sealed secrets for prod
+	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
+	ENVIRONMENT=prod envsubst < k8s/templates/secrets.yaml.template | \
+		op inject -i -f - | \
+		kubeseal \
+		--namespace {{ cookiecutter.project_dash }}-prod \
+		--format yaml > k8s/prod/secrets.yaml
 
 argocd-app:
 	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml
