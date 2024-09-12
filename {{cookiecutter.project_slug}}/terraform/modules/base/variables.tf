@@ -45,7 +45,7 @@ variable "cluster_domain_name" {
 
 variable "nextjs_domain_name" {
   type    = string
-  default = "nextjs.cipr.sixfeetup.com"
+  default = "nextjs.{{ cookiecutter.domain_name }}"
 }
 
 variable "argocd_domain_name" {
