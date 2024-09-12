@@ -43,6 +43,11 @@ variable "cluster_domain_name" {
   default = "k8s.{{ cookiecutter.domain_name }}"
 }
 
+variable "nextjs_domain_name" {
+  type    = string
+  default = "nextjs.cipr.sixfeetup.com"
+}
+
 variable "argocd_domain_name" {
   type    = string
   default = "argocd.{{ cookiecutter.domain_name }}"
