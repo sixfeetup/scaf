@@ -30,7 +30,7 @@ variable "cluster_name" {
 
 variable "domain_name" {
   type    = string
-  default = "sandbox.{{ cookiecutter.domain_name }}"
+  default = "{{ cookiecutter.domain_name }}"
 }
 
 variable "api_domain_name" {
