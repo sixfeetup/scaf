@@ -1,21 +1,3 @@
-output "talosconfig" {
-  description = "The generated talosconfig"
-  value       = module.cluster.talosconfig
-  sensitive   = true
-}
-
-output "kubeconfig" {
-  description = "The generated kubeconfig"
-  value       = module.cluster.kubeconfig
-  sensitive   = true
-}
-
-output "machineconfig" {
-  description = "The generated machineconfig"
-  value       = module.cluster.machineconfig
-  sensitive   = true
-}
-
 output "cnpg-iam-role-arn" {
   description = "CloudNativePG iam role arn"
   value       = module.cluster.cnpg-iam-role-arn
