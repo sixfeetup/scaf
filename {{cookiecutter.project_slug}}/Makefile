@@ -122,21 +122,34 @@ shell-frontend:
 secure:  ## Analyze dependencies for security issues
 	$(KUBECTL_EXEC_BACKEND) -c "safety check"
 
-sandbox-secrets: ## Create sealed secrets for sandbox
+DEBUG ?= false
+secrets:
+	@$(call check_var,ENVIRONMENT)
 	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
-	ENVIRONMENT=sandbox envsubst < k8s/templates/secrets.yaml.template | \
-		op inject -i -f - | \
-		kubeseal \
-		--namespace {{ cookiecutter.project_dash }}-sandbox \
-		--format yaml > k8s/sandbox/secrets.yaml
+	kubectl config get-contexts --no-headers | \
+		grep {{ cookiecutter.project_slug }}-$(ENVIRONMENT) && \
+		kubectl config use-context admin@{{ cookiecutter.project_slug }}-$(ENVIRONMENT)
+	ENVIRONMENT=$(ENVIRONMENT) \
+	envsubst < k8s/templates/secrets.yaml.template | op inject | if [ "$(DEBUG)" = "true" ]; then cat; else kubeseal -n {{ cookiecutter.project_slug }}-$(ENVIRONMENT) --format yaml > k8s/$(ENVIRONMENT)/secrets.yaml; fi
+
+sandbox-secrets: ## Create sealed secrets for sandbox
+	$(MAKE) secrets ENVIRONMENT=sandbox
+
+debug-sandbox-secrets: ## Debug sandbox secrets
+	$(MAKE) secrets ENVIRONMENT=sandbox DEBUG=true
+
+staging-secrets: ## Create sealed secrets for sandbox
+	$(MAKE) secrets ENVIRONMENT=sandbox
+
+debug-staging-secrets: ## Debug sandbox secrets
+	$(MAKE) secrets ENVIRONMENT=sandbox DEBUG=true
 
 prod-secrets: ## Create sealed secrets for prod
-	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
-	ENVIRONMENT=prod envsubst < k8s/templates/secrets.yaml.template | \
-		op inject -i -f - | \
-		kubeseal \
-		--namespace {{ cookiecutter.project_dash }}-prod \
-		--format yaml > k8s/prod/secrets.yaml
+	$(MAKE) secrets ENVIRONMENT=prod
+
+debug-prod-secrets: ## Create sealed secrets for prod
+	$(MAKE) secrets ENVIRONMENT=prod DEBUG=true
+
 
 argocd-app:
 	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml
