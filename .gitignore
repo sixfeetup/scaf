@@ -385,3 +385,6 @@ dist
 *.tfvars.json
 
 .direnv
+
+# scaf challenge
+.scaf-challenge.json

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Scaf challenge script
+BRANCH=${SCAF_SCRIPT_BRANCH:-main}
+SCAF_CHALLENGE_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/challenge.sh"
+CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
+
 # Default repository URL if none is provided
 DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
 
@@ -46,6 +51,15 @@ if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
   DOCKER_RUN_OPTIONS="-it"
 fi
 
+# Check if --challenge is in scaf cli arguments
+SCAF_CHALLENGE="n"
+if [[ $COOKIECUTTER_OPTIONS == *"--challenge"* ]]; then
+  SCAF_CHALLENGE="y"
+  # Remove `--challenge` from COOKIECUTTER_OPTIONS as these are carried forward and it is not a
+  # standard cookiecutter option.
+  COOKIECUTTER_OPTIONS=$(echo "${COOKIECUTTER_OPTIONS[@]}" | xargs -n1 | grep -v -- "--challenge" | xargs)
+fi
+
 party_popper() {
     for i in {1..4}; do
         echo -ne "\r🎉 POP! 💥"
@@ -61,34 +75,94 @@ party_popper() {
     echo
 }
 
+start_challenge_oauthflow() {
+    # Kick off scaf challenge oauthflow process
+    CHALLENGE_SCRIPT="./scaf-challenge-oauth.sh"
+    if [ -f "$CHALLENGE_SCRIPT" ]; then
+        rm $CHALLENGE_SCRIPT
+    fi
+    # Download challenge script and start oauth flow
+    echo "Downloading scaf challenge oauthflow script from $SCAF_CHALLENGE_SCRIPT_URL..."
+    curl -L $SCAF_CHALLENGE_SCRIPT_URL -o $CHALLENGE_SCRIPT
+
+    if [ -f "$CHALLENGE_SCRIPT" ]; then
+        chmod +x $CHALLENGE_SCRIPT
+        source $CHALLENGE_SCRIPT
+        run_scaf_challenge_oauth_flow
+        rm $CHALLENGE_SCRIPT
+    else
+        echo "Failed to download oauthflow script: $SCAF_CHALLENGE_SCRIPT_URL"
+        exit 1
+    fi
+}
+
+start_challenge_session() {
+  # Start a new session and report start timestamp to scaf challenge report API
+  echo "Starting challenge session..."
+
+  # Extract token, session_id, and base_url from the challenge config file
+  config=$(cat $CHALLENGE_CONFIG_PATH)
+  token=$(echo $config | grep -o '"access_token": "[^"]*"' | sed -e 's/"access_token": "\([^"]*\)"/\1/')
+  base_url=$(echo $config | grep -o '"base_url": "[^"]*"' | sed -e 's/"base_url": "\([^"]*\)"/\1/')
+  session_id=$(echo $config | grep -o '"session_id": "[^"]*"' | sed -e 's/"session_id": "\([^"]*\)"/\1/')
+  start=$(python -c "import time; print('{:.6f}'.format(time.time()))")
+
+  # Make report API call to kick off the session
+  status_code=$(curl -o /dev/null -s -w "%{http_code}" --location "$base_url/Prod/report" \
+    --header "Content-Type: application/json" \
+    --header "Authorization: Bearer $token" \
+    --data "{ \"sessionid\": \"$session_id\", \"start\": \"$start\" }")
+
+  # Check whether session has been started successfully
+  if [[ $status_code -ne 200 ]]; then
+      echo "Failed to start the challenge session: $status_code"
+      # Force skip challenge if failed to start the session
+      SCAF_CHALLENGE="n"
+  fi
+}
+
+if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  start_challenge_oauthflow
+  if [[ -f "$CHALLENGE_CONFIG_PATH" ]]; then
+    start_challenge_session
+  else
+    # Force skip challenge as it cannot be started without config file
+    SCAF_CHALLENGE="n"
+  fi
+else
+  echo "Skipping challenge."
+fi
+
 echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 IMAGE_TAG=${IMAGE_TAG:-latest}
+CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
+  -e CHALLENGE_CONFIG="$CHALLENGE_CONFIG" \
   docker.io/sixfeetup/scaf:$IMAGE_TAG \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
-  project_slug="$COOKIECUTTER_SLUG"
+  project_slug="$COOKIECUTTER_SLUG" \
+  challenge="$SCAF_CHALLENGE"
+
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
-    kind create cluster --name $CLUSTER_SLUG
-    cd $COOKIECUTTER_SLUG
-    make compile
-    echo "Dependencies compiled successfully."
-    pwd
-    echo "Performing initial commit."
-    git add .
-    git commit -m "Initial commit"
-    echo
-    party_popper
+  kind create cluster --name $CLUSTER_SLUG
+  cd $COOKIECUTTER_SLUG
+  make compile
+  echo "Dependencies compiled successfully."
+  pwd
+  echo "Performing initial commit."
+  git add .
+  git commit -m "Initial commit"
+  party_popper
 else
-    echo "Failed to create project."
-    exit 1
+  echo "Failed to create project."
+  exit 1
 fi
-

@@ -24,7 +24,12 @@ data:
   FLOWER_BROKER_URL: "redis://redis:6379/0"
   FLOWER_ADDRESS: "0.0.0.0"
   FLOWER_PORT: "5555"{%- endif %}
-
+{%- if cookiecutter.challenge == "y" %}
+  # Scaf challenge settings
+  CHALLENGE_SESSION_ID: __CHALLENGE_SESSION_ID__
+  CHALLENGE_JWT_TOKEN: __CHALLENGE_JWT_TOKEN__
+  CHALLENGE_BASE_URL: __CHALLENGE_BASE_URL__
+{%- endif %}
   # S3 storage access
   DJANGO_AWS_REGION_NAME: "{{ cookiecutter.aws_region }}"
   DJANGO_AWS_STORAGE_BUCKET_NAME: "CHANGEME_S3_BUCKET_NAME"

@@ -4,7 +4,7 @@ import shlex
 import shutil
 import string
 import subprocess
-import zipfile
+import json
 
 try:
     # Inspired by
@@ -128,29 +128,12 @@ def set_django_secret_key(file_path):
     return django_secret_key
 
 
-def set_django_admin_url(file_path):
-    django_admin_url = set_flag(
-        file_path,
-        "!!!SET DJANGO_ADMIN_URL!!!",
-        formatted="{}/",
-        length=32,
-        using_digits=True,
-        using_ascii_letters=True,
-    )
-    return django_admin_url
-
-
 def generate_random_user():
     return generate_random_string(length=32, using_ascii_letters=True)
 
 
 def generate_postgres_user(debug=False):
     return DEBUG_VALUE if debug else generate_random_user()
-
-
-def set_postgres_user(file_path, value):
-    postgres_user = set_flag(file_path, "!!!SET POSTGRES_USER!!!", value=value)
-    return postgres_user
 
 
 def set_postgres_password(file_path, value=None):
@@ -165,25 +148,6 @@ def set_postgres_password(file_path, value=None):
     return postgres_password
 
 
-def set_celery_flower_user(file_path, value):
-    celery_flower_user = set_flag(
-        file_path, "!!!SET CELERY_FLOWER_USER!!!", value=value
-    )
-    return celery_flower_user
-
-
-def set_celery_flower_password(file_path, value=None):
-    celery_flower_password = set_flag(
-        file_path,
-        "!!!SET CELERY_FLOWER_PASSWORD!!!",
-        value=value,
-        length=64,
-        using_digits=True,
-        using_ascii_letters=True,
-    )
-    return celery_flower_password
-
-
 def append_to_gitignore_file(s):
     with open(".gitignore", "a") as gitignore_file:
         gitignore_file.write(s)
@@ -192,14 +156,29 @@ def append_to_gitignore_file(s):
 
 def set_flags_in_secrets(postgres_user, celery_flower_user, debug=False):
     local_secrets_path = os.path.join("k8s", "local", "secrets.yaml")
-
     set_django_secret_key(os.path.join("k8s", "local", "secrets.yaml"))
-
-    set_postgres_user(local_secrets_path, value=postgres_user)
     set_postgres_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
 
-    set_celery_flower_user(local_secrets_path, value=celery_flower_user)
-    set_celery_flower_password(local_secrets_path, value=DEBUG_VALUE if debug else None)
+
+def set_challenge_settings_in_config_map():
+    challenge_config = json.loads(os.getenv("CHALLENGE_CONFIG"))
+    local_configmap_path = os.path.join("k8s", "base", "app.configmap.yaml")
+
+    set_flag(
+        local_configmap_path,
+        "__CHALLENGE_SESSION_ID__",
+        value=challenge_config['session_id']
+    )
+    set_flag(
+        local_configmap_path,
+        "__CHALLENGE_JWT_TOKEN__",
+        value=challenge_config['access_token']
+    )
+    set_flag(
+        local_configmap_path,
+        "__CHALLENGE_BASE_URL__",
+        value=challenge_config['base_url']
+    )
 
 
 def remove_sentry_files():
@@ -243,6 +222,11 @@ def remove_graphql_files():
     )
 
 
+def remove_challenge_files():
+    challenge_dir = os.path.join("backend", "{{ cookiecutter.project_slug }}", "challenge")
+    shutil.rmtree(challenge_dir)
+
+
 def init_git_repo():
     print(INFO + "Initializing git repository..." + TERMINATOR)
     print(INFO + f"Current working directory: {os.getcwd()}" + TERMINATOR)
@@ -274,6 +258,9 @@ def main():
         debug=debug,
     )
 
+    if "{{ cookiecutter.challenge }}".lower() == "y":
+        set_challenge_settings_in_config_map()
+
     if "{{ cookiecutter.use_celery }}".lower() == "n":
         remove_celery_files()
 
@@ -288,6 +275,9 @@ def main():
 
     if "{{ cookiecutter.create_nextjs_frontend }}".lower() == "n":
         remove_graphql_files()
+
+    if "{{ cookiecutter.challenge }}".lower() == "n":
+        remove_challenge_files()
 
     subprocess.run(shlex.split("black ./backend"))
     subprocess.run(shlex.split("isort --profile=black ./backend"))
