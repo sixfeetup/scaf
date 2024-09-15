@@ -137,8 +137,13 @@ echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
+# Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
+CHALLENGE_CONFIG=""
+if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
+fi
+
 IMAGE_TAG=${IMAGE_TAG:-latest}
-CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   -e HOST_UID="$(id -u)" \
   -e HOST_GID="$(id -g)" \
