@@ -24,7 +24,7 @@ data:
   FLOWER_BROKER_URL: "redis://redis:6379/0"
   FLOWER_ADDRESS: "0.0.0.0"
   FLOWER_PORT: "5555"{%- endif %}
-{%- if cookiecutter.__challenge == "y" %}
+{%- if cookiecutter._challenge == "y" %}
   # Scaf challenge settings
   CHALLENGE_SESSION_ID: __CHALLENGE_SESSION_ID__
   CHALLENGE_JWT_TOKEN: __CHALLENGE_JWT_TOKEN__

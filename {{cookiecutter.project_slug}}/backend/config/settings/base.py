@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "{{ cookiecutter.project_slug }}.users.apps.UsersConfig",
-    {% if cookiecutter.__challenge == "y" -%}
+    {% if cookiecutter._challenge == "y" -%}
     "{{ cookiecutter.project_slug }}.challenge.apps.ChallengeConfig",
     {%- endif %}
     # Your stuff: custom apps go here
@@ -335,7 +335,7 @@ STRAWBERRY_DJANGO = {
 {%- endif %}
 
 
-{%- if cookiecutter.__challenge == "y" %}
+{%- if cookiecutter._challenge == "y" %}
 # ------------------------------------------------------------------------------
 # CHALLENGE settings
 CHALLENGE_SESSION_ID = env("CHALLENGE_SESSION_ID")

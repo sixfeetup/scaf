@@ -224,7 +224,7 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
   project_slug="$COOKIECUTTER_SLUG" \
-  challenge="$SCAF_CHALLENGE"
+  _challenge="$SCAF_CHALLENGE"
 
 
 # Check if cookiecutter was successful
