@@ -258,7 +258,7 @@ def main():
         debug=debug,
     )
 
-    if "{{ cookiecutter.challenge }}".lower() == "y":
+    if "{{ cookiecutter.__challenge }}".lower() == "y":
         set_challenge_settings_in_config_map()
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
@@ -276,7 +276,7 @@ def main():
     if "{{ cookiecutter.create_nextjs_frontend }}".lower() == "n":
         remove_graphql_files()
 
-    if "{{ cookiecutter.challenge }}".lower() == "n":
+    if "{{ cookiecutter.__challenge }}".lower() == "n":
         remove_challenge_files()
 
     subprocess.run(shlex.split("black ./backend"))
