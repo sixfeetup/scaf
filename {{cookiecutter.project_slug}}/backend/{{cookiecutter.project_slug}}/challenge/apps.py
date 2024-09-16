@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 
 class ChallengeConfig(AppConfig):
-    name = "demo.challenge"
+    name = "{{cookiecutter.project_slug}}.challenge"
 
     def ready(self):
         from django.db.models.signals import post_migrate
