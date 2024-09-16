@@ -1,4 +1,4 @@
-# demo/challenge/apps.py
+# {{cookiecutter.project_slug}}/challenge/apps.py
 from django.apps import AppConfig
 
 

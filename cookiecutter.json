@@ -16,7 +16,7 @@
     "Amazon SES",
     "Other SMTP"
   ],
-  "challenge": "n",
+  "_challenge": "n",
   "use_celery": "n",
   "use_sentry": "n",
   "debug": "n",
