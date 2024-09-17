@@ -24,11 +24,14 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: sixfeetup/scaf:${{ github.sha }}
+        tags: |
+          sixfeetup/scaf:${{ github.sha }}
+          sixfeetup/scaf:latest
         context: .
         file: ./Dockerfile
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        platforms: linux/amd64,linux/arm64
 
   setup:
     environment: dev
