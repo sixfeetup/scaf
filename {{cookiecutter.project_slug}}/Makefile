@@ -2,6 +2,7 @@ KUBECTL_EXEC_BACKEND = kubectl exec -it $$(kubectl get pods -l app=backend -o js
 {% if cookiecutter.create_nextjs_frontend == "y" %}
 KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") -- bash
 {% endif %}
+PREREQUISITE_COMMANDS := kubectl tilt kind
 
 # colors
 BLUE:=$(shell echo "\033[0;36m")
@@ -11,6 +12,8 @@ RED:=$(shell echo "\033[0;31m")
 END:=$(shell echo "\033[0m")
 
 PROJECT_SLUG:="{{ cookiecutter.project_slug }}"
+REGISTRY_HOSTNAME := localhost
+REGISTRY_PORT := 5001
 
 ## Release/Deployment Targets
 
@@ -80,19 +83,30 @@ setup:
 		echo " $(GREEN)✔️$(END) All prerequisites are installed."; \
 	fi
 	@CURRENT_CONTEXT="$$(kubectl config current-context 2>&1)"; \
-	if [ "$$CURRENT_CONTEXT" = "kind-$(PROJECT_SLUG)" ]; then \
-		echo " $(GREEN)✔️$(END) The kubectl context is correctly set to kind-$(PROJECT_SLUG). Run 'tilt up' to start your cluster!"; \
+	NEW_CONTEXT=kind-$(shell echo $(PROJECT_SLUG) | sed 's/_/-/g'); \
+	if [ -z "$$(kubectl config get-contexts -o name | grep -w $$NEW_CONTEXT$$)" ]; then \
+		echo " $(YELLOW)⛭$(END) No context found for $$NEW_CONTEXT. Creating your cluster. Please wait, this may take a couple of minutes on a slower machine..."; \
+		k8s/scripts/kind-with-registry.sh $(shell echo $(PROJECT_SLUG) | sed 's/_/-/g') > /tmp/scaf_cluster.log 2>&1; \
+		echo " $(GREEN)✔️$(END) $$NEW_CONTEXT cluster and context created."; \
+		echo " $(BLUE)🗣️ Remember, you can safely run \"make setup\" any time to switch between Scaf projects.$(END)"; \
+		echo " $(GREEN)✔️$(END) Finished! Run 'tilt up' to start your cluster! "; \
 	else \
-		echo " $(YELLOW)⛭$(END) Current kubectl context is not 'kind-$(PROJECT_SLUG)'. Switching context now..."; \
-		if [ -z "$$(kubectl config get-contexts -o name | grep -w 'kind-$(PROJECT_SLUG)$$')" ]; then \
-			echo " $(YELLOW)⛭$(END) No context found for kind-$(PROJECT_SLUG). Creating one. Please wait, this may take a couple of minutes on a slower machine..."; \
-			kind create cluster --name $(PROJECT_SLUG) 1>/dev/null 2>/tmp/scaf_error.log; \
-			echo " $(GREEN)✔️$(END) kind-$(PROJECT_SLUG) cluster and context created."; \
-			echo " $(BLUE)🗣️ Remember, you can safely run \"make setup\" any time to switch between Scaf projects.$(END)"; \
+		if [ "$$CURRENT_CONTEXT" = "$$NEW_CONTEXT" ]; then \
+			echo " $(GREEN)✔️$(END) The kubectl context is correctly set to '$$NEW_CONTEXT'. Run 'tilt up' to start your cluster!"; \
+		else \
+			kubectl config use-context $$NEW_CONTEXT 1>/dev/null 2>/tmp/scaf_error.log; \
+			echo " $(GREEN)✔️$(END) Context switched to $$NEW_CONTEXT. Run 'tilt up' to start your cluster! "; \
 		fi; \
-		kubectl config use-context kind-$(PROJECT_SLUG) 1>/dev/null 2>/tmp/scaf_error.log; \
-		echo " $(GREEN)✔️$(END) Context switched to kind-$(PROJECT_SLUG). Run 'tilt up' to start your cluster! "; \
-	fi
+	fi; \
+
+list-local-docker-images:
+	@echo " $(YELLOW)⛭$(END) Listing local docker images..."
+	@curl -s "$(REGISTRY_HOSTNAME):$(REGISTRY_PORT)/v2/_catalog" | jq -r '.repositories[]' | while read REPO; do \
+		echo "Repository: $$REPO"; \
+		curl -s "$(REGISTRY_HOSTNAME):$(REGISTRY_PORT)/v2/$$REPO/tags/list" | jq -r '.tags[]' | while read TAG; do \
+			echo "  Tag: $$TAG"; \
+		done; \
+	done
 
 outdated: ## Show all the outdated packages with their latest versions in the container
 	$(KUBECTL_EXEC_BACKEND) -c "pip list --outdated"
