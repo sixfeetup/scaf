@@ -83,10 +83,20 @@ setup:
 		echo " $(GREEN)✔️$(END) All prerequisites are installed."; \
 	fi
 	@CURRENT_CONTEXT="$$(kubectl config current-context 2>&1)"; \
-	NEW_CONTEXT=kind-$(shell echo $(PROJECT_SLUG) | sed 's/_/-/g'); \
-	if [ -z "$$(kubectl config get-contexts -o name | grep -w $$NEW_CONTEXT$$)" ]; then \
-		echo " $(YELLOW)⛭$(END) No context found for $$NEW_CONTEXT. Creating your cluster. Please wait, this may take a couple of minutes on a slower machine..."; \
-		k8s/scripts/kind-with-registry.sh $(shell echo $(PROJECT_SLUG) | sed 's/_/-/g') > /tmp/scaf_cluster.log 2>&1; \
+	CLUSTER_NAME=$(shell echo $(PROJECT_SLUG) | sed 's/_/-/g'); \
+	NEW_CONTEXT=kind-$$CLUSTER_NAME; \
+	CLUSTER_EXISTS = $(shell kind get clusters | grep -w $$CLUSTER_NAME$$ || true); \
+	if [ -z "$$CLUSTER_EXISTS" ]; then \
+		echo " $(YELLOW)⛭$(END) No cluster found for $$CLUSTER_NAME. Creating your cluster. Please wait, this may take a couple of minutes on a slower machine..."; \
+		k8s/scripts/kind-with-registry.sh $$CLUSTER_NAME > /tmp/scaf_cluster.log 2>&1; \
+		echo " $(GREEN)✔️$(END) $$NEW_CONTEXT cluster and context created."; \
+		echo " $(BLUE)🗣️ $(END) Pre-loading upstream images into cluster."; \
+		docker pull postgres:16; \
+		docker pull redis:6.0.5; \
+		docker pull mailhog/mailhog:v1.0.0; \
+		kind load docker-image postgres:16 --name $$CLUSTER_NAME; \
+		kind load docker-image redis:6.0.5 --name $$CLUSTER_NAME; \
+		kind load docker-image mailhog/mailhog:v1.0.0 --name $$CLUSTER_NAME; \
 		echo " $(GREEN)✔️$(END) $$NEW_CONTEXT cluster and context created."; \
 		echo " $(BLUE)🗣️ Remember, you can safely run \"make setup\" any time to switch between Scaf projects.$(END)"; \
 		echo " $(GREEN)✔️$(END) Finished! Run 'tilt up' to start your cluster! "; \
