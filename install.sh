@@ -34,7 +34,7 @@ command_exists() {
 
 check_top_level_dependencies() {
     # these are dependencies that we depend on the user to have installed
-    dependencies="bash curl make python3 docker git rsync"
+    dependencies="bash curl make docker git rsync"
     missing=""
 
     for dep in $dependencies; do
@@ -42,6 +42,13 @@ check_top_level_dependencies() {
             missing="$missing $dep"
         fi
     done
+
+    # Check if python commands exist
+    if command -v python &>/dev/null || command -v python3 &>/dev/null; then
+        :
+    else
+        missing="$missing python3"
+    fi    
 
     if [ -z "$missing" ]; then
         echo "All top-level dependencies are installed."

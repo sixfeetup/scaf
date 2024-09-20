@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# set python command
+if command -v python &>/dev/null; then
+    PYTHON_CMD=python
+elif command -v python3 &>/dev/null; then
+    PYTHON_CMD=python3
+else
+    echo "Missing python3 command. Please install python3."
+fi
+
 # Scaf challenge script
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
@@ -122,11 +131,11 @@ EOF
   trap code_received SIGUSR1
 
   # Start the Python server in the background
-  python temp_server.py &
+  $PYTHON_CMD temp_server.py &
   server_pid=$!
 
   # Example opening of the browser to auth/reg user
-  python -c "import webbrowser; webbrowser.open('https://scaf.withpassage.com/authorize?response_type=code&client_id=961JRDH4c4Sin8LYGGbI0Lb7&redirect_uri=http://localhost:51111&scope=openid%20email')"
+  $PYTHON_CMD -c "import webbrowser; webbrowser.open('https://scaf.withpassage.com/authorize?response_type=code&client_id=961JRDH4c4Sin8LYGGbI0Lb7&redirect_uri=http://localhost:51111&scope=openid%20email')"
 
   echo "Waiting for authorization..."
 
@@ -178,7 +187,7 @@ start_challenge_session() {
   token=$(echo $config | grep -o '"access_token": "[^"]*"' | sed -e 's/"access_token": "\([^"]*\)"/\1/')
   base_url=$(echo $config | grep -o '"base_url": "[^"]*"' | sed -e 's/"base_url": "\([^"]*\)"/\1/')
   session_id=$(echo $config | grep -o '"session_id": "[^"]*"' | sed -e 's/"session_id": "\([^"]*\)"/\1/')
-  start=$(python -c "import time; print('{:.6f}'.format(time.time()))")
+  start=$($PYTHON_CMD -c "import time; print('{:.6f}'.format(time.time()))")
 
   # Make report API call to kick off the session
   status_code=$(curl -o /dev/null -s -w "%{http_code}" --location "$base_url/Prod/report" \
