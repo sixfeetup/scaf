@@ -2,21 +2,15 @@ KUBECTL_EXEC_BACKEND = kubectl exec -it $$(kubectl get pods -l app=backend -o js
 {% if cookiecutter.create_nextjs_frontend == "y" %}
 KUBECTL_EXEC_FRONTEND = kubectl exec -it $$(kubectl get pods -l app=frontend -o jsonpath="{.items[0].metadata.name}") -- bash
 {% endif %}
-PREREQUISITE_COMMANDS := kubectl tilt kind
 
-# escape character for colors
-ESC := \033
-
-# color variables
-BLUE := $(ESC)[0;36m
-GREEN := $(ESC)[0;32m
-YELLOW := $(ESC)[0;33m
-RED := $(ESC)[0;31m
-END := $(ESC)[0m
+# colors
+BLUE:=$(shell echo "\033[0;36m")
+GREEN:=$(shell echo "\033[0;32m")
+YELLOW:=$(shell echo "\033[0;33m")
+RED:=$(shell echo "\033[0;31m")
+END:=$(shell echo "\033[0m")
 
 PROJECT_SLUG:="{{ cookiecutter.project_slug }}"
-REGISTRY_HOSTNAME := localhost
-REGISTRY_PORT := 5001
 
 ## Release/Deployment Targets
 
@@ -72,7 +66,7 @@ backend/requirements/production.txt: compile
 backend/requirements/tests.txt: compile
 
 setup:
-	@printf " $(YELLOW)⛭$(END) Checking if the setup is correct and all prerequisites are installed..."
+	@echo " $(YELLOW)⛭$(END) Checking if the setup is correct and all prerequisites are installed..."
 	@MISSING=""; \
 	for exec in $(PREREQUISITE_COMMANDS); do \
 		if ! which $$exec > /dev/null 2>&1; then \
@@ -80,46 +74,25 @@ setup:
 		fi; \
 	done; \
 	if [ -n "$$MISSING" ]; then \
-		printf " $(RED)❌$(END)Missing executables:$$MISSING. These must be installed by you to continue"; \
+		echo " $(RED)❌$(END)Missing executables:$$MISSING. These must be installed by you to continue"; \
 		false; \
 	else \
-		printf " $(GREEN)✔️$(END) All prerequisites are installed."; \
+		echo " $(GREEN)✔️$(END) All prerequisites are installed."; \
 	fi
 	@CURRENT_CONTEXT="$$(kubectl config current-context 2>&1)"; \
-	CLUSTER_NAME=$(shell echo $(PROJECT_SLUG) | sed 's/_/-/g'); \
-	NEW_CONTEXT=kind-$$CLUSTER_NAME; \
-	CLUSTER_EXISTS = $(shell kind get clusters | grep -w $$CLUSTER_NAME$$ || true); \
-	if [ -z "$$CLUSTER_EXISTS" ]; then \
-		printf " $(YELLOW)⛭$(END) No cluster found for $$CLUSTER_NAME. Creating your cluster. Please wait, this may take a couple of minutes on a slower machine..."; \
-		k8s/scripts/kind-with-registry.sh $$CLUSTER_NAME > /tmp/scaf_cluster.log 2>&1; \
-		printf " $(GREEN)✔️$(END) $$NEW_CONTEXT cluster and context created."; \
-		printf " $(BLUE)🗣️ $(END) Pre-loading upstream images into cluster."; \
-		docker pull postgres:16; \
-		docker pull redis:6.0.5; \
-		docker pull mailhog/mailhog:v1.0.0; \
-		kind load docker-image postgres:16 --name $$CLUSTER_NAME; \
-		kind load docker-image redis:6.0.5 --name $$CLUSTER_NAME; \
-		kind load docker-image mailhog/mailhog:v1.0.0 --name $$CLUSTER_NAME; \
-		printf " $(GREEN)✔️$(END) $$NEW_CONTEXT cluster and context created."; \
-		printf " $(BLUE)🗣️ Remember, you can safely run \"make setup\" any time to switch between Scaf projects.$(END)"; \
-		printf " $(GREEN)✔️$(END) Finished! Run 'tilt up' to start your cluster! "; \
+	if [ "$$CURRENT_CONTEXT" = "kind-$(PROJECT_SLUG)" ]; then \
+		echo " $(GREEN)✔️$(END) The kubectl context is correctly set to kind-$(PROJECT_SLUG). Run 'tilt up' to start your cluster!"; \
 	else \
-		if [ "$$CURRENT_CONTEXT" = "$$NEW_CONTEXT" ]; then \
-			printf " $(GREEN)✔️$(END) The kubectl context is correctly set to '$$NEW_CONTEXT'. Run 'tilt up' to start your cluster!"; \
-		else \
-			kubectl config use-context $$NEW_CONTEXT 1>/dev/null 2>/tmp/scaf_error.log; \
-			printf " $(GREEN)✔️$(END) Context switched to $$NEW_CONTEXT. Run 'tilt up' to start your cluster! "; \
+		echo " $(YELLOW)⛭$(END) Current kubectl context is not 'kind-$(PROJECT_SLUG)'. Switching context now..."; \
+		if [ -z "$$(kubectl config get-contexts -o name | grep -w 'kind-$(PROJECT_SLUG)$$')" ]; then \
+			echo " $(YELLOW)⛭$(END) No context found for kind-$(PROJECT_SLUG). Creating one. Please wait, this may take a couple of minutes on a slower machine..."; \
+			kind create cluster --name $(PROJECT_SLUG) 1>/dev/null 2>/tmp/scaf_error.log; \
+			echo " $(GREEN)✔️$(END) kind-$(PROJECT_SLUG) cluster and context created."; \
+			echo " $(BLUE)🗣️ Remember, you can safely run \"make setup\" any time to switch between Scaf projects.$(END)"; \
 		fi; \
-	fi; \
-
-list-local-docker-images:
-	@printf " $(YELLOW)⛭$(END) Listing local docker images..."
-	@curl -s "$(REGISTRY_HOSTNAME):$(REGISTRY_PORT)/v2/_catalog" | jq -r '.repositories[]' | while read REPO; do \
-		echo "Repository: $$REPO"; \
-		curl -s "$(REGISTRY_HOSTNAME):$(REGISTRY_PORT)/v2/$$REPO/tags/list" | jq -r '.tags[]' | while read TAG; do \
-			echo "  Tag: $$TAG"; \
-		done; \
-	done
+		kubectl config use-context kind-$(PROJECT_SLUG) 1>/dev/null 2>/tmp/scaf_error.log; \
+		echo " $(GREEN)✔️$(END) Context switched to kind-$(PROJECT_SLUG). Run 'tilt up' to start your cluster! "; \
+	fi
 
 outdated: ## Show all the outdated packages with their latest versions in the container
 	$(KUBECTL_EXEC_BACKEND) -c "pip list --outdated"

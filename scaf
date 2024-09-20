@@ -231,8 +231,8 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
+  kind create cluster --name $CLUSTER_SLUG
   cd $COOKIECUTTER_SLUG
-  make setup
   make compile
   echo "Dependencies compiled successfully."
   pwd
