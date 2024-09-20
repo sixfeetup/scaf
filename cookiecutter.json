@@ -36,8 +36,5 @@
     }
   },
   "repo_name": "{{ cookiecutter.project_slug }}",
-  "repo_url": "git@{{ cookiecutter.source_control_provider }}:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_slug }}.git",
-  "_copy_without_render": [
-    "k8s/scripts/kind-with-registry.sh"
-  ]
+  "repo_url": "git@{{ cookiecutter.source_control_provider }}:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_slug }}.git"
 }
