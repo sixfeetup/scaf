@@ -43,6 +43,10 @@ be found on your system.
 
 ## Creating a new project using this repo
 
+NB: Before you continue, make sure that you have at least 5 to 10 GB of free
+space available to Docker. Note that Docker Desktop on MacOS has its own
+resource limits separate from the host.
+
 Run `scaf myproject`, answer all the questions, and you'll have your new project!
 
 Inside `myproject/README.md`, you will have more
