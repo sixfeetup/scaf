@@ -30,8 +30,8 @@ tasks:
         talosctl gen config {{ '{{.CLUSTER_NAME}}' }} {{ '{{.CONTROL_PLANE_ENDPOINT}}' }} \
           --output-types controlplane,talosconfig \
           --output ./{{ '{{.ENV}}' }}/ \
-          --config-patch @patch-machine.yaml \
-          --config-patch-control-plane @patch-control-plane.yaml \
+          --config-patch @patches/patch-machine.yaml \
+          --config-patch-control-plane @patches/patch-control-plane.yaml \
           --with-examples=false \
           --with-docs=false
   set_node_ips:
@@ -94,7 +94,7 @@ tasks:
         for node in $(yq -r '.contexts[].endpoints[]' $TALOSCONFIG); do
           talosctl patch mc \
             --nodes $node \
-            --patch @patch-ecr-credential-helper.yaml; \
+            --patch @patches/patch-ecr-credential-helper.yaml; \
         done
   store_talosconfig:
     desc: |
