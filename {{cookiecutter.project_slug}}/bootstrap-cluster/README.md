@@ -114,7 +114,7 @@ bootstrap process.
           --vault='{{ cookiecutter.project_name }}'
    ```
 
-   Generate the deploy key:
+   Sign into 1password with `op signin` and generate the deploy key:
    ```shell
    task argocd:generate_github_deploy_key
    ```
