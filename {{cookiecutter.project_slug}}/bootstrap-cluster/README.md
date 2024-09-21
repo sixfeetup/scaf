@@ -104,8 +104,17 @@ bootstrap process.
 ### Bootstrapping ArgoCD
 
 1. First, we need to create a GitHub deploy key to allow ArgoCD to monitor the
-   repo:
+   repo. This step requires access to the 1password vault for your project.
 
+   Review the vault name in the `op` cli command in
+   `bootstrap-cluster/argocd.yaml`:
+   ```
+      - op item create 
+          ...
+          --vault='{{ cookiecutter.project_name }}'
+   ```
+
+   Generate the deploy key:
    ```shell
    task argocd:generate_github_deploy_key
    ```
