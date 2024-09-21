@@ -35,7 +35,7 @@ resource "aws_iam_openid_connect_provider" "github" {
 
 # Define the IAM role
 resource "aws_iam_role" "github_oidc_role" {
-  name = "github-oidc-role"
+  name = "{{ cookiecutter.project_slug }}-github-oidc-role"
 
   assume_role_policy = <<EOF
 {
@@ -50,9 +50,11 @@ resource "aws_iam_role" "github_oidc_role" {
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:sandbox"
-          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:staging"
-          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:prod"
+          "token.actions.githubusercontent.com:sub": [
+            "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:sandbox",
+            "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:staging",
+            "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.project_dash }}:environment:prod"
+          ]
         }
       }
     }
