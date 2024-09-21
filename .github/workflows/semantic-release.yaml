@@ -5,25 +5,19 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  issues: write
+
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - name: Prepare workaround
-        # Create a GitHub App token to authenticate as the workaround app.
-        uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ vars.CI_VERSION_WORKAROUND_APP_ID }}
-          private-key: ${{ secrets.CI_VERSION_WORKAROUND_APP_PRIVATE_KEY }}
-
       - name: Checkout
-        # Use the workaround app-token to pull all history and tags for the repository.
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
       - name: Setup Node.js
@@ -38,12 +32,4 @@ jobs:
         run: npm audit signatures
 
       - name: Run Semantic Release
-        # Use the workaround app-token to authenticate as the workaround app in order to
-        # push tags to the protected branch.
         run: npx semantic-release
-        env:
-          # Deprecated in favor of the app token.
-          #CI_VERSION_WORKAROUND_APP_ID: ${{ vars.CI_VERSION_WORKAROUND_APP_ID }}
-          #CI_VERSION_WORKAROUND_APP_PRIVATE_KEY: ${{ secrets.CI_VERSION_WORKAROUND_APP_PRIVATE_KEY }}
-          #GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}  # I think this is deprecated in favor of the app token
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
