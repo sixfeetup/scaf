@@ -10,7 +10,7 @@ module "cluster" {
   control_plane = {
     # 2 vCPUs, 2 GiB RAM, $0.0188 per Hour
     instance_type = "t3a.small"
-    num_instances = 2
+    num_instances = 3
     # NB!: set ami_id to prevent instance recreation when the latest ami
     # changes, eg:
     # ami_id = "ami-09d22b42af049d453"
