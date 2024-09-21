@@ -72,6 +72,12 @@ bootstrap process.
          - task: enable_ecr_credential_helper
    ```
 
+   It takes a few minutes for the cluster nodes to register as etcd
+   members and synchronize.
+
+   If the cluster fails to bootstrap, refer to the Troubleshooting section
+   below.
+
 4. Verify the health of your cluster with:
 
    ```shell
@@ -132,3 +138,21 @@ The `argocd:bootstrap` task configuration is as follows:
 
 4. Commit the `secrets.yaml` file for the given environment and push it to the
    repo.
+
+## Troubleshooting
+
+If bootstrapping Talos fails, we recommend resetting the config files and
+recreating ec2 instances before trying again.
+
+1. Reset config and state with `task talos:reset_config` for the given
+   environment.
+
+2. Destroy and recreate ec2 instances:
+
+   cd ../terraform/$ENV/
+   terraform destroy \
+      -target "module.cluster.module.control_plane_nodes[0].aws_instance.this[0]" \
+      -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]" \
+      -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]"
+   terraform plan -out="tfplan.out"
+   terraform apply tfplan.out
