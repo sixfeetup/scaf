@@ -34,7 +34,7 @@ patches:
       value: k8s/sandbox
     - op: replace
       path: /spec/destination/namespace
-    value: {{ cookiecutter.project_slug }}-sandbox
+      value: {{ cookiecutter.project_slug }}-sandbox
   target:
     kind: Application
     name: {{ cookiecutter.project_slug }}
