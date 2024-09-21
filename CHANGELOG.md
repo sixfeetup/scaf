@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.15.1](https://github.com/sixfeetup/scaf/compare/v1.15.0...v1.15.1) (2024-09-21)
+
+### Bug Fixes
+
+* check for python commands, fallback to python3 refs [#386](https://github.com/sixfeetup/scaf/issues/386) ([#389](https://github.com/sixfeetup/scaf/issues/389)) ([7510477](https://github.com/sixfeetup/scaf/commit/7510477414c60b35a517c1416137164e98e7a5d8))
+
 ## [1.15.0](https://github.com/sixfeetup/scaf/compare/v1.14.0...v1.15.0) (2024-09-21)
 
 ### Features
