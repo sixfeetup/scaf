@@ -12,6 +12,9 @@ To view a list of tasks and their descriptions, navigate to the
 Note that there is a directory for each environment: sandbox, staging, and
 cluster.
 
+We recommend opening the AWS serial console for each ec2 instance to monitor the
+bootstrap process.
+
 ### Bootstrapping Talos
 
 1. Navigate to the directory corresponding to the environment being set up and
