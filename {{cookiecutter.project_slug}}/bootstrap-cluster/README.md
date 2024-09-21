@@ -119,7 +119,9 @@ bootstrap process.
    task argocd:generate_github_deploy_key
    ```
 
-2. Proceed with installing ArgoCD by executing:
+2. Add the deploy key to your Git repository
+
+3. Proceed with installing ArgoCD by executing:
 
    ```shell
    task argocd:bootstrap
@@ -136,7 +138,7 @@ The `argocd:bootstrap` task configuration is as follows:
         - task: bootstrap_root_app
 ```
 
-3. ArgoCD will install the Sealed Secrets operator in the cluster. Once it is
+4. ArgoCD will install the Sealed Secrets operator in the cluster. Once it is
    installed, we can generate secrets for the given environment.
 
    ```shell
@@ -145,7 +147,7 @@ The `argocd:bootstrap` task configuration is as follows:
    make $ENV-secrets
    ```
 
-4. Commit the `secrets.yaml` file for the given environment and push it to the
+5. Commit the `secrets.yaml` file for the given environment and push it to the
    repo.
 
 ## Troubleshooting
