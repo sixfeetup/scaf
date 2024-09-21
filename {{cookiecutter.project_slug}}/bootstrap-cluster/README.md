@@ -20,14 +20,14 @@ bootstrap process.
 1. Navigate to the directory corresponding to the environment being set up and
    run:
 
-   ```bash
+   ```shell
    export ENV=sandbox
    cd $ENV
    ```
 
 2. Review the `.env` file for the given environment:
 
-   ```bash
+   ```shell
    CONTROL_PLANE_ENDPOINT: "https://k8s.sandbox.{{ cookiecutter.domain_name }}:6443"
    CLUSTER_NAME: "{{ cookiecutter.project_dash }}-sandbox"
    ```
@@ -74,13 +74,13 @@ bootstrap process.
 
 4. Verify the health of your cluster with:
 
-   ```console
+   ```shell
    task talos:health
    ```
 
 5. Test kubectl access:
 
-   ```bash
+   ```shell
    eval $(task talos:kubeconfig)
    kubectl cluster-info
    ```
@@ -100,13 +100,13 @@ bootstrap process.
 1. First, we need to create a GitHub deploy key to allow ArgoCD to monitor the
    repo:
 
-   ```bash
+   ```shell
    task argocd:generate_github_deploy_key
    ```
 
 2. Proceed with installing ArgoCD by executing:
 
-   ```bash
+   ```shell
    task argocd:bootstrap
    ```
 
@@ -124,7 +124,7 @@ The `argocd:bootstrap` task configuration is as follows:
 3. ArgoCD will install the Sealed Secrets operator in the cluster. Once it is
    installed, we can generate secrets for the given environment.
 
-   ```bash
+   ```shell
    cd ..
    make debug-$ENV-secrets
    make $ENV-secrets
