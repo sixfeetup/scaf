@@ -121,12 +121,19 @@ sandbox, staging).
     terraform init
     ```
 
-3. Plan the Terraform configuration:
+3. Restrict the IPs allowed to manage the cluster. Edit
+    `<environment>/cluster.tf` and set the following variables:
+    ```
+      kubectl_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
+      talos_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
+    ```
+
+4. Plan the Terraform configuration:
     ```bash
     terraform plan -out="tfplan.out"
     ```
 
-4. Apply the Terraform configuration:
+5. Apply the Terraform configuration:
     ```bash
     terraform apply tfplan.out
     ```
