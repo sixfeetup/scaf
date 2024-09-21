@@ -37,4 +37,4 @@ patches:
       value: {{ cookiecutter.project_slug }}-sandbox
   target:
     kind: Application
-    name: {{ cookiecutter.project_slug }}
+    name: {{ cookiecutter.project_slug }}-prod

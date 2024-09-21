@@ -23,16 +23,3 @@ patches:
   target:
     kind: Application
     name: ingress
-- patch: |-
-    - op: replace
-      path: /spec/source/targetRevision
-      value: HEAD
-    - op: replace
-      path: /spec/source/path
-      value: deploy/prod
-    - op: replace
-      path: /spec/destination/namespace
-      value: {{ cookiecutter.project_slug }}-prod
-  target:
-    kind: Application
-    name: {{ cookiecutter.project_slug }}
