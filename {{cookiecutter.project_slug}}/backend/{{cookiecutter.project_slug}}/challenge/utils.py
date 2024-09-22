@@ -1,7 +1,6 @@
 import http.client
 import json
 import logging
-import time
 
 from django.conf import settings
 
@@ -20,7 +19,7 @@ def report_readiness():
     payload = json.dumps(
         {
             "sessionid": settings.CHALLENGE_SESSION_ID,
-            "end": "{:.6f}".format(time.time()),
+            "action": "end",
         }
     )
     headers = {
