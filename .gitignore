@@ -240,7 +240,6 @@ fabric.properties
 # VcsDirectoryMappings
 .idea/vcs.xml
 
-.idea/cookiecutter-sixiedjango.iml
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/misc.xml
 
