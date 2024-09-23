@@ -5,15 +5,15 @@ default_context:
   create_nextjs_frontend: y
   debug: n
   description: My Awesome Scaf Project!
-  domain_name: example.com
-  email: iamscafman@example.com
+  domain_name: sixfeetup.com
+  email: iamscafman@sixfeetup.com
   mail_service: Mailgun
   project_dash: my-awesome-scaf-project
   project_name: My Awesome Scaf Project
   project_slug: my_awesome_scaf_project
   repo_name: my_awesome_scaf_project
   repo_url: git@github.com:sixfeetup/my_awesome_scaf_project.git
-  source_control_organization_slug: example_slug
+  source_control_organization_slug: sixfeetup
   source_control_provider: github.com
   timezone: US/Eastern
   use_celery: n
