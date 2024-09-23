@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.16.0](https://github.com/sixfeetup/scaf/compare/v1.15.1...v1.16.0) (2024-09-23)
+
+### Features
+
+* update text references to refer to Scaf instead of Sixie ([#393](https://github.com/sixfeetup/scaf/issues/393)) ([5288cf0](https://github.com/sixfeetup/scaf/commit/5288cf0ac843d7c474e6e16232b65795581f198f))
+
 ## [1.15.1](https://github.com/sixfeetup/scaf/compare/v1.15.0...v1.15.1) (2024-09-21)
 
 ### Bug Fixes
