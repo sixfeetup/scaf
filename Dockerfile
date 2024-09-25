@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.12.0a1-alpine
 
 RUN set -eux; \
   apk add git shadow su-exec; \
