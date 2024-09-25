@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.16.1](https://github.com/sixfeetup/scaf/compare/v1.16.0...v1.16.1) (2024-09-25)
+
+### Bug Fixes
+
+* entrypoint.sh: Reorder commands so UID and GID checks work ([#395](https://github.com/sixfeetup/scaf/issues/395)) ([bd8e647](https://github.com/sixfeetup/scaf/commit/bd8e6470260a087ea639ad52eb735d7065fe6f88))
+
 ## [1.16.0](https://github.com/sixfeetup/scaf/compare/v1.15.1...v1.16.0) (2024-09-23)
 
 ### Features
