@@ -20,26 +20,26 @@ fi
 
 # Function to check if a group with the given GID already exists
 group_exists_with_gid() {
+    echo "Checking if user with UID $1 exists..."
     getent group | cut -d: -f3 | grep -q "^$1$"
-    echo "Checking if group with GID $1 exists..."
 }
 
 # Function to check if a user with the given UID already exists
 user_exists_with_uid() {
-    getent passwd | cut -d: -f3 | grep -q "^$1$"
     echo "Checking if user with UID $1 exists..."
+    getent passwd | cut -d: -f3 | grep -q "^$1$"
 }
 
 # Function to check if the scaf user already has the target UID
 scaf_has_uid() {
-    [ "$(id -u scaf)" -eq "$1" ]
     echo "Checking if scaf has UID $1..."
+    [ "$(id -u scaf)" -eq "$1" ]
 }
 
 # Function to check if the scaf group already has the target GID
 scaf_has_gid() {
-    [ "$(getent group scaf | cut -d: -f3)" -eq "$1" ]
     echo "Checking if scaf group has GID $1..."
+    [ "$(getent group scaf | cut -d: -f3)" -eq "$1" ]
 }
 
 # Modify the scaf user account to match the host user, adjusting for existing GID
