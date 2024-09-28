@@ -24,11 +24,11 @@ patches:
     name: ingress
 - patch: |-
     - op: replace
-      path: /metadata/name
-      value: {{ cookiecutter.project_slug }}-sandbox
-    - op: replace
       path: /spec/source/targetRevision
       value: develop
+    - op: replace
+      path: /metadata/name
+      value: {{ cookiecutter.project_slug }}-sandbox
     - op: replace
       path: /spec/source/path
       value: k8s/sandbox

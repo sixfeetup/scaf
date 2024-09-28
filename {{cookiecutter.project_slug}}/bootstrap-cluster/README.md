@@ -103,25 +103,78 @@ bootstrap process.
 
 ### Bootstrapping ArgoCD
 
-1. First, we need to create a GitHub deploy key to allow ArgoCD to monitor the
+1. Review the branches used for deployment to the sandbox, staging and
+   production environments. The default configuration will release the `develop`
+   branch to the Sandbox and the `main` branch to the Production environment.
+   Make sure to make the `develop` branch the default branch for PRs on a newly
+   created Git repository.
+
+   Review the branch rule in `bootstrap_root_app` job in
+   `bootstrap-cluster/argocd.yaml`:
+
+   ```
+   vars:
+     BRANCH:
+       sh: ([ "$ENV" = "production" ] && echo "main" || echo "develop")
+   ```
+
+   Review the `targetRevision` in the `kustomization.yaml` files shown below:
+
+   `argocd/sandbox/apps/kustomization.yaml`:
+
+   ```
+   patches:
+   - patch: |-
+       - op: replace
+         path: /spec/source/targetRevision
+         value: develop
+     target:
+       kind: Application
+       name: ingress
+   ...
+   - patch: |-
+       - op: replace
+         path: /spec/source/targetRevision
+         value: develop
+     target:
+       kind: Application
+       name: {{ cookiecutter.project_slug }}-prod
+   ```
+
+   `argocd/prod/apps/kustomization.yaml`:
+
+   ```
+   patches:
+   - patch: |-
+       - op: replace
+         path: /spec/source/targetRevision
+         value: main
+     target:
+       kind: Application
+       name: ingress
+   ```
+
+2. Next, we need to create a GitHub deploy key to allow ArgoCD to monitor the
    repo. This step requires access to the 1password vault for your project.
 
    Review the vault name in the `op` cli command in
    `bootstrap-cluster/argocd.yaml`:
+
    ```
-      - op item create 
+      - op item create
           ...
           --vault='{{ cookiecutter.project_name }}'
    ```
 
    Sign into 1password with `op signin` and generate the deploy key:
+
    ```shell
    task argocd:generate_github_deploy_key
    ```
 
-2. Add the deploy key to your Git repository
+3. Add the deploy key to your Git repository
 
-3. Proceed with installing ArgoCD by executing:
+4. Proceed with installing ArgoCD by executing:
 
    ```shell
    task argocd:bootstrap
@@ -138,7 +191,7 @@ The `argocd:bootstrap` task configuration is as follows:
         - task: bootstrap_root_app
 ```
 
-4. ArgoCD will install the Sealed Secrets operator in the cluster. Once it is
+5. ArgoCD will install the Sealed Secrets operator in the cluster. Once it is
    installed, we can generate secrets for the given environment.
 
    ```shell
@@ -147,7 +200,7 @@ The `argocd:bootstrap` task configuration is as follows:
    make $ENV-secrets
    ```
 
-5. Commit the `secrets.yaml` file for the given environment and push it to the
+6. Commit the `secrets.yaml` file for the given environment and push it to the
    repo.
 
 ## Troubleshooting
@@ -162,8 +215,8 @@ recreating ec2 instances before trying again.
 
    cd ../terraform/$ENV/
    terraform destroy \
-      -target "module.cluster.module.control_plane_nodes[0].aws_instance.this[0]" \
-      -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]" \
-      -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]"
+    -target "module.cluster.module.control_plane_nodes[0].aws_instance.this[0]" \
+    -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]" \
+    -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]"
    terraform plan -out="tfplan.out"
    terraform apply tfplan.out
