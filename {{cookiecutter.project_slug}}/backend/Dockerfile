@@ -1,5 +1,5 @@
 # Build all of the dependencies then we will build the actual application image
-FROM python:3.12-slim as build
+FROM python:3.13.0rc2-slim as build
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -55,7 +55,7 @@ RUN set -x \
     -r /tmp/requirements/tests.txt; fi
 
 # Now we can build the application image
-FROM python:3.12-slim
+FROM python:3.13.0rc2-slim
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /app
