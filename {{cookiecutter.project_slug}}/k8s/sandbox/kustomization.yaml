@@ -5,7 +5,6 @@ namespace: {{ cookiecutter.project_dash }}-sandbox
 resources:
   - ../base
   - certificate.yaml
-  - cluster-issuer.yaml
   - ingress-route.yaml
   - postgres.cnpg.yaml
   - secrets.yaml
