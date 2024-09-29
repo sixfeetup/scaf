@@ -127,10 +127,15 @@ secrets:
 	@$(call check_var,ENVIRONMENT)
 	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
 	kubectl config get-contexts --no-headers | \
-		grep {{ cookiecutter.project_slug }}-$(ENVIRONMENT) && \
-		kubectl config use-context admin@{{ cookiecutter.project_slug }}-$(ENVIRONMENT)
+		grep {{ cookiecutter.project_slug }}-$(ENVIRONMENT) && kubectl config use-context admin@{{ cookiecutter.project_slug }}-$(ENVIRONMENT)
+	AWS_S3_ACCESS_KEY_ID=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_access_key) \
+	AWS_S3_SECRET_ACCESS_KEY=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_secret_key) \
+{% if cookiecutter.mail_service == "Amazon SES" %}	AWS_SES_ACCESS_KEY_ID=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw xxx_user_access_key) \
+	AWS_S3_SECRET_ACCESS_KEY=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_secret_key) \
+	AWS_SES_SECRET_ACCESS_KEY=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_secret_key) \{% endif %}
+	DJANGO_SECRET_KEY=$$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32; echo) \
 	ENVIRONMENT=$(ENVIRONMENT) \
-	envsubst < k8s/templates/secrets.yaml.template | op inject | if [ "$(DEBUG)" = "true" ]; then cat; else kubeseal -n {{ cookiecutter.project_slug }}-$(ENVIRONMENT) --format yaml > k8s/$(ENVIRONMENT)/secrets.yaml; fi
+	envsubst < k8s/templates/secrets.yaml.template | op inject | if [ "$(DEBUG)" = "true" ]; then cat; else kubeseal -n cipr-$(ENVIRONMENT) --format yaml > k8s/$(ENVIRONMENT)/secrets.yaml; fi
 
 sandbox-secrets: ## Create sealed secrets for sandbox
 	$(MAKE) secrets ENVIRONMENT=sandbox
@@ -149,7 +154,6 @@ prod-secrets: ## Create sealed secrets for prod
 
 debug-prod-secrets: ## Create sealed secrets for prod
 	$(MAKE) secrets ENVIRONMENT=prod DEBUG=true
-
 
 ## Help
 
