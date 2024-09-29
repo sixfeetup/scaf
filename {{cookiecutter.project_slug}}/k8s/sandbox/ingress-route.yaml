@@ -9,7 +9,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`api.{{ cookiecutter.domain_name }}`)
+      match: Host(`api.sandbox.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
         - name: backend
@@ -28,7 +28,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`k8s.{{ cookiecutter.domain_name }}`)
+      match: Host(`k8s.sandbox.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
         - name: backend
