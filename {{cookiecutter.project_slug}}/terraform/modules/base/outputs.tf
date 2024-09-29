@@ -12,6 +12,17 @@ output "cnpg_user_secret_key" {
   sensitive = true
   value     = aws_iam_access_key.cnpg_user_key.secret
 }
+{% if cookiecutter.mail_service == "Amazon SES" %}
+
+output "amazon_ses_user_key" {
+  value = aws_iam_access_key.amazon_ses_user_key.id
+}
+
+output "amazon_ses_user_secret_key" {
+  sensitive = true
+  value     = aws_iam_access_key.amazon_ses_user_key.secret
+}
+{% endif %}
 
 output "control_plane_nodes_public_ips" {
   description = "The public ip addresses of the talos control plane nodes."
