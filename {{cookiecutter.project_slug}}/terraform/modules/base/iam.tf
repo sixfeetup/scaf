@@ -26,6 +26,6 @@ resource "aws_iam_access_key" "amazon_ses_user_key" {
 
 resource "aws_iam_user_policy_attachment" "amazon_ses_user_policy_attachment" {
   user       = aws_iam_user.amazon_ses_user.name
-  policy_arn = aws_iam_policy.ses_rw_policy.arn
+  policy_arn = aws_iam_policy.amazon_ses_policy.arn
 }
 {% endif %}
