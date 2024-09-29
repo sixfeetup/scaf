@@ -33,12 +33,12 @@ output "cnpg_user_secret_key" {
 {% if cookiecutter.mail_service == "Amazon SES" %}
 
 output "amazon_ses_user_key" {
-  value = aws_iam_access_key.amazon_ses_user_key.id
+  value = module.cluster.amazon_ses_user_key
 }
 
 output "amazon_ses_user_secret_key" {
   sensitive = true
-  value     = aws_iam_access_key.amazon_ses_user_key.secret
+  value     = module.cluster.amazon_ses_user_key
 }
 {% endif %}
 
