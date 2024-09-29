@@ -166,7 +166,6 @@ tasks:
     cmds:
       - task: delete_all_secrets
       - cd {{ '{{.ENV}}' }} && rm -f controlplane.yaml kubeconfig talosconfig
-
   kubeconfig:
     desc: |
       Retrieve the Kubeconfig for a given cluster
@@ -179,3 +178,25 @@ tasks:
     cmds:
       - task: generate_kubeconfig
       - echo "export KUBECONFIG=$(pwd)/{{ '{{.ENV}}' }}/kubeconfig"
+  fetch_config:
+    desc: |
+      Fetch kubeconfig, talosconfig and controlplane.yaml from AWS Secrets
+      Manager.
+    requires:
+      vars: [ENV]
+    cmds:
+      - |
+        aws secretsmanager get-secret-value \
+          --secret-id "{{ '{{.ENV}}' }}_kubeconfig" | \
+          yq ".SecretString" | tr -d '"' | \
+          base64 -d > ./{{ '{{.ENV}}' }}/kubeconfig
+      - |
+        aws secretsmanager get-secret-value \
+          --secret-id "{{ '{{.ENV}}' }}_talosconfig_yaml" | \
+          yq ".SecretString" | tr -d '"' | \
+          base64 -d > ./{{ '{{.ENV}}' }}/talosconfig
+      - |
+        aws secretsmanager get-secret-value \
+          --secret-id "{{ '{{.ENV}}' }}_talos_controlplane_yaml" | \
+          yq ".SecretString" | tr -d '"' | \
+          base64 -d > ./{{ '{{.ENV}}' }}/controlplane.yaml
