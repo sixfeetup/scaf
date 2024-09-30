@@ -41,11 +41,12 @@ ifeq ($(CI),true)
 	pip install uv; \
 	cd backend; \
 	uv venv ./venv; \
-	source ./venv/bin/activate; \
+	. ./venv/bin/activate; \
 	uv pip install \
 		-r requirements/production.txt \
 		-r requirements/tests.txt; \
-	cd {{ cookiecutter.project_slug }}; \
+	cd scafman; \
+	export DJANGO_SECRET_KEY="test"; \
 	pytest --cov=./ --cov-report html --ds=config.settings.test
 else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
