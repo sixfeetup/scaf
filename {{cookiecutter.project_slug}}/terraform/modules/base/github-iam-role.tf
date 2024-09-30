@@ -1,5 +1,5 @@
 data "aws_iam_role" "github_oidc_role" {
-  name = "github-oidc-role"
+  name = "{{ cookiecutter.project_slug }}-github-oidc-role"
 }
 
 # Define the IAM policy for ECR
