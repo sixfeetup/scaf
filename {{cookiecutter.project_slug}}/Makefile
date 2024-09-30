@@ -17,10 +17,14 @@ PROJECT_SLUG:="{{ cookiecutter.project_slug }}"
 .PHONY: ci
 ci: test secure build  ## Execute the same checks used in CI/CD
 
-check-lint-and-formatting:  ## Execute check of lint and formatting using existing pre-commit hooks
+.git/hooks/pre-commit: ## Install pre-commit hooks
 	pip install pre-commit; \
 	cd backend/; \
-	pre-commit install; \
+	pre-commit install
+
+.PHONY: check-lint-and-formatting
+check-lint-and-formatting: .git/hooks/pre-commit ## Execute check of lint and formatting using existing pre-commit hooks
+	cd backend; \
 	pre-commit run -a
 
 {% if cookiecutter.create_nextjs_frontend == 'y' %}
