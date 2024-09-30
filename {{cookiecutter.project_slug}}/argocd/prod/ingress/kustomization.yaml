@@ -27,7 +27,7 @@ patches:
       path: /spec/routes/1/match
       value: Host(`argocd.{{ cookiecutter.domain_name }}`) && Headers(`Content-Type`, `application/grpc`)
     - op: replace
-      path: /spec/tls/secretName
+      path: /spec/tls
       value: argocd-{{ cookiecutter.project_slug }}-tls
   target:
     kind: IngressRoute
