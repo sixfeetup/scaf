@@ -38,7 +38,10 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 
 backend-test: ## Execute backend tests
 ifeq ($(CI),true)
+	pip install uv; \
 	cd backend; \
+	uv venv ./venv; \
+	source ./venv/bin/activate; \
 	uv pip install \
 		-r requirements/production.txt \
 		-r requirements/tests.txt; \
