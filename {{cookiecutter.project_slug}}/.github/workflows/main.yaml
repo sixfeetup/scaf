@@ -2,6 +2,10 @@ name: Main Workflow
 
 on: [ push, pull_request ]
 
+env:
+  AWS_REGION: ${{ '{{ vars.AWS_REGION }}' }}
+  AWS_ACCOUNT_ID: ${{ '{{ vars.AWS_ACCOUNT_ID }}' }}
+
 jobs:
   check-lint-and-formatting:
     runs-on: ubuntu-latest
