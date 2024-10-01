@@ -48,16 +48,12 @@ resource "aws_iam_role" "github_oidc_role" {
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
+        "StringLike": {
+          "token.actions.githubusercontent.com:sub": "repo:{{ cookiecutter.source_control_organization_slug }}/{{ cookiecutter.repo_name }}:*"
+        },
         "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": [
-            "repo:{{ cookiecutter.source_control_organization_slug }}/{{
-  cookiecutter.repo_name }}:environment:sandbox",
-            "repo:{{ cookiecutter.source_control_organization_slug }}/{{
-  cookiecutter.repo_name }}:environment:staging",
-            "repo:{{ cookiecutter.source_control_organization_slug }}/{{
-  cookiecutter.repo_name }}:environment:prod"
-        ]
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+        }
         }
       }
     }
