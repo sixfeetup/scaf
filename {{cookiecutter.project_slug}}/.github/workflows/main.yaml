@@ -115,7 +115,8 @@ jobs:
         run: |
           echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "BRANCH_NAME=$(echo ${{ '{{ github.ref }}' }} | sed s,refs/heads/,, | sed s,/,-,g)" >> $GITHUB_ENV
-          echo "TARGET_ENV=$(if [ "$BRANCH_NAME" = "main" ]; then echo "prod"; else echo "sandbox"; fi)" >> $GITHUB_ENV
+          export TARGET_ENV=$(if [ "$BRANCH_NAME" = "main" ]; then echo "prod"; else echo "sandbox"; fi)
+          echo "TARGET_ENV=$TARGET_ENV" >> $GITHUB_ENV
           echo "ECR_REPO_BACKEND=${{ '{{ env.AWS_ACCOUNT_ID }}' }}.dkr.ecr.${{ '{{ env.AWS_REGION }}' }}.amazonaws.com/{{ cookiecutter.project_dash }}-$TARGET_ENV-backend" >> $GITHUB_ENV
 
       - name: Build and push backend image
