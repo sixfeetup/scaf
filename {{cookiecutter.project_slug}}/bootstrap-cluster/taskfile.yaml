@@ -1,0 +1,15 @@
+version: '3'
+
+dotenv: ['.env', '{{ "{{.ENV}}" }}/.env']
+
+includes:
+  argocd: ./argocd.yaml
+  talos: ./talos.yaml
+
+tasks:
+  default:
+    desc: |
+      List all available tasks in the Taskfile.
+    cmds:
+      - task --list
+

@@ -1,3 +1,15 @@
+data "aws_ami" "talos" {
+  owners      = ["540036508848"] # Sidero Labs
+  most_recent = true
+  name_regex  = "^talos-v\\d+\\.\\d+\\.\\d+-${data.aws_availability_zones.available.id}-amd64$"
+}
+
+locals {
+  cluster_required_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+  }
+}
+
 module "control_plane_nodes" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6.1"
@@ -15,11 +27,5 @@ module "control_plane_nodes" {
   tags                        = merge(local.common_tags, local.cluster_required_tags)
 
   vpc_security_group_ids = [module.cluster_sg.security_group_id]
-
-  root_block_device = [
-    {
-      volume_size = 100
-    }
-  ]
 }
 

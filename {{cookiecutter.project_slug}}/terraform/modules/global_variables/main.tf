@@ -1,6 +1,6 @@
 output "app_name" {
   description = "App Name"
-  value       = "{{ cookiecutter.project_name }}"
+  value       = "{{ cookiecutter.project_dash }}"
 }
 
 output "application" {

@@ -29,9 +29,5 @@ terraform {
       source  = "hashicorp/template"
       version = ">= 2.2.0"
     }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.14.0"
-    }
   }
 }

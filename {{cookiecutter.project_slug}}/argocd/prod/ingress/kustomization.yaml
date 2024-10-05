@@ -1,0 +1,35 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+- ../../sandbox/ingress
+patches:
+- patch: |-
+    - op: replace
+      path: /metadata/name
+      value: argocd-{{ cookiecutter.project_slug }}-tls
+    - op: replace
+      path: /spec/secretName
+      value: argocd-{{ cookiecutter.project_slug }}-tls
+    - op: replace
+      path: /spec/dnsNames
+      value:
+        - argocd.{{ cookiecutter.domain_name }}
+  target:
+    kind: Certificate
+    name: argocd-sandbox-{{ cookiecutter.project_slug }}-tls
+- patch: |-
+    - op: replace
+      path: /metadata/name
+      value: argocd-{{ cookiecutter.project_slug }}
+    - op: replace
+      path: /spec/routes/0/match
+      value: Host(`argocd.{{ cookiecutter.domain_name }}`)
+    - op: replace
+      path: /spec/routes/1/match
+      value: Host(`argocd.{{ cookiecutter.domain_name }}`) && Headers(`Content-Type`, `application/grpc`)
+    - op: replace
+      path: /spec/tls
+      value: argocd-{{ cookiecutter.project_slug }}-tls
+  target:
+    kind: IngressRoute
+    name: argocd-sandbox-{{ cookiecutter.project_slug }}
+kind: Kustomization
