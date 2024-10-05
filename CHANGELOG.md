@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.17.0](https://github.com/sixfeetup/scaf/compare/v1.16.1...v1.17.0) (2024-10-05)
+
+### Features
+
+* deploy apps with ArgoCD ([6938661](https://github.com/sixfeetup/scaf/commit/69386611ee96ec2e0278fbf57717db10bc484c7e))
+
 ## [1.16.1](https://github.com/sixfeetup/scaf/compare/v1.16.0...v1.16.1) (2024-09-25)
 
 ### Bug Fixes
