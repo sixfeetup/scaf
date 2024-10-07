@@ -135,8 +135,12 @@ EOF
   $PYTHON_CMD temp_server.py &
   server_pid=$!
 
+  # Passage OIDC client credentials – move them? (for now, they are hardcoded)
+  oidc_client_id="961JRDH4c4Sin8LYGGbI0Lb7"
+  oidc_client_secret="gyrskWRKfYccaCffwJGKa0hqekPtbTNJ"
+
   # Example opening of the browser to auth/reg user
-  $PYTHON_CMD -c "import webbrowser; webbrowser.open('https://scaf.withpassage.com/authorize?response_type=code&client_id=961JRDH4c4Sin8LYGGbI0Lb7&redirect_uri=http://localhost:51111&scope=openid%20email')"
+  $PYTHON_CMD -c "import webbrowser; webbrowser.open('https://scaf.withpassage.com/authorize?response_type=code&client_id=${oidc_client_id}&redirect_uri=http://localhost:51111&scope=openid%20email')"
 
   echo "Waiting for authorization..."
 
@@ -145,10 +149,6 @@ EOF
 
   # Read the code
   code=$(cat code.txt)
-
-  # Passage OIDC client credentials – move them? (for now, they are hardcoded)
-  oidc_client_id="961JRDH4c4Sin8LYGGbI0Lb7"
-  oidc_client_secret="gyrskWRKfYccaCffwJGKa0hqekPtbTNJ"
 
   # Perform the curl request and capture the response
   response=$(curl -s --location --request POST "https://scaf.withpassage.com/token?grant_type=authorization_code&code=$code&redirect_uri=http%3A%2F%2Flocalhost%3A51111&client_id=$oidc_client_id&client_secret=$oidc_client_secret" \
@@ -188,13 +188,12 @@ start_challenge_session() {
   token=$(echo $config | grep -o '"access_token": "[^"]*"' | sed -e 's/"access_token": "\([^"]*\)"/\1/')
   base_url=$(echo $config | grep -o '"base_url": "[^"]*"' | sed -e 's/"base_url": "\([^"]*\)"/\1/')
   session_id=$(echo $config | grep -o '"session_id": "[^"]*"' | sed -e 's/"session_id": "\([^"]*\)"/\1/')
-  start=$($PYTHON_CMD -c "import time; print('{:.6f}'.format(time.time()))")
 
   # Make report API call to kick off the session
   status_code=$(curl -o /dev/null -s -w "%{http_code}" --location "$base_url/Prod/report" \
     --header "Content-Type: application/json" \
     --header "Authorization: Bearer $token" \
-    --data "{ \"sessionid\": \"$session_id\", \"start\": \"$start\" }")
+    --data "{ \"sessionid\": \"$session_id\", \"action\": \"start\" }")
 
   # Check whether session has been started successfully
   if [[ $status_code -ne 200 ]]; then
