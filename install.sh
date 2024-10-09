@@ -1,12 +1,4 @@
-#!/bin/bash
-
-# This script installs scaf and its dependencies.
-# It is meant to be run on a new machine to ensure that all the necessary tools are installed.
-# It can be run with the following command:
-#   curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
-# or
-#   curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | DEBUG=True bash
-
+#!/bin/sh
 
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
@@ -14,28 +6,10 @@ TEMP_DOWNLOAD="./scaf"
 PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
 DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
-# These are dependencies that we depend on the user to have installed.
-# The format is "name>=version" where version is optional.
-# Only >= is supported for version comparison.
-dependencies=(
-    "bash>=5.1"
-    "curl>=7.80"
-    "make>=4.3"
-    "python3>=3.10"
-    "docker>=25.0"
-    "git>=2.39"
-    "rsync>=3.2.0"
-)
 
-get_os() {
-    os=$(uname -s 2>/dev/null || echo "Unknown")
-    if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
-        os="WSL"
-    elif [ "$os" = "Unknown" ] && [ "${OSTYPE#msys}" != "$OSTYPE" ]; then
-        os="Windows"
-    fi
-    echo $os
-}
+# These are dependencies that we depend on the user to have installed:
+dependencies="bash>=4.0 curl>=8.7.0 make>=3.8 python3>=3.6 docker>=19.0 git>=2.0 rsync>=3.2.0"
+# ^^ Must be in the format of "name>=version" or just "name" if no version is required.
 
 ensure_bin_folder() {
   if [ ! -d "$PREFERRED_BIN_FOLDER" ]; then
@@ -62,13 +36,36 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
-version_satisfies() {
-    local name="$1"
-    local required="$2"
-    [ -n "$DEBUG" ] && echo "Checking '$name' for required version: $required"
+version_compare() {
+    installed="$1"
+    required="$2"
 
-    local installed_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
-    [ -n "$DEBUG" ] && echo "Installed version: $installed_version"
+    IFS='.'
+    set -- $installed
+    installed_parts="$@"
+    set -- $required
+    required_parts="$@"
+    unset IFS
+
+    i=1
+    for req in $required_parts; do
+        inst=$(echo "$installed_parts" | cut -d' ' -f$i)
+        if [ "${inst:-0}" -lt "$req" ]; then
+            return 1
+        elif [ "${inst:-0}" -gt "$req" ]; then
+            return 0
+        fi
+        i=$((i + 1))
+    done
+
+    return 0
+}
+
+version_satisfies() {
+    name="$1"
+    required="$2"
+
+    installed_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
     if [ -z "$installed_version" ]; then
         return 1
     fi
@@ -80,69 +77,60 @@ version_satisfies() {
     return 0
 }
 
-version_compare() {
-    local installed="$1"
-    local required="$2"
+check_top_level_dependencies() {
+    missing=""
+    for dep in $dependencies; do
+        name=$(echo "$dep" | cut -d'>' -f1)
+        version=$(echo "$dep" | grep -o '[0-9.]\+$')
 
-    IFS='.' read -ra installed_parts <<< "$installed"
-    IFS='.' read -ra required_parts <<< "$required"
-
-    for i in "${!required_parts[@]}"; do
-        if [[ "${installed_parts[$i]:-0}" -lt "${required_parts[$i]}" ]]; then
-            return 1
-        elif [[ "${installed_parts[$i]:-0}" -gt "${required_parts[$i]}" ]]; then
-            return 0
-        fi
-    done
-
-    return 0
-}
-
-function check_top_level_dependencies() {
-    local missing=()
-    local os=$(get_os)
-    for dep in "${dependencies[@]}"; do
-        if [[ "$dep" =~ ^([^>=]+)(>=(.+))? ]]; then
-            name="${BASH_REMATCH[1]}"
-            version="${BASH_REMATCH[3]:-}"
-
-            if ! command_exists "$name"; then
-                missing+=("$name")
-            elif [ -n "$version" ]; then
+        if ! command_exists "$name"; then
+            missing="$missing $name"
+        elif [ -n "$version" ]; then
+            if ! version_satisfies "$name" "$version"; then
                 detected_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
-                if ! version_satisfies "$name" "$version"; then
-                    missing+=("$name>=$version required but found $detected_version")
-                else
-                    [ -n "$DEBUG" ] && echo "$name version $detected_version satisfies the required version $version"
-                fi
+                missing="$missing\n$name>=$version but found $detected_version"
             fi
-        else
-            echo "Invalid dependency format: $dep" >&2
         fi
     done
 
-    if [ ${#missing[@]} -eq 0 ]; then
-        echo "🎉 All top-level dependencies are installed and meet the required versions. 🎉"
-        return 0
+    if [ -z "$missing" ]; then
+        echo "All top-level dependencies are installed and meet the required versions."
+        exit 0
     fi
 
     echo "The following dependencies are missing or do not meet the required versions:"
-    for dep in "${missing[@]}"; do
-        echo "- $dep"
-        tool_name=$(echo $dep | cut -d'>' -f1)
-        [ -n "$DEBUG" ] && echo Tool name: $tool_name
-        case $tool_name in
-            "bash")
+    echo $missing
+
+    if [ -z "$missing" ]; then
+        echo "All top-level dependencies are installed."
+        return 0
+    fi
+
+    os=$(uname -s 2>/dev/null || echo "Unknown")
+    if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
+        os="WSL"
+    elif [ "$os" = "Unknown" ] && [ "${OSTYPE#msys}" != "$OSTYPE" ]; then
+        os="Windows"
+    fi
+
+    # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
+    #       for those rather then strictly by OS.
+
+    # Process $missing line by line instead of word by word.
+    echo "$missing" | while IFS= read -r dep; do
+        [ -z "$dep" ] && continue  # Skip empty lines.
+        case $dep in
+            bash*)
                 echo "Please install bash for consistent shell execution."
                 ;;
-            "curl")
+            curl*)
                 echo "Please install curl:"
                 echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade curl"
                 echo "  - CentOS/Fedora: sudo yum install curl || sudo yum upgrade curl"
                 echo "  - macOS: brew install curl || brew upgrade curl"
                 echo "  - Windows: Download from https://curl.se/windows/"
                 ;;
-            "make")
+            make*)
                 echo "Please install make:"
                 echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade make"
                 echo "  - CentOS/Fedora: sudo yum install make || sudo yum upgrade make"
@@ -150,14 +138,14 @@ function check_top_level_dependencies() {
                 echo "    or: brew install make"
                 echo "  - Windows: Install MinGW or use WSL"
                 ;;
-            "python3")
+            python3*)
                 echo "Please install python3:"
                 echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade python3"
                 echo "  - CentOS/Fedora: sudo yum install python3 || sudo yum upgrade python3"
                 echo "  - macOS: brew install python || brew upgrade python"
                 echo "  - Windows: Download from https://www.python.org/downloads/windows/"
                 ;;
-            "rsync")
+            rsync*)
                 echo "Please install rsync:"
                 echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade rsync"
                 echo "  - CentOS/Fedora: sudo yum install rsync || sudo yum upgrade rsync"
@@ -165,7 +153,7 @@ function check_top_level_dependencies() {
                 echo "  - Windows: Can be obtained from https://www.itefix.net/cwrsync"
                 echo "    or: Install WSL and usesudo apt-get install rsync"
                 ;;
-            "docker")
+            docker*)
                 case $os in
                     "Darwin")
                         echo "Please install Docker Desktop for macOS:"
@@ -193,7 +181,6 @@ function check_top_level_dependencies() {
     done
     exit 1
 }
-
 
 check_git_config() {
     git config --get user.name > /dev/null 2>&1
@@ -294,11 +281,11 @@ install_scaf() {
         if [ -f "$DESTINATION" ]; then
             echo "🎉 scaf installed successfully at $DESTINATION 🎉"
         else
-            echo "Failed to move scaf to the destination."
+            echo "🧨 Failed to move scaf to the destination. 🧨"
             exit 1
         fi
     else
-        echo "Failed to download scaf."
+        echo "🧨 Failed to download scaf. 🧨"
         exit 1
     fi
 }
