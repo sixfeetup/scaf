@@ -81,12 +81,12 @@ AWS_S3_REGION_NAME = env("DJANGO_AWS_REGION_NAME", default="us-east-1")
 
 # STATIC
 # ------------------------
-STATICFILES_STORAGE = "{{ cookiecutter.project_slug }}.utils.storages.StaticStorage"
+STATICFILES_STORAGE = "{{ cookiecutter.project_slug }}.utils.cloud_storage.S3StaticStorage"
 STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
 
 # MEDIA
 # ------------------------------------------------------------------------------
-DEFAULT_FILE_STORAGE = "{{ cookiecutter.project_slug }}.utils.storages.MediaStorage"
+DEFAULT_FILE_STORAGE = "{{ cookiecutter.project_slug }}.utils.cloud_storage.S3MediaStorage"
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 # TEMPLATES

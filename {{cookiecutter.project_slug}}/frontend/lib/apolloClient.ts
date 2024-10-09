@@ -19,7 +19,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 const httpLink = new HttpLink({
-  uri: typeof window === 'undefined' ? process.env.NEXT_GRAPHQL_ENDPOINT || 'http://backend:8000/graphql/' : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql/',
+  uri:
+    typeof window === 'undefined'
+      ? process.env.NEXT_GRAPHQL_ENDPOINT || 'http://backend:8000/graphql/'
+      : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql/',
   credentials: 'include'
 })
 

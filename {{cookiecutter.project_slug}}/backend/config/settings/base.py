@@ -86,6 +86,9 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "{{ cookiecutter.project_slug }}.users.apps.UsersConfig",
+    {% if cookiecutter._challenge == "y" -%}
+    "{{ cookiecutter.project_slug }}.challenge.apps.ChallengeConfig",
+    {%- endif %}
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -329,6 +332,15 @@ STRAWBERRY_DJANGO = {
     "MUTATIONS_DEFAULT_ARGUMENT_NAME": "input",
     "MUTATIONS_DEFAULT_HANDLE_ERRORS": True,
 }
+{%- endif %}
+
+
+{%- if cookiecutter._challenge == "y" %}
+# ------------------------------------------------------------------------------
+# CHALLENGE settings
+CHALLENGE_SESSION_ID = env("CHALLENGE_SESSION_ID")
+CHALLENGE_JWT_TOKEN = env("CHALLENGE_JWT_TOKEN")
+CHALLENGE_BASE_URL = env("CHALLENGE_BASE_URL")
 {%- endif %}
 
 # Your stuff...

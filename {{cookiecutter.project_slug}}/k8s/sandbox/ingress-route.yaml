@@ -1,4 +1,4 @@
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: backend-ingress
@@ -9,7 +9,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`api.{{ cookiecutter.domain_name }}`)
+      match: Host(`api.sandbox.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
         - name: backend
@@ -17,7 +17,7 @@ spec:
   tls:
     secretName: cluster-cert-tls
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: k8s-ingress
@@ -28,7 +28,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`k8s.{{ cookiecutter.domain_name }}`)
+      match: Host(`k8s.sandbox.{{ cookiecutter.domain_name }}`)
       priority: 10
       services:
         - name: backend
@@ -36,7 +36,7 @@ spec:
   tls:
     secretName: cluster-cert-tls
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: http-to-https-redirect
@@ -53,7 +53,7 @@ spec:
         - kind: TraefikService
           name: noop@internal
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: redirect-to-https

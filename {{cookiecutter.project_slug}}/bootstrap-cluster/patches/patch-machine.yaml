@@ -1,0 +1,8 @@
+machine:
+  kubelet:
+    # The registerWithFQDN field is used to force kubelet to use the node
+    # FQDN for registration. This is required in clouds like AWS.
+    registerWithFQDN: true
+    # # Required for Metrics Server
+    extraArgs:
+      rotate-server-certificates: true

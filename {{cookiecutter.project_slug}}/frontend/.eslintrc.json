@@ -1,7 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:jsx-a11y/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
+  ],
   "plugins": ["jsx-a11y", "unused-imports"],
   "rules": {
+    "react/jsx-curly-brace-presence": "error",
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
@@ -42,6 +51,11 @@
             "name": "@apollo/client/core",
             "importNames": ["gql"],
             "message": "Use the @/__generated__/gql to get proper typings!"
+          },
+          {
+            "name": "@testing-library/react",
+            "importNames": ["*"],
+            "message": "Use the imports from test-utils instead!"
           }
         ]
       }

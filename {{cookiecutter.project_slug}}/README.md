@@ -23,32 +23,14 @@ Consult the links below if you prefer to use Minikube or Docker Desktop instead:
 
 ### Run the kubernetes cluster and the {{ cookiecutter.project_slug }} app to develop the code
 
-1. Load the environment variables.
+First load the environment variables, then run:
 
-2. Start the local kubernetes cluster:
-
-       $ kind create cluster --name {{ cookiecutter.project_slug }}
-    * If you want to create a cluster with a different name, run:
-
-          $ kind create cluster --name <alt-project-name>
-
-2. You can verify that it is running with
-
-       $ kubectl cluster-info
-
-3. Verify the context with:
-
-       $ kubectl config current-context
-
-4. To spin up the app and all the services such as the database, use
-
-       $ tilt up
+      $ make setup
+      $ tilt up
 
 :information_source: It may take a little bit of time for all the services to start up, and it's possible for
 the first run to fail because of timing conflicts. If you do see messages indicating there
 were errors during the first run, stop all the containers using Ctrl-C, and then try it again.
-
-:information_source: You can type `s` to view the console output as it starts up to confirm that the process isn't hanging.
 
 You are now ready to edit the code.
 The app will be automatically reloaded when its files change.
@@ -63,6 +45,11 @@ To remove the cluster entirely:
 
        $ kind delete cluster --name {{ cookiecutter.project_slug }}
 
+To switch between different Scaf project contexts:
+      
+      $ tilt down    # inside the codebase of the previous project
+      $ make setup   # inside the codebase of the project you want to work on
+      $ tilt up
 
 ### Update dependencies
 
@@ -87,14 +74,15 @@ This project has a NextJS frontend configured. You can access it at [http://loca
 ## Infrastructure provisioning
 
 Terraform can be used to provision AWS resources for your project deployment.
-terraform/ec2-cluster will create an EC2 instance running a kubernetes cluster for your project.
-Check `terraform/ec2-cluster/README.md` for more information and steps for provisioning resources.
+Read `terraform/README.md` for more information and steps for provisioning
+resources.
 
-## Project deployment
+## Application deployment
 
-ArgoCD and kubernetes can be used to automate the deployment of your project to your infrastructure.
-ArgoCD will watch for changes in your repository and apply the kubernetes manifests.
-Check `k8s/argocd/README.md` for more information on creating and setting up the ArgoCD application.
+Use ArgoCD and Kubernetes to automate the deployment of your application to
+your infrastructure. ArgoCD monitors changes within your repository, promptly
+applying the relevant Kubernetes manifests. Read `bootstrap-cluster/README.md`
+for more details.
 
 ## How to manage passwords and sensitive values
 

@@ -6,11 +6,11 @@ logger = logging.getLogger(__name__)
 
 
 def debugger_connect_pycharm(host_ip):
-    logger.info(f"Pycharm pydevd connecting...")
+    logger.info("Pycharm pydevd connecting...")
     import pydevd_pycharm
     try:
         pydevd_pycharm.settrace(host_ip, port=6400, stdoutToServer=True, stderrToServer=True)
-    except ConnectionRefusedError as e:
+    except ConnectionRefusedError:
         msg = "Debugger connection failed. Check IDE debugger is running and try again. Continuing without debugger."
         logger.error(msg.upper())
 

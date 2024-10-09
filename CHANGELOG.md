@@ -1,5 +1,84 @@
 # Changelog
 
+## [1.17.0](https://github.com/sixfeetup/scaf/compare/v1.16.1...v1.17.0) (2024-10-05)
+
+### Features
+
+* deploy apps with ArgoCD ([6938661](https://github.com/sixfeetup/scaf/commit/69386611ee96ec2e0278fbf57717db10bc484c7e))
+
+## [1.16.1](https://github.com/sixfeetup/scaf/compare/v1.16.0...v1.16.1) (2024-09-25)
+
+### Bug Fixes
+
+* entrypoint.sh: Reorder commands so UID and GID checks work ([#395](https://github.com/sixfeetup/scaf/issues/395)) ([bd8e647](https://github.com/sixfeetup/scaf/commit/bd8e6470260a087ea639ad52eb735d7065fe6f88))
+
+## [1.16.0](https://github.com/sixfeetup/scaf/compare/v1.15.1...v1.16.0) (2024-09-23)
+
+### Features
+
+* update text references to refer to Scaf instead of Sixie ([#393](https://github.com/sixfeetup/scaf/issues/393)) ([5288cf0](https://github.com/sixfeetup/scaf/commit/5288cf0ac843d7c474e6e16232b65795581f198f))
+
+## [1.15.1](https://github.com/sixfeetup/scaf/compare/v1.15.0...v1.15.1) (2024-09-21)
+
+### Bug Fixes
+
+* check for python commands, fallback to python3 refs [#386](https://github.com/sixfeetup/scaf/issues/386) ([#389](https://github.com/sixfeetup/scaf/issues/389)) ([7510477](https://github.com/sixfeetup/scaf/commit/7510477414c60b35a517c1416137164e98e7a5d8))
+
+## [1.15.0](https://github.com/sixfeetup/scaf/compare/v1.14.0...v1.15.0) (2024-09-21)
+
+### Features
+
+* added local registry support and improved setup (close [#353](https://github.com/sixfeetup/scaf/issues/353)) ([32de8c7](https://github.com/sixfeetup/scaf/commit/32de8c76b260f81774e087dc221c237767a0049a))
+* Gfranxman/313 prefer dotlocalbin as install location ([#342](https://github.com/sixfeetup/scaf/issues/342)) ([dbb3556](https://github.com/sixfeetup/scaf/commit/dbb3556e7258a57e5105f80063f95f3222d3fd6a))
+* implement s3 storage for static and media files on production ([#339](https://github.com/sixfeetup/scaf/issues/339)) ([76afd23](https://github.com/sixfeetup/scaf/commit/76afd23da1aa0867422249584a3156f43b7b974e))
+* implement scaf challenge for session recording ([#379](https://github.com/sixfeetup/scaf/issues/379)) ([0c091af](https://github.com/sixfeetup/scaf/commit/0c091afbd574632350f2c4cdb43420fadb8eb317))
+* **install.sh:** force re-download of Scaf on each install ([#338](https://github.com/sixfeetup/scaf/issues/338)) ([f7ef3e3](https://github.com/sixfeetup/scaf/commit/f7ef3e3ac0876c70f4c6f3e1f34a41386321e9a3))
+* op inject secrets (close [#368](https://github.com/sixfeetup/scaf/issues/368)) ([58090b5](https://github.com/sixfeetup/scaf/commit/58090b56f65f35cb2c68258f0aa4f3aaf8509417))
+* reorder environment variables in k8s django config ([#350](https://github.com/sixfeetup/scaf/issues/350)) ([f2cb234](https://github.com/sixfeetup/scaf/commit/f2cb2349666ecd46f24145c49b5f42bbc189c9b4))
+* script to test cookiecutter part of Scaf ([952e276](https://github.com/sixfeetup/scaf/commit/952e276852afe84cdbfca062da65fcae6cad6bc8))
+
+### Bug Fixes
+
+* Fixes frontend tests ([#363](https://github.com/sixfeetup/scaf/issues/363)) ([4a2a5b2](https://github.com/sixfeetup/scaf/commit/4a2a5b254891fd4b1688499d17240aa93356ce81))
+* mailhog port config (closes [#249](https://github.com/sixfeetup/scaf/issues/249)) ([cea1602](https://github.com/sixfeetup/scaf/commit/cea1602d99e5a03e63fc8cffcc842844bf648897))
+* Specify the full container path, including the host. ([#309](https://github.com/sixfeetup/scaf/issues/309)) ([2fa7276](https://github.com/sixfeetup/scaf/commit/2fa727672fc6b8ab2a0c40550f63cf27ba3b859c)), closes [#308](https://github.com/sixfeetup/scaf/issues/308)
+* Update logo ([#373](https://github.com/sixfeetup/scaf/issues/373)) ([afe2d84](https://github.com/sixfeetup/scaf/commit/afe2d849ad6db3ca05d812d1da12c02a9f127b96))
+* use GitHub token for semantic release workflow ([b5eef60](https://github.com/sixfeetup/scaf/commit/b5eef607dbc4b7bad9a6037bb8bc30dd81c100d2))
+
+### Documentation
+
+* add disk space warning to README ([#385](https://github.com/sixfeetup/scaf/issues/385)) ([4262b2d](https://github.com/sixfeetup/scaf/commit/4262b2d0868edf3dd1b22a6aef5aac78ae203afb))
+* update related to optional GraphQL ([#366](https://github.com/sixfeetup/scaf/issues/366)) ([92bfc8d](https://github.com/sixfeetup/scaf/commit/92bfc8d61f53d9845a3d7e952c96225b22e95a3d)), closes [#290](https://github.com/sixfeetup/scaf/issues/290)
+
+## [1.14.0](https://github.com/sixfeetup/scaf/compare/v1.13.2...v1.14.0) (2024-09-04)
+
+### Features
+
+* update docker build-push-action to v5 and utilize github's ([#352](https://github.com/sixfeetup/scaf/issues/352)) ([cf0b2e4](https://github.com/sixfeetup/scaf/commit/cf0b2e4d0a47c6d584bcc4d76dac40bf7c538175))
+
+## [1.13.2](https://github.com/sixfeetup/scaf/compare/v1.13.1...v1.13.2) (2024-08-28)
+
+### Bug Fixes
+
+* local.txt should include stuff from base ([#361](https://github.com/sixfeetup/scaf/issues/361)) ([33fbac5](https://github.com/sixfeetup/scaf/commit/33fbac5d63ff2e2fd79a8f0495eb5bc4488fd759))
+
+## [1.13.1](https://github.com/sixfeetup/scaf/compare/v1.13.0...v1.13.1) (2024-08-28)
+
+### Bug Fixes
+
+* move flower to its own deployment refs [#89](https://github.com/sixfeetup/scaf/issues/89) ([#105](https://github.com/sixfeetup/scaf/issues/105)) ([8ff7033](https://github.com/sixfeetup/scaf/commit/8ff7033f115c4a79792c1cf0883798ef3d792c3a))
+
+## [1.13.0](https://github.com/sixfeetup/scaf/compare/v1.12.0...v1.13.0) (2024-08-27)
+
+### Features
+
+* add automatic git remote configuration ([#336](https://github.com/sixfeetup/scaf/issues/336)) ([23e39af](https://github.com/sixfeetup/scaf/commit/23e39af0ef5bd0eaf2f808d4204d1a1cfde73e18))
+* add function to check for necessary dependencies in install.sh ([#320](https://github.com/sixfeetup/scaf/issues/320)) ([4da9d4f](https://github.com/sixfeetup/scaf/commit/4da9d4fb6b9e23cf6ca3ae2720698d224c44cc66))
+* add party_popper function to enhance project initiation experience ([#340](https://github.com/sixfeetup/scaf/issues/340)) ([61da47b](https://github.com/sixfeetup/scaf/commit/61da47bf8939e8824e413af5e30669138c2c0e24))
+* added make setup target ([#359](https://github.com/sixfeetup/scaf/issues/359)) ([31a835b](https://github.com/sixfeetup/scaf/commit/31a835bf5815351fe35938c232c438c0deb5e6f1))
+* allow hyphens and underscores in project slugs ([#341](https://github.com/sixfeetup/scaf/issues/341)) ([2d51499](https://github.com/sixfeetup/scaf/commit/2d51499dbcf09ecaf79e73a19d6bb8d4e1425392))
+* improve installation script to handle preferred bin folder ([#321](https://github.com/sixfeetup/scaf/issues/321)) ([0ed6ac1](https://github.com/sixfeetup/scaf/commit/0ed6ac1dab2b419a5eda1219292f24149530729f))
+
 ## [1.12.0](https://github.com/sixfeetup/scaf/compare/v1.11.0...v1.12.0) (2024-07-29)
 
 ### Features

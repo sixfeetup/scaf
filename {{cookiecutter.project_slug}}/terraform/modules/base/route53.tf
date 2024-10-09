@@ -19,6 +19,14 @@ resource "aws_route53_record" "k8s" {
   ttl     = 600
 }
 
+resource "aws_route53_record" "nextjs" {
+  zone_id = aws_route53_zone.route_zone.zone_id
+  name    = var.nextjs_domain_name
+  type    = "CNAME"
+  records = [module.elb_k8s_elb.elb_dns_name]
+  ttl     = 600
+}
+
 resource "aws_route53_record" "frontend" {
   zone_id = aws_route53_zone.route_zone.zone_id
   name    = var.domain_name

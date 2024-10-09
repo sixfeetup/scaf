@@ -93,6 +93,13 @@ check_top_level_dependencies() {
         fi
     done
 
+    # Check if python commands exist
+    if command -v python &>/dev/null || command -v python3 &>/dev/null; then
+        :
+    else
+        missing="$missing python3"
+    fi    
+
     if [ -z "$missing" ]; then
         echo "All top-level dependencies are installed and meet the required versions."
         exit 0
@@ -224,6 +231,17 @@ detect_os_and_arch() {
     echo $os_arch
 }
 
+move_to_bin_folder() {
+    DEST=${2:-$PREFERRED_BIN_FOLDER}
+    echo "Moving $1 to ${DEST}..."
+    # if the DEST folder is not writable, use sudo to move the file
+    if [ -w $DEST ]; then
+        mv $1 $DEST/$1
+    else
+        sudo mv $1 $DEST/$1
+    fi
+}
+
 install_kubectl() {
     echo "Installing kubectl..."
     os_arch=$(detect_os_and_arch)
@@ -235,7 +253,7 @@ install_kubectl() {
             url="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${os}/${arch}/kubectl"
             curl -LO $url
             chmod +x ./kubectl
-            sudo mv ./kubectl $PREFERRED_BIN_FOLDER/kubectl
+            move_to_bin_folder ./kubectl
             ;;
         *)
             echo "Unsupported OS or architecture: $os_arch"
@@ -253,7 +271,7 @@ install_kind() {
         "linux-amd64"|"darwin-amd64"|"darwin-arm64"|"linux-arm64"|"windows-amd64")
         curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.23.0/kind-$os_arch"
         chmod +x ./kind
-        sudo mv ./kind $PREFERRED_BIN_FOLDER/kind
+        move_to_bin_folder ./kind
         ;;
     *)
         echo "Unsupported OS or architecture: $os_arch"
@@ -270,6 +288,10 @@ install_tilt() {
 }
 
 install_scaf() {
+    # Install/re-install scaf
+    if [ -f "$TEMP_DOWNLOAD" ]; then
+        rm $TEMP_DOWNLOAD
+    fi
     # Download and install scaf
     echo "Downloading scaf from $SCAF_SCRIPT_URL..."
     curl -L $SCAF_SCRIPT_URL -o $TEMP_DOWNLOAD
@@ -277,7 +299,7 @@ install_scaf() {
     if [ -f "$TEMP_DOWNLOAD" ]; then
         chmod +x $TEMP_DOWNLOAD
         echo "Moving scaf to $DESTINATION..."
-        sudo mv $TEMP_DOWNLOAD $DESTINATION
+        move_to_bin_folder $TEMP_DOWNLOAD `dirname $DESTINATION`
         if [ -f "$DESTINATION" ]; then
             echo "🎉 scaf installed successfully at $DESTINATION 🎉"
         else
@@ -305,8 +327,4 @@ for tool in kubectl kind tilt; do
     fi
 done
 
-if ! command_exists scaf; then
-    install_scaf
-else
-    echo "scaf is already installed."
-fi
+install_scaf
