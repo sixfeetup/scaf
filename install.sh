@@ -7,6 +7,10 @@ PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
 DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
 
+# These are dependencies that we depend on the user to have installed:
+dependencies="bash>=4.0 curl>=8.7.0 make>=3.8 python3>=3.6 docker>=19.0 git>=2.0 rsync>=3.2.0"
+# ^^ Must be in the format of "name>=version" or just "name" if no version is required.
+
 ensure_bin_folder() {
   if [ ! -d "$PREFERRED_BIN_FOLDER" ]; then
       echo "Creating $PREFERRED_BIN_FOLDER..."
@@ -32,26 +36,75 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
-check_top_level_dependencies() {
-    # these are dependencies that we depend on the user to have installed
-    dependencies="bash curl make python3 docker git rsync"
-    missing=""
+version_compare() {
+    installed="$1"
+    required="$2"
 
+    IFS='.'
+    set -- $installed
+    installed_parts="$@"
+    set -- $required
+    required_parts="$@"
+    unset IFS
+
+    i=1
+    for req in $required_parts; do
+        inst=$(echo "$installed_parts" | cut -d' ' -f$i)
+        if [ "${inst:-0}" -lt "$req" ]; then
+            return 1
+        elif [ "${inst:-0}" -gt "$req" ]; then
+            return 0
+        fi
+        i=$((i + 1))
+    done
+
+    return 0
+}
+
+version_satisfies() {
+    name="$1"
+    required="$2"
+
+    installed_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+    if [ -z "$installed_version" ]; then
+        return 1
+    fi
+
+    if ! version_compare "$installed_version" "$required"; then
+        return 1
+    fi
+
+    return 0
+}
+
+check_top_level_dependencies() {
+    missing=""
     for dep in $dependencies; do
-        if ! command_exists $dep ; then
-            missing="$missing $dep"
+        name=$(echo "$dep" | cut -d'>' -f1)
+        version=$(echo "$dep" | grep -o '[0-9.]\+$')
+
+        if ! command_exists "$name"; then
+            missing="$missing $name"
+        elif [ -n "$version" ]; then
+            if ! version_satisfies "$name" "$version"; then
+                detected_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+                missing="$missing\n$name>=$version but found $detected_version"
+            fi
         fi
     done
+
+    if [ -z "$missing" ]; then
+        echo "All top-level dependencies are installed and meet the required versions."
+        exit 0
+    fi
+
+    echo "The following dependencies are missing or do not meet the required versions:"
+    echo $missing
 
     if [ -z "$missing" ]; then
         echo "All top-level dependencies are installed."
         return 0
     fi
-
-    echo "The following dependencies are missing:"
-    for dep in $missing; do
-        echo "- $dep"
-    done
 
     os=$(uname -s 2>/dev/null || echo "Unknown")
     if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
@@ -62,19 +115,22 @@ check_top_level_dependencies() {
 
     # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
     #       for those rather then strictly by OS.
-    for dep in $missing; do
+
+    # Process $missing line by line instead of word by word.
+    echo "$missing" | while IFS= read -r dep; do
+        [ -z "$dep" ] && continue  # Skip empty lines.
         case $dep in
-            "bash")
+            bash*)
                 echo "Please install bash for consistent shell execution."
                 ;;
-            "curl")
+            curl*)
                 echo "Please install curl:"
                 echo "  - Ubuntu/Debian: sudo apt-get install curl"
                 echo "  - CentOS/Fedora: sudo yum install curl"
                 echo "  - macOS: brew install curl"
                 echo "  - Windows: Download from https://curl.se/windows/"
                 ;;
-            "make")
+            make*)
                 echo "Please install make:"
                 echo "  - Ubuntu/Debian: sudo apt-get install make"
                 echo "  - CentOS/Fedora: sudo yum install make"
@@ -82,14 +138,14 @@ check_top_level_dependencies() {
                 echo "    or: brew install make"
                 echo "  - Windows: Install MinGW or use WSL"
                 ;;
-            "python3")
+            python3*)
                 echo "Please install python3:"
                 echo "  - Ubuntu/Debian: sudo apt-get install python3"
                 echo "  - CentOS/Fedora: sudo yum install python3"
                 echo "  - macOS: brew install python"
                 echo "  - Windows: Download from https://www.python.org/downloads/windows/"
                 ;;
-            "rsync")
+            rsync*)
                 echo "Please install rsync:"
                 echo "  - Ubuntu/Debian: sudo apt-get install rsync"
                 echo "  - CentOS/Fedora: sudo yum install rsync"
@@ -97,7 +153,7 @@ check_top_level_dependencies() {
                 echo "  - Windows: Can be obtained from https://www.itefix.net/cwrsync"
                 echo "    or: Install WSL and usesudo apt-get install rsync"
                 ;;
-            "docker")
+            docker*)
                 case $os in
                     "Darwin")
                         echo "Please install Docker Desktop for macOS:"
