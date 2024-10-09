@@ -8,7 +8,7 @@ DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
 
 # These are dependencies that we depend on the user to have installed:
-dependencies="bash>=4.0 curl>=8.7.0 make>=3.8 python3>=3.6 docker>=19.0 git>=2.0 rsync>=3.2.0"
+dependencies="bash>=4.0 curl>=7.8.0 make>=3.8 python3>=3.6 docker>=19.0 git>=2.0 rsync>=3.2.0"
 # ^^ Must be in the format of "name>=version" or just "name" if no version is required.
 
 ensure_bin_folder() {
