@@ -30,7 +30,7 @@ variable "cluster_name" {
 
 variable "domain_name" {
   type    = string
-  default = "sandbox.{{ cookiecutter.domain_name }}"
+  default = "{{ cookiecutter.domain_name }}"
 }
 
 variable "api_domain_name" {
@@ -41,6 +41,11 @@ variable "api_domain_name" {
 variable "cluster_domain_name" {
   type    = string
   default = "k8s.{{ cookiecutter.domain_name }}"
+}
+
+variable "nextjs_domain_name" {
+  type    = string
+  default = "nextjs.{{ cookiecutter.domain_name }}"
 }
 
 variable "argocd_domain_name" {

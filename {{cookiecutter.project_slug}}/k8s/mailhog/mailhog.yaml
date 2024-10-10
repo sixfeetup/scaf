@@ -10,7 +10,11 @@ spec:
     app: mailhog
   ports:
     - port: 8025
+      targetPort: smtp-server-ui
+      name: smtp-server-ui
+    - port: 1025
       targetPort: smtp-server
+      name: smtp-server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,5 +36,7 @@ spec:
         - name: mailhog
           image: mailhog/mailhog:v1.0.0
           ports:
-            - name: smtp-server
+            - name: smtp-server-ui
               containerPort: 8025
+            - name: smtp-server
+              containerPort: 1025

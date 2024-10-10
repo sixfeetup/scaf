@@ -1,0 +1,22 @@
+default_context:
+  author_name: Iam Scafman
+  aws_account_id: "000000000000"
+  aws_region: us-east-1
+  create_nextjs_frontend: y
+  debug: n
+  description: My Awesome Scaf Project!
+  domain_name: sixfeetup.com
+  email: iamscafman@sixfeetup.com
+  mail_service: Mailgun
+  project_dash: my-awesome-scaf-project
+  project_name: My Awesome Scaf Project
+  project_slug: my_awesome_scaf_project
+  repo_name: my_awesome_scaf_project
+  repo_url: git@github.com:sixfeetup/my_awesome_scaf_project.git
+  source_control_organization_slug: sixfeetup
+  source_control_provider: github.com
+  timezone: US/Eastern
+  use_celery: n
+  use_graphql: y
+  use_sentry: n
+  version: 0.1.0

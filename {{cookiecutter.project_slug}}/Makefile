@@ -17,10 +17,14 @@ PROJECT_SLUG:="{{ cookiecutter.project_slug }}"
 .PHONY: ci
 ci: test secure build  ## Execute the same checks used in CI/CD
 
-check-lint-and-formatting:  ## Execute check of lint and formatting using existing pre-commit hooks
+.git/hooks/pre-commit: ## Install pre-commit hooks
 	pip install pre-commit; \
 	cd backend/; \
-	pre-commit install; \
+	pre-commit install
+
+.PHONY: check-lint-and-formatting
+check-lint-and-formatting: .git/hooks/pre-commit ## Execute check of lint and formatting using existing pre-commit hooks
+	cd backend; \
 	pre-commit run -a
 
 {% if cookiecutter.create_nextjs_frontend == 'y' %}
@@ -34,11 +38,15 @@ check-lint-and-test-frontend:  ## Frontend Lint & Typecheck & Test
 
 backend-test: ## Execute backend tests
 ifeq ($(CI),true)
+	pip install uv; \
 	cd backend; \
+	uv venv ./venv; \
+	. ./venv/bin/activate; \
 	uv pip install \
 		-r requirements/production.txt \
 		-r requirements/tests.txt; \
-	cd {{ cookiecutter.project_slug }}; \
+	cd scafman; \
+	export DJANGO_SECRET_KEY="test"; \
 	pytest --cov=./ --cov-report html --ds=config.settings.test
 else
 	$(KUBECTL_EXEC_BACKEND) -c "cd {{ cookiecutter.project_slug }} && pytest --cov=./ --cov-report html --ds=config.settings.test"
@@ -122,55 +130,37 @@ shell-frontend:
 secure:  ## Analyze dependencies for security issues
 	$(KUBECTL_EXEC_BACKEND) -c "safety check"
 
-sandbox-secrets: ## Substitute with secrets template with env variable and run kubeseal
-	@echo "Sealing secrets from sandbox template to $$(kubectl config current-context)"
-	NAMESPACE={{ cookiecutter.project_dash }}-sandbox envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/sandbox/secrets.yaml
+DEBUG ?= false
+secrets:
+	@$(call check_var,ENVIRONMENT)
+	@echo "Creating sealed secrets for $$(kubectl config current-context) cluster"
+	kubectl config get-contexts --no-headers | \
+		grep {{ cookiecutter.project_dash }}-$(ENVIRONMENT) && kubectl config use-context admin@{{ cookiecutter.project_dash }}-$(ENVIRONMENT)
+	AWS_S3_ACCESS_KEY_ID=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_access_key) \
+	AWS_S3_SECRET_ACCESS_KEY=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw cnpg_user_secret_key) \
+{% if cookiecutter.mail_service == "Amazon SES" %}	AWS_SES_ACCESS_KEY_ID=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw amazon_ses_user_key) \
+	AWS_SES_SECRET_ACCESS_KEY=$$(tofu -chdir=./terraform/$(ENVIRONMENT) output -raw amazon_ses_user_secret_key) \{% endif %}
+	DJANGO_SECRET_KEY=$$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32; echo) \
+	ENVIRONMENT=$(ENVIRONMENT) \
+	envsubst < k8s/templates/secrets.yaml.template | op inject | if [ "$(DEBUG)" = "true" ]; then cat; else kubeseal -n {{ cookiecutter.project_slug }}-$(ENVIRONMENT) --format yaml > k8s/$(ENVIRONMENT)/secrets.yaml; fi
 
-prod-secrets: ## Substitute with secrets template with env variable and run kubeseal
-	@echo "Sealing secrets from prod template to $$(kubectl config current-context)"
-	NAMESPACE={{ cookiecutter.project_dash }}-prod envsubst < k8s/templates/secrets.yaml.template | kubeseal --format yaml > k8s/prod/secrets.yaml
+sandbox-secrets: ## Create sealed secrets for sandbox
+	$(MAKE) secrets ENVIRONMENT=sandbox
 
-argocd-app:
-	envsubst < k8s/templates/argocd.application.yaml.template | kubeseal --format yaml > k8s/argocd/application.yaml
-	envsubst < k8s/templates/repocreds.yaml.template | kubeseal --format yaml > k8s/argocd/repocreds.yaml
-	sed -i '/spec:/ {N; s/spec:\n/  annotations:\n    sealedsecrets.bitnami.com\/managed: "true"\nspec:\n/}' k8s/argocd/repocreds.yaml
+debug-sandbox-secrets: ## Debug sandbox secrets
+	$(MAKE) secrets ENVIRONMENT=sandbox DEBUG=true
 
-## Monitoring
-check_var = $(strip $(if $(filter undefined,$(origin $1)),$(error $1 is not set)))
+staging-secrets: ## Create sealed secrets for sandbox
+	$(MAKE) secrets ENVIRONMENT=sandbox
 
-kube-prometheus-up:  ## Install kube-prometheus
-	@$(call check_var,GRAFANA_ADMIN_PASSWORD)
-	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	@helm repo update
-	@helm install kube-prometheus prometheus-community/kube-prometheus-stack --set grafana.sidecar.datasources.isDefaultDatasource=false,grafana.persistence.enabled=true,grafana.adminPassword=$(GRAFANA_ADMIN_PASSWORD) --namespace monitoring --create-namespace
+debug-staging-secrets: ## Debug sandbox secrets
+	$(MAKE) secrets ENVIRONMENT=sandbox DEBUG=true
 
-loki-up:  ## Install loki
-	@helm repo add grafana https://grafana.github.io/helm-charts
-	@helm repo update
-	@helm install loki grafana/loki-stack --values k8s/_monitoring/loki-stack-values.yaml --namespace monitoring --create-namespace
+prod-secrets: ## Create sealed secrets for prod
+	$(MAKE) secrets ENVIRONMENT=prod
 
-monitoring-up: kube-prometheus-up loki-up  ## Install the monitoring stack
-
-loki-down:  ## Uninstall loki
-	helm uninstall loki --namespace monitoring
-
-kube-prometheus-down:  ## Uninstall kube-prometheus
-	helm uninstall kube-prometheus --namespace monitoring
-
-monitoring-down: loki-down kube-prometheus-down  ## Uninstall the monitoring stack
-
-monitoring-login:  ## Get the login credentials for the monitoring stack
-	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-user}' | base64 -d; echo
-	@kubectl get secret --namespace monitoring kube-prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d; echo
-
-monitoring-port-forward:  ## Forward the port for the monitoring stack
-	kubectl --namespace monitoring port-forward svc/kube-prometheus-grafana 8080:80
-
-monitoring-dashboard:  ## Create the dashboard for the monitoring stack
-	kubectl apply -f k8s/_monitoring/django-logs-table.yaml -n monitoring
-
-monitoring:  ## Show the status of the monitoring stack
-	kubectl get all -n monitoring
+debug-prod-secrets: ## Create sealed secrets for prod
+	$(MAKE) secrets ENVIRONMENT=prod DEBUG=true
 
 ## Help
 
