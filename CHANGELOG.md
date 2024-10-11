@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.17.1](https://github.com/sixfeetup/scaf/compare/v1.17.0...v1.17.1) (2024-10-11)
+
+### Bug Fixes
+
+* updating tests in install.sh to detect missing preferred bin folder. ([#404](https://github.com/sixfeetup/scaf/issues/404)) ([e694307](https://github.com/sixfeetup/scaf/commit/e694307e18357461e7bacffe157916573e8eac48)), closes [#403](https://github.com/sixfeetup/scaf/issues/403)
+
 ## [1.17.0](https://github.com/sixfeetup/scaf/compare/v1.16.1...v1.17.0) (2024-10-05)
 
 ### Features
