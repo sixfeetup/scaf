@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.17.2](https://github.com/sixfeetup/scaf/compare/v1.17.1...v1.17.2) (2024-10-30)
+
+### Bug Fixes
+
+* Do not change the ownership of the bind mounted directory ([#414](https://github.com/sixfeetup/scaf/issues/414)) ([2b4469e](https://github.com/sixfeetup/scaf/commit/2b4469e669ffefdf0370d688c727db14ae7f995e)), closes [#413](https://github.com/sixfeetup/scaf/issues/413)
+
+### Documentation
+
+* change readme structure ([#369](https://github.com/sixfeetup/scaf/issues/369)) ([abd3b64](https://github.com/sixfeetup/scaf/commit/abd3b649852e7bccced5d5fbc38147e4a3f4280a)), closes [#365](https://github.com/sixfeetup/scaf/issues/365)
+
 ## [1.17.1](https://github.com/sixfeetup/scaf/compare/v1.17.0...v1.17.1) (2024-10-11)
 
 ### Bug Fixes
