@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.18.0](https://github.com/sixfeetup/scaf/compare/v1.17.2...v1.18.0) (2024-11-01)
+
+### Features
+
+* Gfranxman/345 ensure latest version of rsync ([#400](https://github.com/sixfeetup/scaf/issues/400)) ([8dbc784](https://github.com/sixfeetup/scaf/commit/8dbc784b8e3cfac363d36592103bde49c4d9ed55))
+
 ## [1.17.2](https://github.com/sixfeetup/scaf/compare/v1.17.1...v1.17.2) (2024-10-30)
 
 ### Bug Fixes
