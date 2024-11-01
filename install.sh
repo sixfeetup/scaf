@@ -2,7 +2,9 @@
 
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
-TEMP_DOWNLOAD="./scaf"
+TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'tmp')/$(echo -n "$(date +%s%N)" | md5sum | awk '{print $1}')
+mkdir -p "$TEMP_DIR"
+TEMP_DOWNLOAD="$TEMP_DIR/scaf"
 PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
 DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
@@ -102,16 +104,11 @@ check_top_level_dependencies() {
 
     if [ -z "$missing" ]; then
         echo "All top-level dependencies are installed and meet the required versions."
-        exit 0
+        return 0
     fi
 
     echo "The following dependencies are missing or do not meet the required versions:"
     echo $missing
-
-    if [ -z "$missing" ]; then
-        echo "All top-level dependencies are installed."
-        return 0
-    fi
 
     os=$(uname -s 2>/dev/null || echo "Unknown")
     if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
@@ -236,9 +233,9 @@ move_to_bin_folder() {
     echo "Moving $1 to ${DEST}..."
     # if the DEST folder is not writable, use sudo to move the file
     if [ -w $DEST ]; then
-        mv $1 $DEST/$1
+        mv $1 $DEST
     else
-        sudo mv $1 $DEST/$1
+        sudo mv $1 $DEST
     fi
 }
 
@@ -299,7 +296,7 @@ install_scaf() {
     if [ -f "$TEMP_DOWNLOAD" ]; then
         chmod +x $TEMP_DOWNLOAD
         echo "Moving scaf to $DESTINATION..."
-        move_to_bin_folder $TEMP_DOWNLOAD `dirname $DESTINATION`
+        move_to_bin_folder $TEMP_DOWNLOAD $(dirname $DESTINATION)
         if [ -f "$DESTINATION" ]; then
             echo "🎉 scaf installed successfully at $DESTINATION 🎉"
         else
@@ -314,8 +311,11 @@ install_scaf() {
 
 # Start the installation process
 echo "Installing scaf from $SCAF_SCRIPT_URL for the $BRANCH branch..."
+[ -n "$DEBUG" ] && echo "Ensuring bin folder exists"
 ensure_bin_folder
+[ -n "$DEBUG" ] && echo "Checking top level dependencies"
 check_top_level_dependencies
+[ -n "$DEBUG" ] && echo "Checking Git Config"
 check_git_config
 
 for tool in kubectl kind tilt; do
