@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.12-alpine
 
 RUN set -eux; \
   apk add git shadow su-exec; \
@@ -6,6 +6,7 @@ RUN set -eux; \
   uv pip install --system black isort cookiecutter
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN addgroup -S scaf && adduser -s /bin/ash -S scaf -G scaf
 WORKDIR /home/scaf/out

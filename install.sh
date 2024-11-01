@@ -22,8 +22,8 @@ ensure_bin_folder() {
       echo "Or set PREFERRED_BIN_FOLDER to a writable directory."
       exit 1
   fi
-  # verify if PREFERRED_BIN_FOLDER is in PATH or exit with advice.
-  if ! [ -n "$PATH" ] && [ -n "$HOME" ] && echo "$PATH" | grep -q ":$HOME/.local/bin:"; then
+
+  if [ -z "$PATH" ] || [ -z "$HOME" ] || ! echo $PATH | grep -qE ":?$PREFERRED_BIN_FOLDER:?"; then
       echo "Your PATH is missing $PREFERRED_BIN_FOLDER."
       echo "Please add the following line to your shell profile file (e.g. ~/.bashrc, ~/.zshrc, etc.)"
       echo "export PATH=\$PATH:$PREFERRED_BIN_FOLDER"
