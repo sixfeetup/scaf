@@ -2,10 +2,16 @@
 
 BRANCH=${SCAF_SCRIPT_BRANCH:-main}
 SCAF_SCRIPT_URL="https://raw.githubusercontent.com/sixfeetup/scaf/${BRANCH}/scaf"
-TEMP_DOWNLOAD="./scaf"
+TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'tmp')/$(echo -n "$(date +%s%N)" | md5sum | awk '{print $1}')
+mkdir -p "$TEMP_DIR"
+TEMP_DOWNLOAD="$TEMP_DIR/scaf"
 PREFERRED_BIN_FOLDER=${PREFERRED_BIN_FOLDER:-"${HOME}/.local/bin"}
 DESTINATION="${PREFERRED_BIN_FOLDER}/scaf"
 
+
+# These are dependencies that we depend on the user to have installed:
+dependencies="bash>=4.0 curl>=7.8.0 make>=3.8 python3>=3.6 docker>=19.0 git>=2.0 rsync>=3.2.0"
+# ^^ Must be in the format of "name>=version" or just "name" if no version is required.
 
 ensure_bin_folder() {
   if [ ! -d "$PREFERRED_BIN_FOLDER" ]; then
@@ -32,14 +38,60 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
-check_top_level_dependencies() {
-    # these are dependencies that we depend on the user to have installed
-    dependencies="bash curl make docker git rsync"
-    missing=""
+version_compare() {
+    installed="$1"
+    required="$2"
 
+    IFS='.'
+    set -- $installed
+    installed_parts="$@"
+    set -- $required
+    required_parts="$@"
+    unset IFS
+
+    i=1
+    for req in $required_parts; do
+        inst=$(echo "$installed_parts" | cut -d' ' -f$i)
+        if [ "${inst:-0}" -lt "$req" ]; then
+            return 1
+        elif [ "${inst:-0}" -gt "$req" ]; then
+            return 0
+        fi
+        i=$((i + 1))
+    done
+
+    return 0
+}
+
+version_satisfies() {
+    name="$1"
+    required="$2"
+
+    installed_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+    if [ -z "$installed_version" ]; then
+        return 1
+    fi
+
+    if ! version_compare "$installed_version" "$required"; then
+        return 1
+    fi
+
+    return 0
+}
+
+check_top_level_dependencies() {
+    missing=""
     for dep in $dependencies; do
-        if ! command_exists $dep ; then
-            missing="$missing $dep"
+        name=$(echo "$dep" | cut -d'>' -f1)
+        version=$(echo "$dep" | grep -o '[0-9.]\+$')
+
+        if ! command_exists "$name"; then
+            missing="$missing $name"
+        elif [ -n "$version" ]; then
+            if ! version_satisfies "$name" "$version"; then
+                detected_version=$("$name" --version | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+                missing="$missing\n$name>=$version but found $detected_version"
+            fi
         fi
     done
 
@@ -51,14 +103,12 @@ check_top_level_dependencies() {
     fi    
 
     if [ -z "$missing" ]; then
-        echo "All top-level dependencies are installed."
+        echo "All top-level dependencies are installed and meet the required versions."
         return 0
     fi
 
-    echo "The following dependencies are missing:"
-    for dep in $missing; do
-        echo "- $dep"
-    done
+    echo "The following dependencies are missing or do not meet the required versions:"
+    echo $missing
 
     os=$(uname -s 2>/dev/null || echo "Unknown")
     if [ "$os" = "Linux" ] && [ -f /proc/version ] && grep -qi microsoft /proc/version; then
@@ -69,42 +119,45 @@ check_top_level_dependencies() {
 
     # TODO: I wonder if we should look for nix, brew, apt-get, yum, etc. and provide instructions
     #       for those rather then strictly by OS.
-    for dep in $missing; do
+
+    # Process $missing line by line instead of word by word.
+    echo "$missing" | while IFS= read -r dep; do
+        [ -z "$dep" ] && continue  # Skip empty lines.
         case $dep in
-            "bash")
+            bash*)
                 echo "Please install bash for consistent shell execution."
                 ;;
-            "curl")
+            curl*)
                 echo "Please install curl:"
-                echo "  - Ubuntu/Debian: sudo apt-get install curl"
-                echo "  - CentOS/Fedora: sudo yum install curl"
-                echo "  - macOS: brew install curl"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade curl"
+                echo "  - CentOS/Fedora: sudo yum install curl || sudo yum upgrade curl"
+                echo "  - macOS: brew install curl || brew upgrade curl"
                 echo "  - Windows: Download from https://curl.se/windows/"
                 ;;
-            "make")
+            make*)
                 echo "Please install make:"
-                echo "  - Ubuntu/Debian: sudo apt-get install make"
-                echo "  - CentOS/Fedora: sudo yum install make"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade make"
+                echo "  - CentOS/Fedora: sudo yum install make || sudo yum upgrade make"
                 echo "  - macOS: xcode-select --install"
                 echo "    or: brew install make"
                 echo "  - Windows: Install MinGW or use WSL"
                 ;;
-            "python3")
+            python3*)
                 echo "Please install python3:"
-                echo "  - Ubuntu/Debian: sudo apt-get install python3"
-                echo "  - CentOS/Fedora: sudo yum install python3"
-                echo "  - macOS: brew install python"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade python3"
+                echo "  - CentOS/Fedora: sudo yum install python3 || sudo yum upgrade python3"
+                echo "  - macOS: brew install python || brew upgrade python"
                 echo "  - Windows: Download from https://www.python.org/downloads/windows/"
                 ;;
-            "rsync")
+            rsync*)
                 echo "Please install rsync:"
-                echo "  - Ubuntu/Debian: sudo apt-get install rsync"
-                echo "  - CentOS/Fedora: sudo yum install rsync"
-                echo "  - macOS: brew install rsync"
+                echo "  - Ubuntu/Debian: sudo apt-get update && sudo apt-get install --only-upgrade rsync"
+                echo "  - CentOS/Fedora: sudo yum install rsync || sudo yum upgrade rsync"
+                echo "  - macOS: brew install rsync || brew upgrade rsync"
                 echo "  - Windows: Can be obtained from https://www.itefix.net/cwrsync"
                 echo "    or: Install WSL and usesudo apt-get install rsync"
                 ;;
-            "docker")
+            docker*)
                 case $os in
                     "Darwin")
                         echo "Please install Docker Desktop for macOS:"
@@ -180,9 +233,9 @@ move_to_bin_folder() {
     echo "Moving $1 to ${DEST}..."
     # if the DEST folder is not writable, use sudo to move the file
     if [ -w $DEST ]; then
-        mv $1 $DEST/$1
+        mv $1 $DEST
     else
-        sudo mv $1 $DEST/$1
+        sudo mv $1 $DEST
     fi
 }
 
@@ -243,23 +296,26 @@ install_scaf() {
     if [ -f "$TEMP_DOWNLOAD" ]; then
         chmod +x $TEMP_DOWNLOAD
         echo "Moving scaf to $DESTINATION..."
-        move_to_bin_folder $TEMP_DOWNLOAD `dirname $DESTINATION`
+        move_to_bin_folder $TEMP_DOWNLOAD $(dirname $DESTINATION)
         if [ -f "$DESTINATION" ]; then
-            echo "scaf installed successfully at $DESTINATION"
+            echo "🎉 scaf installed successfully at $DESTINATION 🎉"
         else
-            echo "Failed to move scaf to the destination."
+            echo "🧨 Failed to move scaf to the destination. 🧨"
             exit 1
         fi
     else
-        echo "Failed to download scaf."
+        echo "🧨 Failed to download scaf. 🧨"
         exit 1
     fi
 }
 
 # Start the installation process
 echo "Installing scaf from $SCAF_SCRIPT_URL for the $BRANCH branch..."
+[ -n "$DEBUG" ] && echo "Ensuring bin folder exists"
 ensure_bin_folder
+[ -n "$DEBUG" ] && echo "Checking top level dependencies"
 check_top_level_dependencies
+[ -n "$DEBUG" ] && echo "Checking Git Config"
 check_git_config
 
 for tool in kubectl kind tilt; do
@@ -267,7 +323,7 @@ for tool in kubectl kind tilt; do
         echo "$tool is not installed."
         install_$tool
     else
-        echo "$tool is already installed."
+        [ -n "$DEBUG" ] && echo "$tool is already installed."
     fi
 done
 
