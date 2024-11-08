@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.19.0](https://github.com/sixfeetup/scaf/compare/v1.18.0...v1.19.0) (2024-11-08)
+
+### Features
+
+* enable prometheus metrics retention for 90 days ([#401](https://github.com/sixfeetup/scaf/issues/401)) ([dc36f45](https://github.com/sixfeetup/scaf/commit/dc36f45c9157f0d5680cf7bdf1f9a3390f2b2b8c))
+
 ## [1.18.0](https://github.com/sixfeetup/scaf/compare/v1.17.2...v1.18.0) (2024-11-01)
 
 ### Features
