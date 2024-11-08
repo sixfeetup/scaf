@@ -11,7 +11,7 @@ default_context:
   project_dash: my-awesome-scaf-project
   project_name: My Awesome Scaf Project
   project_slug: my_awesome_scaf_project
-  repo_name: my_awesome_sixie_project
+  repo_name: my_awesome_scaf_project
   repo_url: git@github.com:sixfeetup/my_awesome_scaf_project.git
   source_control_organization_slug: sixfeetup
   source_control_provider: github.com

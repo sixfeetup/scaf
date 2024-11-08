@@ -8,8 +8,8 @@ module "cluster" {
   argocd_domain_name     = "argocd.sandbox.{{ cookiecutter.domain_name }}"
   prometheus_domain_name = "prometheus.sandbox.{{ cookiecutter.domain_name }}"
   control_plane = {
-    # 2 vCPUs, 2 GiB RAM, $0.0188 per Hour
-    instance_type = "t3a.small"
+    # 2 vCPUs, 4 GiB RAM, $0.0376 per Hour
+    instance_type = "t3a.medium"
     num_instances = 3
     # NB!: set ami_id to prevent instance recreation when the latest ami
     # changes, eg:

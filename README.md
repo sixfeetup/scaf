@@ -35,7 +35,7 @@ contains the following:
 Installation is supported on Linux and macOS:
 
 ```
-curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
 ```
 
 The installation script will install kubectl, kind, and Tilt if it can't
