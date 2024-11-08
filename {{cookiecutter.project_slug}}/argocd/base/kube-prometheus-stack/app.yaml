@@ -26,6 +26,22 @@ spec:
             requests:
               cpu: 50m
               memory: 100Mi
+        prometheus:
+          prometheusSpec:
+            podMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelector: {}
+            # Add retention configuration for Prometheus
+            retention: 90d
+            retentionSize: 9GB
+            # Adjust storage size if needed
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: local-path
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
 
   destination:
     server: "https://kubernetes.default.svc"
