@@ -28,18 +28,24 @@ class HealthCheckMiddleware(object):
         # Connect to each database and do a generic standard SQL query
         # that doesn't write any data and doesn't depend on any tables
         # being present.
-        try:
-            from django.db import connections
+        from django.db import connections
 
-            for name in connections:
-                cursor = connections[name].cursor()
+        for name in connections:
+            cursor = None
+            connection = connections[name]
+            try:
+                cursor = connection.cursor()
                 cursor.execute("SELECT 1;")
                 row = cursor.fetchone()
                 if row is None:
                     return HttpResponseServerError("db: invalid response")
-        except Exception as e:
-            logger.exception(e)
-            return HttpResponseServerError("db: cannot connect to database.")
+            except Exception as e:
+                logger.exception(e)
+                return HttpResponseServerError("db: cannot connect to database.")
+            finally:
+                if cursor:
+                    cursor.close()
+                connection.close()
 
         # Call get_stats() to connect to each memcached instance and get its stats.
         # This can effectively check if each is online.
