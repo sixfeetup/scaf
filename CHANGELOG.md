@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.19.1](https://github.com/sixfeetup/scaf/compare/v1.19.0...v1.19.1) (2024-11-20)
+
+### Bug Fixes
+
+* close readiness conneciton ([#423](https://github.com/sixfeetup/scaf/issues/423)) ([eee9948](https://github.com/sixfeetup/scaf/commit/eee9948738570fc4c7d680f85b43ee23dd6370dd))
+
 ## [1.19.0](https://github.com/sixfeetup/scaf/compare/v1.18.0...v1.19.0) (2024-11-08)
 
 ### Features
