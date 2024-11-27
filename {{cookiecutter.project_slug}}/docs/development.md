@@ -53,7 +53,7 @@ To switch between different Scaf project contexts:
 ## Next steps
 
 Creating a superuser account in the backend is useful so you have access to
-Django Admin that will be accesible at [http://localhost:8009/admin](http://localhost:8009/admin)
+Django Admin that will be accesible at [http://localhost:8000/admin](http://localhost:8000/admin)
 
 To create a superuser use the following commands:
 
