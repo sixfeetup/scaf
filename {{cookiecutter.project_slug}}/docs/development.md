@@ -50,14 +50,6 @@ To switch between different Scaf project contexts:
       $ make setup   # inside the codebase of the project you want to work on
       $ tilt up
 
-## Update dependencies
-
-To update the backend app dependencies, you must edit the `backend/requirements/*.in` files.
-Once you have made your changes, you need to regenerate the `backend/requirements/*.txt` files using:
-
-       $ make compile
-
-
 ## Next steps
 
 Creating a superuser account in the backend is useful so you have access to
@@ -70,3 +62,10 @@ To create a superuser use the following commands:
 {% if cookiecutter.create_nextjs_frontend == 'y' %}
 This project has a NextJS frontend configured. You can access it at [http://localhost:3000/](http://localhost:3000/).
 {% endif %}
+
+## Update dependencies
+
+To update the backend app dependencies, you must edit the `backend/requirements/*.in` files.
+Once you have made your changes, you need to regenerate the `backend/requirements/*.txt` files using:
+
+       $ make compile
