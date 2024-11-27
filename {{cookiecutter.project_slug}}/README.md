@@ -24,7 +24,7 @@ See [docs/debug.md](/docs/debug.md)
 
 ## :test_tube: How to test the application
 
-See [docs/debug.md](/docs/qa.md)
+See [docs/qa.md](/docs/qa.md)
 
 ## :microscope: How to monitor the application
 
