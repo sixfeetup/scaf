@@ -22,6 +22,10 @@ See [docs/secrets.md](/docs/secrets.md)
 
 See [docs/debug.md](/docs/debug.md)
 
+## :test_tube: How to test the application
+
+See [docs/qa.md](/docs/qa.md)
+
 ## :microscope: How to monitor the application
 
 See [docs/monitoring.md](/docs/monitoring.md)
