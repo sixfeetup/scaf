@@ -96,6 +96,11 @@ variable "config_patch_files" {
   type        = list(string)
   default     = []
 }
+{% if cookiecutter.operating_system == "k3s" %}
+variable "path_to_deploy_key" {
+  type    = string
+  default = "~/.ssh/{{ cookiecutter.project_slug }}"
+}
 {%- endif %}
 
 variable "repo_name" {
