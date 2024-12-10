@@ -1,0 +1,85 @@
+---
+version: '3'
+env:
+  KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
+tasks:
+  bootstrap:
+    desc: |
+      Run all tasks required to bootstrap k3s and Kubernetes cluster.
+    requires:
+      vars: [ENV]
+    cmds:
+      - task: bootstrap_kubernetes
+      - sleep 30
+      - task: generate_kubeconfig
+      - task: store_kubeconfig
+      - task: upgrade_talos
+      - task: enable_ecr_credential_helper
+  bootstrap_kubernetes:
+    desc: |
+      Bootstrap the Kubernetes cluster on the first control plane node.
+    cmds:
+
+  enable_ecr_credential_helper:
+    desc: |
+      Enable the ECR credential helper on all control plane nodes.
+    cmds:
+      - task: health
+      - |
+        for node in $(yq -r '.contexts[].endpoints[]' $TALOSCONFIG); do
+          talosctl patch mc \
+            --nodes $node \
+            --patch @patches/patch-ecr-credential-helper.yaml; \
+        done
+  store_kubeconfig:
+    desc: |
+      Store the Kubernetes kubeconfig file in AWS Secrets Manager.
+    requires:
+      vars: [ENV]
+    cmds:
+      - |
+        aws secretsmanager create-secret \
+          --name "{{ '{{.ENV}}' }}_kubeconfig" \
+          --secret-string "$(base64 -w0 $KUBECONFIG)"
+  delete_all_secrets:
+    desc: |
+      Delete all related secrets from AWS Secrets Manager.
+    requires:
+      vars: [ENV]
+    cmds:
+      - |
+        aws secretsmanager delete-secret \
+          --secret-id "{{ '{{.ENV}}' }}_kubeconfig" \
+          --force-delete-without-recovery
+  reset_config:
+    desc: |
+      Remove all config files and delete secrets in AWS Secrets Manager
+    requires:
+      vars: [ENV]
+    cmds:
+      - task: delete_all_secrets
+      - cd {{ '{{.ENV}}' }} && rm -f kubeconfig
+  kubeconfig:
+    desc: |
+      Retrieve the Kubeconfig for a given cluster
+
+      Since the commands run in sub-shell you can eval the output to export
+      KUBECONFIG to your current shell:
+
+        eval $(task talos:kubeconfig)
+    silent: true
+    cmds:
+      - task: generate_kubeconfig
+      - echo "export KUBECONFIG=$(pwd)/{{ '{{.ENV}}' }}/kubeconfig"
+  fetch_config:
+    desc: |
+      Fetch kubeconfig from AWS Secrets
+      Manager.
+    requires:
+      vars: [ENV]
+    cmds:
+      - |
+        aws secretsmanager get-secret-value \
+          --secret-id "{{ '{{.ENV}}' }}_kubeconfig" | \
+          yq ".SecretString" | tr -d '"' | \
+          base64 -d > ./{{ '{{.ENV}}' }}/kubeconfig
