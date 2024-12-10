@@ -3,18 +3,13 @@ version: '3'
 env:
   KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
   SSH_KEY: ~/.ssh/{{ cookiecutter.project_slug }}_default_key
+  TFDIR: ../terraform/{{ '{{.ENV}}' }}
 
 vars:
   CONTROL_PLANE_IPS:
-    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r '.'
-  SANDBOX_INSTANCE_IP:
-    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
-  PROD_INSTANCE_IP:
-    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
-  PROD_OTHER_IPS:
-    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[1:][]'
-  PROD_PRIVATE_INSTANCE_IP:
-    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
+    sh: tofu -chdir={{ '{{ .TFDIR }}' }} output -json \
+      control_plane_nodes_public_ips | yq -r '.'
+
 tasks:
   bootstrap:
     desc: |
@@ -22,16 +17,13 @@ tasks:
     requires:
       vars: [ENV]
     cmds:
-      - task: bootstrap_kubernetes
+      - task: install_sandbox
+      - task: install_prod
       - sleep 30
       - task: generate_kubeconfig
       - task: store_kubeconfig
       - task: upgrade_talos
       - task: enable_ecr_credential_helper
-  bootstrap_kubernetes:
-    desc: |
-      Bootstrap the Kubernetes cluster on the first control plane node.
-    cmds:
 
   generate_token:
     desc: Generate a random token for k3s cluster
@@ -40,8 +32,9 @@ tasks:
 
   install_sandbox:
     desc: Install k3s on sandbox instance
-    requires:
-      vars: [SANDBOX_INSTANCE_IP]
+    vars:
+      SANDBOX_INSTANCE_IP:
+        sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[0]'
     cmds:
       - |
         ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} \
@@ -52,8 +45,13 @@ tasks:
 
   install_prod:
     desc: Install k3s on main production instance
-    requires:
-      vars: [PROD_INSTANCE_IP]
+    vars:
+      PROD_INSTANCE_IP:
+        sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[0]'
+      PROD_OTHER_IPS:
+        sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[1:][]'
+      PROD_PRIVATE_INSTANCE_IP:
+        sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[0]'
     deps: [generate_token]
     cmds:
       - |
@@ -63,7 +61,7 @@ tasks:
           INSTALL_K3S_EXEC="server --cluster-init --tls-san ${PROD_INSTANCE_IP} \
           --disable=traefik" K3S_KUBECONFIG_MODE="644" sh -s -'
       - |
-        for ip in $(terraform output -json prod_instance_other_ips | jq -r '.[]'); do
+        for ip in $(echo "$PROD_OTHER_IPS"); do
           echo "Installing $ip..."
           ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} ubuntu@$ip \
             'curl -sfL https://get.k3s.io | K3S_TOKEN=$(cat prod-token.txt) \
