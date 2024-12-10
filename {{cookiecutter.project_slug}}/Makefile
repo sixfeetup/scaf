@@ -159,10 +159,13 @@ prod-secrets: ## Create sealed secrets for prod
 debug-prod-secrets: ## Create sealed secrets for prod
 	$(MAKE) secrets ENVIRONMENT=prod DEBUG=true
 
-docs: ## Build the Docs
+ensure-uv:
+	@which uv >/dev/null 2>&1 || { echo "Installing uv..."; curl -LsSf https://astral.sh/uv/install.sh | sh; }
+
+docs: ensure-uv ## Build the Docs
 	uvx  --with mkdocs-material --with mkdocs-mermaid2-plugin mkdocs build
 
-serve-docs: ## Serve the Docs
+serve-docs: ensure-uv ## Serve the Docs
 	uvx  --with mkdocs-material --with mkdocs-mermaid2-plugin mkdocs serve -a localhost:8001
 
 ## Help
@@ -175,6 +178,6 @@ help: ## Show the list of all the commands and their help text
 		/^## .*/ {match($$0, "## (.+)$$"); txt=substr($$0,4,RLENGTH);printf "\n\033[33m%s\033[0m\n", txt ; target=""} \
 	' $(MAKEFILE_LIST)
 
-.PHONY: help check-lint-and-formatting ci docs serve-docs secure build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
+.PHONY: help check-lint-and-formatting ci ensure-uv secure build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
 
 .DEFAULT_GOAL := help
