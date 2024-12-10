@@ -2,7 +2,7 @@
 version: '3'
 env:
   KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
-  SSH_KEY: ~/.ssh/mycnm_default_key
+  SSH_KEY: ~/.ssh/{{ cookiecutter.project_slug }}_default_key
   SANDBOX_INSTANCE_IP: '{{.SANDBOX_INSTANCE_IP}}'
   PROD_INSTANCE_IP: '{{.PROD_INSTANCE_IP}}'
   PROD_PRIVATE_INSTANCE_IP: '{{.PROD_PRIVATE_INSTANCE_IP}}'
