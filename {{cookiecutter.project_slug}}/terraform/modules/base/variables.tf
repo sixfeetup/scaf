@@ -98,8 +98,9 @@ variable "config_patch_files" {
 }
 {% if cookiecutter.operating_system == "k3s" %}
 variable "path_to_deploy_key" {
-  type    = string
-  default = "~/.ssh/{{ cookiecutter.project_slug }}"
+  type        = string
+  description = "Path to SSH deploy key for K3s instances"
+  default     = "~/.ssh/{{ cookiecutter.project_slug }}"
 }
 {%- endif %}
 
