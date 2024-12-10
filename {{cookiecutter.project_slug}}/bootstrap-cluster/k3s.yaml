@@ -2,7 +2,7 @@
 version: '3'
 env:
   KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
-  SSH_KEY: ~/.ssh/{{ cookiecutter.project_slug }}_default_key
+  SSH_KEY: ./{{ '{{.ENV}}' }}/id_ed25519
   TFDIR: ../terraform/{{ '{{.ENV}}' }}
 
 vars:
@@ -11,12 +11,20 @@ vars:
       control_plane_nodes_public_ips | yq -r '.'
 
 tasks:
+  setup_ssh_key:
+    desc: Extract and save SSH key from terraform output
+    cmds:
+      - mkdir -p ./{{ '{{.ENV}}' }}
+      - |
+        tofu -chdir={{ '{{ .TFDIR }}' }} output -raw private_deploy_key > ${SSH_KEY}
+      - chmod 600 ${SSH_KEY}
   bootstrap:
     desc: |
       Run all tasks required to bootstrap k3s and Kubernetes cluster.
     requires:
       vars: [ENV]
     cmds:
+      - task: setup_ssh_key
       - task: install_sandbox
       - task: install_prod
       - sleep 30
