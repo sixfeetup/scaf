@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.20.0](https://github.com/sixfeetup/scaf/compare/v1.19.1...v1.20.0) (2024-12-10)
+
+### Features
+
+* add documentation commands to Makefile ([#431](https://github.com/sixfeetup/scaf/issues/431)) ([824e1d6](https://github.com/sixfeetup/scaf/commit/824e1d66f8ed6bfe8ecdb25dd66191db35db2698))
+
+### Documentation
+
+* add qa markdown page ([#427](https://github.com/sixfeetup/scaf/issues/427)) ([0e8c0fe](https://github.com/sixfeetup/scaf/commit/0e8c0fec2037f551bd577d75ec42548e80bedc3f))
+* reorganize next steps and dependencies sections + fix typos ([#426](https://github.com/sixfeetup/scaf/issues/426)) ([a7e8af6](https://github.com/sixfeetup/scaf/commit/a7e8af6c8993c3361c4269db5c0c4c71030dfa97))
+
 ## [1.19.1](https://github.com/sixfeetup/scaf/compare/v1.19.0...v1.19.1) (2024-11-20)
 
 ### Bug Fixes
