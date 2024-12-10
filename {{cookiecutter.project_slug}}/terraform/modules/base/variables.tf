@@ -96,7 +96,7 @@ variable "config_patch_files" {
   type        = list(string)
   default     = []
 }
-{% if cookiecutter.operating_system == "k3s" %}
+{% elif cookiecutter.operating_system == "k3s" %}
 variable "path_to_deploy_key" {
   type        = string
   description = "Path to SSH deploy key for K3s instances"
