@@ -90,12 +90,13 @@ variable "cluster_vpc_cidr" {
   default     = "172.16.0.0/16"
 }
 
-# TODO: add cookiecutter.use_talos check 
+{% if cookiecutter.operating_system == "talos" %}
 variable "config_patch_files" {
   description = "Path to talos config path files that applies to all nodes"
   type        = list(string)
   default     = []
 }
+{%- endif %}
 
 variable "repo_name" {
   type    = string

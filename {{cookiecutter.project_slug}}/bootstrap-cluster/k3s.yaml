@@ -2,6 +2,10 @@
 version: '3'
 env:
   KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
+  SSH_KEY: ~/.ssh/mycnm_default_key
+  SANDBOX_INSTANCE_IP: '{{.SANDBOX_INSTANCE_IP}}'
+  PROD_INSTANCE_IP: '{{.PROD_INSTANCE_IP}}'
+  PROD_PRIVATE_INSTANCE_IP: '{{.PROD_PRIVATE_INSTANCE_IP}}'
 tasks:
   bootstrap:
     desc: |
@@ -19,6 +23,45 @@ tasks:
     desc: |
       Bootstrap the Kubernetes cluster on the first control plane node.
     cmds:
+
+  generate_token:
+    desc: Generate a random token for k3s cluster
+    cmds:
+      - tr -dc A-Za-z0-9 </dev/urandom | head -c 13 > prod-token.txt
+
+  install_sandbox:
+    desc: Install k3s on sandbox instance
+    requires:
+      vars: [SANDBOX_INSTANCE_IP]
+    cmds:
+      - |
+        ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} \
+          ubuntu@${SANDBOX_INSTANCE_IP} \
+          'curl -sfL https://get.k3s.io | \
+          INSTALL_K3S_EXEC="--tls-san ${SANDBOX_INSTANCE_IP} --disable=traefik" \
+          K3S_KUBECONFIG_MODE="644" sh -s -'
+
+  install_prod:
+    desc: Install k3s on main production instance
+    requires:
+      vars: [PROD_INSTANCE_IP]
+    deps: [generate_token]
+    cmds:
+      - |
+        ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} \
+          ubuntu@${PROD_INSTANCE_IP} \
+          'curl -sfL https://get.k3s.io | K3S_TOKEN=$(cat prod-token.txt) \
+          INSTALL_K3S_EXEC="server --cluster-init --tls-san ${PROD_INSTANCE_IP} \
+          --disable=traefik" K3S_KUBECONFIG_MODE="644" sh -s -'
+      - |
+        for ip in $(terraform output -json prod_instance_other_ips | jq -r '.[]'); do
+          echo "Installing $ip..."
+          ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} ubuntu@$ip \
+            'curl -sfL https://get.k3s.io | K3S_TOKEN=$(cat prod-token.txt) \
+            INSTALL_K3S_EXEC="server --server https://${PROD_PRIVATE_INSTANCE_IP}:6443 \
+            --tls-san ${PROD_INSTANCE_IP} --disable=traefik" \
+            K3S_KUBECONFIG_MODE="644" sh -s -'
+        done
 
   enable_ecr_credential_helper:
     desc: |
@@ -59,6 +102,7 @@ tasks:
     cmds:
       - task: delete_all_secrets
       - cd {{ '{{.ENV}}' }} && rm -f kubeconfig
+
   kubeconfig:
     desc: |
       Retrieve the Kubeconfig for a given cluster

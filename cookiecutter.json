@@ -11,20 +11,12 @@
   "aws_region": "us-east-1",
   "aws_account_id": "000000000000",
   "create_nextjs_frontend": "y",
-  "mail_service": [
-    "Mailgun",
-    "Amazon SES",
-    "Other SMTP"
-  ],
+  "operating_system": ["k3s", "talos"],
+  "mail_service": ["Mailgun", "Amazon SES", "Other SMTP"],
   "_challenge": "n",
   "use_celery": "n",
   "use_sentry": "n",
-  "debug": "n",
-  "source_control_provider": [
-    "github.com",
-    "bitbucket.org",
-    "none"
-  ],
+  "source_control_provider": ["github.com", "bitbucket.org", "none"],
   "source_control_organization_slug": "sixfeetup",
   "__prompts__": {
     "source_control_organization_slug": "What is the organization slug for the source control provider?",

@@ -25,6 +25,6 @@ output "amazon_ses_user_secret_key" {
 {% endif %}
 
 output "control_plane_nodes_public_ips" {
-  description = "The public ip addresses of the talos control plane nodes."
+  description = "The public ip addresses of the control plane nodes."
   value       = join(",", module.control_plane_nodes.*.public_ip)
 }
