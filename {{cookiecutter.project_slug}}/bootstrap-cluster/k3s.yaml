@@ -34,10 +34,6 @@ tasks:
         tofu -chdir={{ '{{ .TFDIR }}' }} output -raw private_deploy_key > ${SSH_KEY}
       - chmod 600 ${SSH_KEY}
 
-  generate_token:
-    desc: Generate a random token for k3s cluster
-    cmds:
-      - tr -dc A-Za-z0-9 </dev/urandom | head -c 13 > prod-token.txt
 
   install_sandbox:
     desc: Install k3s on sandbox instance
@@ -61,19 +57,21 @@ tasks:
         sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[1:][]'
       PROD_PRIVATE_INSTANCE_IP:
         sh: echo "{{ '{{ .CONTROL_PLANE_IPS }}' }}" | yq -r 'split(",")[0]'
-    deps: [generate_token]
+    vars:
+      K3S_TOKEN:
+        sh: tr -dc A-Za-z0-9 </dev/urandom | head -c 13
     cmds:
       - |
         ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} \
           ubuntu@${PROD_INSTANCE_IP} \
-          'curl -sfL https://get.k3s.io | K3S_TOKEN=$(cat prod-token.txt) \
+          'curl -sfL https://get.k3s.io | K3S_TOKEN={{ '{{.K3S_TOKEN}}' }} \
           INSTALL_K3S_EXEC="server --cluster-init --tls-san ${PROD_INSTANCE_IP} \
           --disable=traefik" K3S_KUBECONFIG_MODE="644" sh -s -'
       - |
         for ip in $(echo "$PROD_OTHER_IPS"); do
           echo "Installing $ip..."
           ssh -oStrictHostKeyChecking=no -i ${SSH_KEY} ubuntu@$ip \
-            'curl -sfL https://get.k3s.io | K3S_TOKEN=$(cat prod-token.txt) \
+            'curl -sfL https://get.k3s.io | K3S_TOKEN={{ '{{.K3S_TOKEN}}' }} \
             INSTALL_K3S_EXEC="server --server https://${PROD_PRIVATE_INSTANCE_IP}:6443 \
             --tls-san ${PROD_INSTANCE_IP} --disable=traefik" \
             K3S_KUBECONFIG_MODE="644" sh -s -'
