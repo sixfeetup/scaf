@@ -3,9 +3,18 @@ version: '3'
 env:
   KUBECONFIG: ./{{ '{{.ENV}}' }}/kubeconfig
   SSH_KEY: ~/.ssh/{{ cookiecutter.project_slug }}_default_key
-  SANDBOX_INSTANCE_IP: '{{.SANDBOX_INSTANCE_IP}}'
-  PROD_INSTANCE_IP: '{{.PROD_INSTANCE_IP}}'
-  PROD_PRIVATE_INSTANCE_IP: '{{.PROD_PRIVATE_INSTANCE_IP}}'
+
+vars:
+  CONTROL_PLANE_IPS:
+    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r '.'
+  SANDBOX_INSTANCE_IP:
+    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
+  PROD_INSTANCE_IP:
+    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
+  PROD_OTHER_IPS:
+    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[1:][]'
+  PROD_PRIVATE_INSTANCE_IP:
+    sh: terraform -chdir=../terraform output -json control_plane_nodes_public_ips | yq -r 'split(",")[0]'
 tasks:
   bootstrap:
     desc: |
