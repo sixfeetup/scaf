@@ -11,13 +11,6 @@ vars:
       control_plane_nodes_public_ips | yq -r '.'
 
 tasks:
-  setup_ssh_key:
-    desc: Extract and save SSH key from terraform output
-    cmds:
-      - mkdir -p ./{{ '{{.ENV}}' }}
-      - |
-        tofu -chdir={{ '{{ .TFDIR }}' }} output -raw private_deploy_key > ${SSH_KEY}
-      - chmod 600 ${SSH_KEY}
   bootstrap:
     desc: |
       Run all tasks required to bootstrap k3s and Kubernetes cluster.
@@ -32,6 +25,14 @@ tasks:
       - task: store_kubeconfig
       - task: upgrade_talos
       - task: enable_ecr_credential_helper
+
+  setup_ssh_key:
+    desc: Extract and save SSH key from terraform output
+    cmds:
+      - mkdir -p ./{{ '{{.ENV}}' }}
+      - |
+        tofu -chdir={{ '{{ .TFDIR }}' }} output -raw private_deploy_key > ${SSH_KEY}
+      - chmod 600 ${SSH_KEY}
 
   generate_token:
     desc: Generate a random token for k3s cluster
