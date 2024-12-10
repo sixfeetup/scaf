@@ -14,7 +14,6 @@ PROJECT_SLUG:="{{ cookiecutter.project_slug }}"
 
 ## Release/Deployment Targets
 
-.PHONY: ci
 ci: test secure build  ## Execute the same checks used in CI/CD
 
 .git/hooks/pre-commit: ## Install pre-commit hooks
@@ -22,7 +21,6 @@ ci: test secure build  ## Execute the same checks used in CI/CD
 	cd backend/; \
 	pre-commit install
 
-.PHONY: check-lint-and-formatting
 check-lint-and-formatting: .git/hooks/pre-commit ## Execute check of lint and formatting using existing pre-commit hooks
 	cd backend; \
 	pre-commit run -a
@@ -126,7 +124,6 @@ shell-frontend:
 	$(KUBECTL_EXEC_FRONTEND)
 {% endif %}
 
-.PHONY: secure
 secure:  ## Analyze dependencies for security issues
 	$(KUBECTL_EXEC_BACKEND) -c "safety check"
 
@@ -162,6 +159,15 @@ prod-secrets: ## Create sealed secrets for prod
 debug-prod-secrets: ## Create sealed secrets for prod
 	$(MAKE) secrets ENVIRONMENT=prod DEBUG=true
 
+ensure-uv:
+	@which uv >/dev/null 2>&1 || { echo "Installing uv..."; curl -LsSf https://astral.sh/uv/install.sh | sh; }
+
+docs: ensure-uv ## Build the Docs
+	uvx  --with mkdocs-material --with mkdocs-mermaid2-plugin mkdocs build
+
+serve-docs: ensure-uv ## Serve the Docs
+	uvx  --with mkdocs-material --with mkdocs-mermaid2-plugin mkdocs serve -a localhost:8001
+
 ## Help
 
 help: ## Show the list of all the commands and their help text
@@ -172,6 +178,6 @@ help: ## Show the list of all the commands and their help text
 		/^## .*/ {match($$0, "## (.+)$$"); txt=substr($$0,4,RLENGTH);printf "\n\033[33m%s\033[0m\n", txt ; target=""} \
 	' $(MAKEFILE_LIST)
 
-.PHONY: help build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
+.PHONY: help check-lint-and-formatting ci ensure-uv secure build build-dev outdated pipdeptree compile destroy-data load-dump clean clean-dev squeaky_clean update check-sandbox-release check-staging-release check-prod-release
 
 .DEFAULT_GOAL := help

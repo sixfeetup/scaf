@@ -387,3 +387,4 @@ dist
 
 # scaf challenge
 .scaf-challenge.json
+.aider*
