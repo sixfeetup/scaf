@@ -1,10 +1,18 @@
-# Bootstrap Talos and ArgoCD
+{%- if cookiecutter.operating_system == "talos" %}# Bootstrap Talos and ArgoCD
 
 After deploying infrastructure using Terraform, we can proceed with configuring
 Talos and bootstrapping ArgoCD.
 
 Terraform is solely utilized for deploying infrastructure. Any subsequent
 configuration of Talos or ArgoCD is done using Taskfile tasks.
+{%- elif cookiecutter.operating_system == "k3s" %}# Bootstrap k3s and ArgoCD
+
+After deploying infrastructure using Terraform, we can proceed with configuring
+k3s and bootstrapping ArgoCD.
+
+Terraform is solely utilized for deploying infrastructure. Any subsequent
+configuration of k3s or ArgoCD is done using Taskfile tasks.
+{%- endif %}
 
 To view a list of tasks and their descriptions, navigate to the
 `bootstrap-cluster` directory and execute `task`.
@@ -15,7 +23,15 @@ cluster.
 We recommend opening the AWS serial console for each ec2 instance to monitor the
 bootstrap process.
 
+{%- if cookiecutter.operating_system == "talos" %}
+
 ### Bootstrapping Talos
+
+{%- elif cookiecutter.operating_system == "k3s" %}
+
+### Bootstrapping k3s
+
+{%- endif %}
 
 1. Navigate to the directory corresponding to the environment being set up and
    run:
@@ -32,6 +48,7 @@ bootstrap process.
    CLUSTER_NAME: "{{ cookiecutter.project_dash }}-sandbox"
    ```
 
+{%- if cookiecutter.operating_system == "talos" %}
    Note that we use a Talos factory image. This image contains a system
    extension that provides the ECR credential provider.
 
@@ -42,7 +59,8 @@ bootstrap process.
        CredentialProvider API to authenticate against AWS' Elastic Container
        Registry and pull images.
    ```
-
+{%- endif %}
+{%- if cookiecutter.operating_system == "talos" %}
 3. Bootstrap Talos with the following command:
 
    ```
@@ -51,45 +69,84 @@ bootstrap process.
 
    To understand what this task will do, examine the Taskfile configuration:
 
-   ```
+   ```yaml
    bootstrap:
-       desc: |
-           Run all tasks required to bootstrap the Talos and Kubernetes cluster.
-       requires:
-           vars: [ENV]
-       cmds:
-         - task: generate_configs
-         - task: set_node_ips
-         - task: store_controlplane_config
-         - task: store_talosconfig
-         - task: apply_talos_config
-         - sleep 30
-         - task: bootstrap_kubernetes
-         - sleep 30
-         - task: generate_kubeconfig
-         - task: store_kubeconfig
-         - task: upgrade_talos
-         - task: enable_ecr_credential_helper
+     desc: |
+       Run all tasks required to bootstrap the Talos and Kubernetes cluster.
+     requires:
+       vars: [ENV]
+     cmds:
+       - task: generate_configs
+       - task: set_node_ips
+       - task: store_controlplane_config
+       - task: store_talosconfig
+       - task: apply_talos_config
+       - sleep 30
+       - task: bootstrap_kubernetes
+       - sleep 30
+       - task: generate_kubeconfig
+       - task: store_kubeconfig
+       - task: upgrade_talos
+       - task: enable_ecr_credential_helper
    ```
 
    It takes a few minutes for the cluster nodes to register as etcd
    members and synchronize.
 
+{%- elif cookiecutter.operating_system == "k3s" %}
+3. Bootstrap k3s with the following command:
+
+   ```
+   task k3s:bootstrap
+   ```
+
+   To understand what this task will do, examine the Taskfile configuration:
+
+   ```yaml
+   bootstrap:
+     desc: |
+       Run all tasks required to bootstrap k3s and Kubernetes cluster.
+     requires:
+       vars: [ENV]
+     cmds:
+       - task: save-node-ips
+       - task: setup-ssh-key
+       - task: install-k3s
+       - task: fetch-kubeconfig
+       - task: store-kubeconfig
+       - task: enable-ecr-credential-helper
+   ```
+
+   It takes a few minutes for the cluster nodes to register as etcd
+   members and synchronize.
+
+{%- endif %}
+
    If the cluster fails to bootstrap, refer to the Troubleshooting section
    below.
 
+{%- if cookiecutter.operating_system == "talos" %}
 4. Verify the health of your cluster with:
 
-   ```shell
-   task talos:health
-   ```
+    ```shell
+    task talos:health
+    ```
 
-5. Test kubectl access:
+    5. Test kubectl access:
+
+       ```shell
+       eval $(task talos:kubeconfig)
+       kubectl cluster-info
+       ```
+{%- elif cookiecutter.operating_system == "k3s" %}
+
+4. Test kubectl access:
 
    ```shell
-   eval $(task talos:kubeconfig)
+   eval $(task k3s:kubeconfig)
    kubectl cluster-info
    ```
+{%- endif %}
 
    This should return output similar to the following:
 
@@ -205,6 +262,7 @@ The `argocd:bootstrap` task configuration is as follows:
 
 ## Troubleshooting
 
+{%- if cookiecutter.operating_system == "talos" %}
 If bootstrapping Talos fails, we recommend resetting the config files and
 recreating ec2 instances before trying again.
 
@@ -220,3 +278,9 @@ recreating ec2 instances before trying again.
     -target "module.c luster.module.control_plane_nodes[1].aws_instance.this[0]"
    terraform plan -out="tfplan.out"
    terraform apply tfplan.out
+{%- elif cookiecutter.operating_system == "k3s" %}
+If bootstrapping k3s fails, we recommend uninstalling k3s from each node and
+boostrapping from scratch.
+
+TODO: create taskfile task to uninstall k3s.
+
