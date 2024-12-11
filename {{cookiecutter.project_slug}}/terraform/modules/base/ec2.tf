@@ -19,23 +19,15 @@ data "aws_ami" "os" {
   }
 }
 
-resource "null_resource" "generate_ssh_key" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      if [ ! -f ${var.path_to_deploy_key} ]; then
-        mkdir -p $(dirname ${var.path_to_deploy_key})
-        ssh-keygen -t rsa -b 4096 -f ${var.path_to_deploy_key} -N ''
-        chmod 600 ${var.path_to_deploy_key}
-      fi
-    EOT
-  }
+resource "tls_private_key" "deploy_key" {
+  algorithm = "ED25519"
 }
 
 resource "aws_key_pair" "default_key" {
-  key_name   = "{{ cookiecutter.project_slug }}_default_key"
-  public_key = file("${var.path_to_deploy_key}.pub")
-  depends_on = [null_resource.generate_ssh_key]
+  key_name   = "hotelnames_deploy_key"
+  public_key = tls_private_key.deploy_key.public_key_openssh
 }
+
 {%- endif %}
 
 locals {
@@ -63,10 +55,6 @@ module "control_plane_nodes" {
 {%- if cookiecutter.operating_system == "k3s" %}
   key_name                    = aws_key_pair.default_key.key_name
 {%- endif %}
-
-  lifecycle {
-    ignore_changes = [ami]
-  }
 
   vpc_security_group_ids = [module.cluster_sg.security_group_id]
 }

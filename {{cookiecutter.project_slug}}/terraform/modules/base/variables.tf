@@ -96,12 +96,6 @@ variable "config_patch_files" {
   type        = list(string)
   default     = []
 }
-{% elif cookiecutter.operating_system == "k3s" %}
-variable "path_to_deploy_key" {
-  type        = string
-  description = "Path to SSH deploy key for K3s instances"
-  default     = "~/.ssh/{{ cookiecutter.project_slug }}"
-}
 {%- endif %}
 
 variable "repo_name" {
@@ -128,15 +122,8 @@ variable "backend_ecr_repo" {
   default     = "{{ cookiecutter.project_dash }}-sandbox-backend"
 }
 
-variable "kubectl_allowed_ips" {
+variable "admin_allowed_ips" {
   description = "A list of CIDR blocks that are allowed to access the kubernetes api"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-# TODO: add cookiecutter.use_talos check 
-variable "talosctl_allowed_ips" {
-  description = "A list of CIDR blocks that are allowed to access the talos api"
   type        = string
   default     = "0.0.0.0/0"
 }
