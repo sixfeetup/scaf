@@ -282,5 +282,7 @@ recreating ec2 instances before trying again.
 If bootstrapping k3s fails, we recommend uninstalling k3s from each node and
 boostrapping from scratch.
 
-TODO: create taskfile task to uninstall k3s.
-
+```shell
+task k3s:uninstall-k3s
+```
+{%- endif %}
