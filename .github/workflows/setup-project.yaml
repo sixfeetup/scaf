@@ -47,7 +47,7 @@ jobs:
         sudo apt-get update && sudo apt-get install --only-upgrade python3       
         INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
         export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
-        git config --global init.defaultBranch main
+        git config --global init.defaultBranch dev
         git config --global user.email "setup-project--install@example.com"
         git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
@@ -60,7 +60,7 @@ jobs:
       run: |
         IMAGE_TAG=$GITHUB_SHA
         echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
-        git config --global init.defaultBranch main
+        git config --global init.defaultBranch dev
         git config --global user.email "setup-project--create@example.com"
         git config --global user.name "CI CD Setup Project"
         
