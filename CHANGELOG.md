@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.20.1](https://github.com/sixfeetup/scaf/compare/v1.20.0...v1.20.1) (2024-12-20)
+
+### Bug Fixes
+
+* github ecr push policy per environment ([bf3a0db](https://github.com/sixfeetup/scaf/commit/bf3a0db9620e0158a2fe417196bb2ec87c7dd1f2))
+
 ## [1.20.0](https://github.com/sixfeetup/scaf/compare/v1.19.1...v1.20.0) (2024-12-10)
 
 ### Features
