@@ -29,6 +29,7 @@ run the Terraform configurations.
 Ensure that you have installed AWS CLI version 2, as AWS SSO support is only
 available in version 2 and above. Create a new AWS profile in `~/.aws/config`.
 Here's an example of the `~/.aws/config` profile:
+
 ```
 [profile scaf]
 sso_start_url = https://sixfeetup.awsapps.com/start
@@ -43,6 +44,7 @@ Note the `sso_role_name` setting above. Make sure to use a role that provides
 you with the necessary permissions to deploy infrastructure on your AWS account.
 
 Export the `AWS_PROFILE` environment variable and continue logging in:
+
 ```
 $ export AWS_PROFILE=scaf
 $ aws sso login
@@ -50,6 +52,7 @@ $ aws sso login
 
 This should open your browser, allowing you to sign in to your AWS account. Upon
 successful login, you will see a message to confirm it:
+
 ```
 Successfully logged into Start URL: https://sixfeetup.awsapps.com/start
 ```
@@ -60,24 +63,27 @@ The first step is to bootstrap the Terraform state. This involves creating an S3
 bucket and a DynamoDB table to manage the state and locking.
 
 1. Navigate to the `bootstrap` directory:
-    ```bash
-    cd bootstrap
-    ```
+
+   ```bash
+   cd bootstrap
+   ```
 
 2. Initialize the Terraform configuration:
-    ```bash
-    terraform init
-    ```
+
+   ```bash
+   terraform init
+   ```
 
 3. Plan the Terraform configuration:
-    ```bash
-    terraform plan -out="tfplan.out"
-    ```
+
+   ```bash
+   terraform plan -out="tfplan.out"
+   ```
 
 4. Apply the Terraform configuration:
-    ```bash
-    terraform apply tfplan.out
-    ```
+   ```bash
+   terraform apply tfplan.out
+   ```
 
 ### Step 3: GitHub OIDC Provider
 
@@ -85,24 +91,27 @@ After bootstrapping the state, the next step is to set up the GitHub OIDC
 provider.
 
 1. Navigate to the `github` directory:
-    ```bash
-    cd ../github
-    ```
+
+   ```bash
+   cd ../github
+   ```
 
 2. Initialize the Terraform configuration:
-    ```bash
-    terraform init
-    ```
+
+   ```bash
+   terraform init
+   ```
 
 3. Plan the Terraform configuration:
-    ```bash
-    terraform plan -out="tfplan.out"
-    ```
+
+   ```bash
+   terraform plan -out="tfplan.out"
+   ```
 
 4. Apply the Terraform configuration:
-    ```bash
-    terraform apply tfplan.out
-    ```
+   ```bash
+   terraform apply tfplan.out
+   ```
 
 ### Step 4: Environment Configurations
 
@@ -112,31 +121,33 @@ sandbox, staging).
 1. Navigate to the desired environment directory (e.g., `prod`, `sandbox`,
    `staging`):
 
-    ```bash
-    cd ../<environment>
-    ```
+   ```bash
+   cd ../<environment>
+   ```
 
 2. Initialize the Terraform configuration:
-    ```bash
-    terraform init
-    ```
+
+   ```bash
+   terraform init
+   ```
 
 3. Restrict the IPs allowed to manage the cluster. Edit
-    `<environment>/cluster.tf` and set the following variables:
-    ```
-      kubectl_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
-      talos_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
-    ```
+   `<environment>/cluster.tf` and set the following variables:
+
+   ```
+     admin_allowed_ips = "10.0.0.1/32,10.0.0.2/32"
+   ```
 
 4. Plan the Terraform configuration:
-    ```bash
-    terraform plan -out="tfplan.out"
-    ```
+
+   ```bash
+   terraform plan -out="tfplan.out"
+   ```
 
 5. Apply the Terraform configuration:
-    ```bash
-    terraform apply tfplan.out
-    ```
+   ```bash
+   terraform apply tfplan.out
+   ```
 
 ## Summary
 
@@ -146,7 +157,6 @@ configurations:
 1. Bootstrap the Terraform state (`bootstrap` directory).
 2. Set up the GitHub OIDC provider (`github` directory).
 3. Configure the desired environment (`prod`, `sandbox`, or `staging` directory).
-
 
 Each step involves running `terraform init`, `terraform plan -out="tfplan.out"`,
 and `terraform apply tfplan.out`.

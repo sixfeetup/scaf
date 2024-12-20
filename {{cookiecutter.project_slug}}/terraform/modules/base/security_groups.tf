@@ -30,17 +30,26 @@ module "cluster_sg" {
       from_port   = 6443
       to_port     = 6443
       protocol    = "tcp"
-      cidr_blocks = var.kubectl_allowed_ips
+      cidr_blocks = var.admin_allowed_ips
       description = "Kubernetes API Access"
     },
-    # TODO: add cookiecutter.use_talos check 
+{% if cookiecutter.operating_system == "talos" %}
     {
       from_port   = 50000
       to_port     = 50000
       protocol    = "tcp"
-      cidr_blocks = var.talosctl_allowed_ips
+      cidr_blocks = var.admin_allowed_ips
       description = "Talos API Access"
     },
+{%- elif cookiecutter.operating_system == "k3s" %}
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.admin_allowed_ips
+      description = "Talos API Access"
+    },
+{%- endif %}
   ]
 
   egress_with_cidr_blocks = [

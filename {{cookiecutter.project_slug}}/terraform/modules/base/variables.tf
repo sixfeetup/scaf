@@ -90,12 +90,13 @@ variable "cluster_vpc_cidr" {
   default     = "172.16.0.0/16"
 }
 
-# TODO: add cookiecutter.use_talos check 
+{% if cookiecutter.operating_system == "talos" %}
 variable "config_patch_files" {
   description = "Path to talos config path files that applies to all nodes"
   type        = list(string)
   default     = []
 }
+{%- endif %}
 
 variable "repo_name" {
   type    = string
@@ -121,15 +122,8 @@ variable "backend_ecr_repo" {
   default     = "{{ cookiecutter.project_dash }}-sandbox-backend"
 }
 
-variable "kubectl_allowed_ips" {
+variable "admin_allowed_ips" {
   description = "A list of CIDR blocks that are allowed to access the kubernetes api"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-# TODO: add cookiecutter.use_talos check 
-variable "talosctl_allowed_ips" {
-  description = "A list of CIDR blocks that are allowed to access the talos api"
   type        = string
   default     = "0.0.0.0/0"
 }
