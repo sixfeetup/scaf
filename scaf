@@ -233,7 +233,6 @@ command_exists() {
     command -v "$1" > /dev/null 2>&1
 }
 
-# Install required python dependencies
 if ! command_exists pip; then
   echo "pip is not installed. Installing pip..."
   curl -sS https://bootstrap.pypa.io/get-pip.py | $PYTHON_CMD
@@ -273,5 +272,11 @@ if [ $? -eq 0 ]; then
   party_popper
 else
   echo "Failed to create project."
+  deactivate
+  rm -rf .venv
   exit 1
 fi
+
+echo "Deactivating and deleting the virtual environment..."
+deactivate
+rm -rf .venv
