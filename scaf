@@ -245,11 +245,5 @@ if [ $? -eq 0 ]; then
   party_popper
 else
   echo "Failed to create project."
-  deactivate
-  rm -rf .venv
   exit 1
 fi
-
-echo "Deactivating and deleting the virtual environment..."
-deactivate
-rm -rf .venv
