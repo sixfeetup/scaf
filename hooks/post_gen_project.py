@@ -222,9 +222,7 @@ def remove_graphql_files():
 
 
 def remove_challenge_files():
-    challenge_dir = os.path.join(
-        "backend", "{{ cookiecutter.project_slug }}", "challenge"
-    )
+    challenge_dir = os.path.join("backend", "{{ cookiecutter.project_slug }}", "challenge")
     shutil.rmtree(challenge_dir)
 
 
