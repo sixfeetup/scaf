@@ -65,4 +65,4 @@ jobs:
         git config --global user.name "CI CD Setup Project"
         
         REPO_URL="https://github.com/rehan892/test-scaf-templates/"
-        $HOME/.local/bin/scaf myproject --no-input --checkout $GITHUB_REF_NAME $REPO_URL
+        $HOME/.local/bin/scaf myproject --no-input $REPO_URL
