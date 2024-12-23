@@ -229,19 +229,27 @@ if [[ "$SCAF_CHALLENGE" == "y" ]]; then
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 fi
 
-IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
-  -e HOST_UID="$(id -u)" \
-  -e HOST_GID="$(id -g)" \
-  -e CHALLENGE_CONFIG="$CHALLENGE_CONFIG" \
-  docker.io/sixfeetup/scaf:$IMAGE_TAG \
-  cookiecutter \
-  $COOKIECUTTER_OPTIONS \
-  $REPO_URL \
-  --directory="$DEFAULT_DIRECTORY" \
-  project_slug="$COOKIECUTTER_SLUG" \
-  _challenge="$SCAF_CHALLENGE"
+command_exists() {
+    command -v "$1" > /dev/null 2>&1
+}
 
+# Install required python dependencies
+if ! command_exists pip; then
+  echo "pip is not installed. Installing pip..."
+  curl -sS https://bootstrap.pypa.io/get-pip.py | $PYTHON_CMD
+  PIP_ROOT_USER_ACTION=ignore
+fi
+
+if ! command_exists uv; then
+  echo "Installing uv..."
+  $PYTHON_CMD -m pip install --user uv
+fi
+
+echo "Installing cookiecutter and other dependencies..."
+uv pip install --system black isort cookiecutter --prefix "/home/$USERNAME/.local/"
+
+echo "Creating your project..."
+cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
