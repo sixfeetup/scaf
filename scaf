@@ -14,7 +14,11 @@ fi
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
 # Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
+DEFAULT_REPO_URL="https://github.com/rehan892/test-scaf-templates/"
+
+# Default template to use if none provided
+DEFAULT_DIRECTORY="templates/sixfeetup-fullstack"
+DIRECTORY_OPTION="--directory=\"$DEFAULT_DIRECTORY\""
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
@@ -235,6 +239,7 @@ docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
   cookiecutter \
   $COOKIECUTTER_OPTIONS \
   $REPO_URL \
+  $DIRECTORY_OPTION \
   project_slug="$COOKIECUTTER_SLUG" \
   _challenge="$SCAF_CHALLENGE"
 
