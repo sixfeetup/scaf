@@ -5,7 +5,6 @@ on: [push]
 jobs:
   setup:
     environment: dev
-    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
