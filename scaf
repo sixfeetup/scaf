@@ -244,7 +244,12 @@ if ! command_exists uv; then
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
+uv run --with isort,black,cookiecutter cookiecutter \
+  $COOKIECUTTER_OPTIONS \ 
+  $REPO_URL \
+  --directory="$DEFAULT_DIRECTORY" \
+  project_slug="$COOKIECUTTER_SLUG" \
+  _challenge="$SCAF_CHALLENGE"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
