@@ -243,21 +243,8 @@ if ! command_exists uv; then
   $PYTHON_CMD -m pip install --user uv
 fi
 
-# Create a virtual environment with uv
-echo "Creating a virtual environment using uv..."
-uv venv .venv --python $PYTHON_CMD
-
-# Activate the virtual environment
-echo "Activating the virtual environment..."
-source .venv/bin/activate
-
-# Install dependencies
-echo "Installing cookiecutter and other dependencies..."
-PIP_ROOT_USER_ACTION=ignore
-uv pip install black isort cookiecutter
-
 echo "Creating your project..."
-cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
+uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
@@ -272,11 +259,5 @@ if [ $? -eq 0 ]; then
   party_popper
 else
   echo "Failed to create project."
-  deactivate
-  rm -rf .venv
   exit 1
 fi
-
-echo "Deactivating and deleting the virtual environment..."
-deactivate
-rm -rf .venv
