@@ -166,17 +166,17 @@ def set_challenge_settings_in_config_map():
     set_flag(
         local_configmap_path,
         "__CHALLENGE_SESSION_ID__",
-        value=challenge_config["session_id"],
+        value=challenge_config['session_id']
     )
     set_flag(
         local_configmap_path,
         "__CHALLENGE_JWT_TOKEN__",
-        value=challenge_config["access_token"],
+        value=challenge_config['access_token']
     )
     set_flag(
         local_configmap_path,
         "__CHALLENGE_BASE_URL__",
-        value=challenge_config["base_url"],
+        value=challenge_config['base_url']
     )
 
 
