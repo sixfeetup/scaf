@@ -237,7 +237,6 @@ command_exists() {
 if ! command_exists pip; then
   echo "pip is not installed. Installing pip..."
   curl -sS https://bootstrap.pypa.io/get-pip.py | $PYTHON_CMD
-  PIP_ROOT_USER_ACTION=ignore
 fi
 
 if ! command_exists uv; then
@@ -245,8 +244,18 @@ if ! command_exists uv; then
   $PYTHON_CMD -m pip install --user uv
 fi
 
+# Create a virtual environment with uv
+echo "Creating a virtual environment using uv..."
+uv venv .venv --python $PYTHON_CMD
+
+# Activate the virtual environment
+echo "Activating the virtual environment..."
+source .venv/bin/activate
+
+# Install dependencies
 echo "Installing cookiecutter and other dependencies..."
-uv pip install --system black isort cookiecutter --prefix "/home/$USERNAME/.local/"
+PIP_ROOT_USER_ACTION=ignore
+uv pip install black isort cookiecutter
 
 echo "Creating your project..."
 cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
