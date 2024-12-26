@@ -229,20 +229,6 @@ if [[ "$SCAF_CHALLENGE" == "y" ]]; then
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 fi
 
-command_exists() {
-    command -v "$1" > /dev/null 2>&1
-}
-
-if ! command_exists pip; then
-  echo "pip is not installed. Installing pip..."
-  curl -sS https://bootstrap.pypa.io/get-pip.py | $PYTHON_CMD
-fi
-
-if ! command_exists uv; then
-  echo "Installing uv..."
-  $PYTHON_CMD -m pip install --user uv
-fi
-
 echo "Creating your project..."
 uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
 
