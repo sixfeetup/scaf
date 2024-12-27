@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.21.0](https://github.com/sixfeetup/scaf/compare/v1.20.0...v1.21.0) (2024-12-27)
+
+### Features
+
+* Add k3s as option for kubernetes install. close [#167](https://github.com/sixfeetup/scaf/issues/167) ([e753983](https://github.com/sixfeetup/scaf/commit/e7539836c8011ae3484d8e82ac5a43101e6c95e6))
+
 ## [1.20.0](https://github.com/sixfeetup/scaf/compare/v1.19.1...v1.20.0) (2024-12-10)
 
 ### Features
