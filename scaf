@@ -219,18 +219,28 @@ else
   echo "Skipping challenge."
 fi
 
-echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
+echo "DEFAULT_DIRECTORY: $DEFAULT_DIRECTORY"
 
 # Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
 CHALLENGE_CONFIG=""
 if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  IS_CHALLENGE_MODE="True"
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
+else
+  IS_CHALLENGE_MODE="False"
+fi
+
+PYTHON_VERSION=$($PYTHON_CMD -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+if [[ "$PYTHON_VERSION" != 3.8 && "$PYTHON_VERSION" != 3.9 && "$PYTHON_VERSION" != 3.10 && "$PYTHON_VERSION" != 3.11 && "$PYTHON_VERSION" != 3.12 ]]; then
+  echo "Django 4.1 only supports Python 3.8, 3.9, 3.10, 3.11, or 3.12."
+  exit 1
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
+uv run --with isort,black,copier copier copy --vcs-ref 443-update-template  $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG" -d "subdirectory=$DEFAULT_DIRECTORY"
+
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
