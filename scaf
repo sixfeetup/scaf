@@ -14,7 +14,7 @@ fi
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
 # Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/rehan892/test-scaf-templates/"
+DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
 
 # Default template to use if none provided
 DEFAULT_DIRECTORY="templates/sixfeetup-fullstack"
