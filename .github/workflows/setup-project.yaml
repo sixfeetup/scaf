@@ -64,5 +64,5 @@ jobs:
         git config --global user.email "setup-project--create@example.com"
         git config --global user.name "CI CD Setup Project"
         
-        REPO_URL="https://github.com/sixfeetup/scaf-templates.git/"
+        REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
         $HOME/.local/bin/scaf myproject --no-input $REPO_URL
