@@ -16,9 +16,6 @@ CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 # Default repository URL if none is provided
 DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
 
-# Default template to use if none provided
-DEFAULT_DIRECTORY="templates/sixfeetup-fullstack"
-
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
   echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
@@ -221,7 +218,6 @@ fi
 
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
-echo "DEFAULT_DIRECTORY: $DEFAULT_DIRECTORY"
 
 # Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
 CHALLENGE_CONFIG=""
@@ -239,7 +235,7 @@ if [[ "$PYTHON_VERSION" != 3.8 && "$PYTHON_VERSION" != 3.9 && "$PYTHON_VERSION" 
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,copier copier copy --vcs-ref 443-update-template  $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG" -d "subdirectory=$DEFAULT_DIRECTORY"
+uv run --with isort,black,copier copier copy --vcs-ref 443-update-template  $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG"
 
 
 # Check if cookiecutter was successful
