@@ -14,7 +14,10 @@ fi
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
 # Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
+DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
+
+# Default template to use if none provided
+DEFAULT_DIRECTORY="templates/sixfeetup-fullstack"
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
@@ -226,18 +229,8 @@ if [[ "$SCAF_CHALLENGE" == "y" ]]; then
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 fi
 
-IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
-  -e HOST_UID="$(id -u)" \
-  -e HOST_GID="$(id -g)" \
-  -e CHALLENGE_CONFIG="$CHALLENGE_CONFIG" \
-  docker.io/sixfeetup/scaf:$IMAGE_TAG \
-  cookiecutter \
-  $COOKIECUTTER_OPTIONS \
-  $REPO_URL \
-  project_slug="$COOKIECUTTER_SLUG" \
-  _challenge="$SCAF_CHALLENGE"
-
+echo "Creating your project..."
+uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then

@@ -3,39 +3,8 @@ name: Create scaf project
 on: [push]
 
 jobs:
-  build-and-push:
-    environment: dev
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
-      # not needed? https://github.com/docker/build-push-action/tree/releases/v5?tab=readme-ov-file#git-context
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-    - name: Build and push Docker image using github's buildkit cache
-      uses: docker/build-push-action@v5
-      with:
-        push: true
-        tags: |
-          sixfeetup/scaf:${{ github.sha }}
-          sixfeetup/scaf:latest
-        context: .
-        file: ./Dockerfile
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        platforms: linux/amd64,linux/arm64
-
   setup:
     environment: dev
-    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
@@ -64,5 +33,5 @@ jobs:
         git config --global user.email "setup-project--create@example.com"
         git config --global user.name "CI CD Setup Project"
         
-        REPO_URL="https://github.com/sixfeetup/scaf.git"
-        $HOME/.local/bin/scaf myproject --no-input --checkout $GITHUB_REF_NAME $REPO_URL
+        REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
+        $HOME/.local/bin/scaf myproject --no-input $REPO_URL
