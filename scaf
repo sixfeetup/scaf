@@ -52,12 +52,6 @@ else
   COOKIECUTTER_OPTIONS=""
 fi
 
-COPIER_RUN_OPTIONS="--defaults"
-# Check if --use-default is present in scaf cli arguments
-if [[ "$COOKIECUTTER_OPTIONS" != *"--use-default"* ]]; then
-  COPIER_RUN_OPTIONS=""
-fi
-
 # Check if --challenge is in scaf cli arguments
 SCAF_CHALLENGE="n"
 if [[ $COOKIECUTTER_OPTIONS == *"--challenge"* ]]; then
@@ -234,7 +228,7 @@ if [[ "$PYTHON_VERSION" != 3.8 && "$PYTHON_VERSION" != 3.9 && "$PYTHON_VERSION" 
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,copier copier copy --vcs-ref 443-update-template $COPIER_RUN_OPTIONS  $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG"
+uv run --with isort,black,copier copier copy $COOKIECUTTER_OPTIONS $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG"
 
 
 # Check if cookiecutter was successful
