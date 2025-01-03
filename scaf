@@ -229,19 +229,8 @@ if [[ "$SCAF_CHALLENGE" == "y" ]]; then
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
 fi
 
-IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
-  -e HOST_UID="$(id -u)" \
-  -e HOST_GID="$(id -g)" \
-  -e CHALLENGE_CONFIG="$CHALLENGE_CONFIG" \
-  docker.io/sixfeetup/scaf:$IMAGE_TAG \
-  cookiecutter \
-  $COOKIECUTTER_OPTIONS \
-  $REPO_URL \
-  --directory="$DEFAULT_DIRECTORY" \
-  project_slug="$COOKIECUTTER_SLUG" \
-  _challenge="$SCAF_CHALLENGE"
-
+echo "Creating your project..."
+uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then
