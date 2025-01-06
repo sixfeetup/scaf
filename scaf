@@ -16,9 +16,6 @@ CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 # Default repository URL if none is provided
 DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
 
-# Default template to use if none provided
-DEFAULT_DIRECTORY="templates/sixfeetup-fullstack"
-
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
   echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
@@ -53,13 +50,6 @@ if [ $# -gt 0 ]; then
 else
   REPO_URL="$DEFAULT_REPO_URL"
   COOKIECUTTER_OPTIONS=""
-fi
-
-DOCKER_RUN_OPTIONS=""
-
-# Check if --no-input is in COOKIECUTTER_OPTIONS
-if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
-  DOCKER_RUN_OPTIONS="-it"
 fi
 
 # Check if --challenge is in scaf cli arguments
@@ -219,18 +209,21 @@ else
   echo "Skipping challenge."
 fi
 
-echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
 echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 # Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
 CHALLENGE_CONFIG=""
 if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  IS_CHALLENGE_MODE="True"
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
+else
+  IS_CHALLENGE_MODE="False"
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,cookiecutter cookiecutter $COOKIECUTTER_OPTIONS $REPO_URL --directory="$DEFAULT_DIRECTORY" project_slug="$COOKIECUTTER_SLUG" _challenge="$SCAF_CHALLENGE"
+uv run --with isort,black,copier copier copy $COOKIECUTTER_OPTIONS $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG"
+
 
 # Check if cookiecutter was successful
 if [ $? -eq 0 ]; then

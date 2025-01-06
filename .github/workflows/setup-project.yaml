@@ -27,11 +27,9 @@ jobs:
     - name: Create Project with Scaf
       shell: bash
       run: |
-        IMAGE_TAG=$GITHUB_SHA
-        echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
         git config --global init.defaultBranch dev
         git config --global user.email "setup-project--create@example.com"
         git config --global user.name "CI CD Setup Project"
         
         REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
-        $HOME/.local/bin/scaf myproject --no-input $REPO_URL
+        $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL
