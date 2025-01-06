@@ -32,4 +32,4 @@ jobs:
         git config --global user.name "CI CD Setup Project"
         
         REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
-        $HOME/.local/bin/scaf myproject --defaults --vcs-ref 443-update-template $REPO_URL
+        $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL
