@@ -31,21 +31,21 @@ fi
 # Remove the project_slug from the argument list
 shift
 CLUSTER_SLUG=${PROJECT_SLUG//_/-}
-COOKIECUTTER_SLUG=${PROJECT_SLUG//-/_}
+COPIER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
 REPO_URL=""
 if [ $# -gt 0 ]; then
   LAST_ARG="${@: -1}"
   if [[ $LAST_ARG == -* ]]; then
-    COOKIECUTTER_OPTIONS="$@"
+    COPIER_OPTIONS="$@"
   else
     REPO_URL="$LAST_ARG"
     # Remove the last argument (the REPO_URL) from the options
-    COOKIECUTTER_OPTIONS="${@:1:$(($#-1))}"
+    COPIER_OPTIONS="${@:1:$(($#-1))}"
   fi
 else
-  COOKIECUTTER_OPTIONS=""
+  COPIER_OPTIONS=""
 fi
 
 # If no repo URL was provided, ask for template selection
@@ -72,11 +72,11 @@ fi
 
 # Check if --challenge is in scaf cli arguments
 SCAF_CHALLENGE="n"
-if [[ $COOKIECUTTER_OPTIONS == *"--challenge"* ]]; then
+if [[ $COPIER_OPTIONS == *"--challenge"* ]]; then
   SCAF_CHALLENGE="y"
-  # Remove `--challenge` from COOKIECUTTER_OPTIONS as these are carried forward and it is not a
-  # standard cookiecutter option.
-  COOKIECUTTER_OPTIONS=$(echo "${COOKIECUTTER_OPTIONS[@]}" | xargs -n1 | grep -v -- "--challenge" | xargs)
+  # Remove `--challenge` from COPIER_OPTIONS as these are carried forward and it is not a
+  # standard copier option.
+  COPIER_OPTIONS=$(echo "${COPIER_OPTIONS[@]}" | xargs -n1 | grep -v -- "--challenge" | xargs)
 fi
 
 party_popper() {
@@ -227,7 +227,7 @@ else
   echo "Skipping challenge."
 fi
 
-echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
+echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 # Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
@@ -240,13 +240,12 @@ else
 fi
 
 echo "Creating your project..."
-uv run --with isort,black,copier copier copy $COOKIECUTTER_OPTIONS $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COOKIECUTTER_SLUG"
+uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COPIER_SLUG"
 
-
-# Check if cookiecutter was successful
+# Check if copier was successful
 if [ $? -eq 0 ]; then
   kind create cluster --name $CLUSTER_SLUG
-  cd $COOKIECUTTER_SLUG
+  cd $COPIER_SLUG
   make compile
   echo "Dependencies compiled successfully."
   pwd
