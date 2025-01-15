@@ -13,9 +13,6 @@ fi
 # Scaf challenge script
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
-# Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf-templates.git"
-
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
   echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
@@ -37,10 +34,10 @@ CLUSTER_SLUG=${PROJECT_SLUG//_/-}
 COOKIECUTTER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
+REPO_URL=""
 if [ $# -gt 0 ]; then
   LAST_ARG="${@: -1}"
   if [[ $LAST_ARG == -* ]]; then
-    REPO_URL="$DEFAULT_REPO_URL"
     COOKIECUTTER_OPTIONS="$@"
   else
     REPO_URL="$LAST_ARG"
@@ -48,8 +45,29 @@ if [ $# -gt 0 ]; then
     COOKIECUTTER_OPTIONS="${@:1:$(($#-1))}"
   fi
 else
-  REPO_URL="$DEFAULT_REPO_URL"
   COOKIECUTTER_OPTIONS=""
+fi
+
+# If no repo URL was provided, ask for template selection
+if [ -z "$REPO_URL" ]; then
+  echo "Please choose a template:"
+  echo "1) SFU Full Stack Template"
+  echo "2) AWS CLI Template"
+  echo -n "Enter the number corresponding to your choice (1 or 2): "
+  read -r template_choice
+
+  case $template_choice in
+    1)
+      REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
+      ;;
+    2)
+      REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      ;;
+    *)
+      echo "Invalid choice. Using default SFU Full Stack Template."
+      REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      ;;
+  esac
 fi
 
 # Check if --challenge is in scaf cli arguments
