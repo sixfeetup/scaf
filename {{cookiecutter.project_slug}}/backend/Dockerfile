@@ -33,7 +33,8 @@ RUN set -x \
 
 # Now that we've created our virtual environment, we'll go ahead and update
 # our $PATH to refer to it first.
-ENV PATH="/app/bin:${PATH}"
+ENV VIRTUAL_ENV="/app"
+ENV PATH="$VIRTUAL_ENV/bin:${PATH}"
 
 # Next, we want to update pip, setuptools, and wheel inside of this virtual
 # environment to ensure that we have the latest versions of them.
