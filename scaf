@@ -58,7 +58,7 @@ if [ -z "$REPO_URL" ]; then
 
   case $template_choice in
     1)
-      REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
+      REPO_URL="https://github.com/sixfeetup/scaf-fullstack-template.git"
       ;;
     2)
       REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
