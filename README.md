@@ -1,3 +1,17 @@
+# 🚀 EXCITING NEWS! 🚀
+
+**Scaf has switched from Cookiecutter to Copier!** ✨
+
+Scaf can now:
+- 📥 Install any template from a GitHub repo
+- 🔄 Update existing projects installed from a Copier template
+
+Currently available templates:
+- 🏗️ Six Feet Up Full Stack Template
+- 🪶 Scaf Lite Template
+
+---
+
 <p align="center">
   <img src="{{cookiecutter.project_slug}}/frontend/public/scaf-logo.png" width="250px">
 </p>
