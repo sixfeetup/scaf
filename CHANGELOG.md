@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.22.0](https://github.com/sixfeetup/scaf/compare/v1.21.0...v1.22.0) (2025-03-05)
+
+### Features
+
+* Update scaf to use copier and multiple templates (closes [#332](https://github.com/sixfeetup/scaf/issues/332), [#441](https://github.com/sixfeetup/scaf/issues/441), [#443](https://github.com/sixfeetup/scaf/issues/443), [#444](https://github.com/sixfeetup/scaf/issues/444), [#445](https://github.com/sixfeetup/scaf/issues/445)) ([ff3645a](https://github.com/sixfeetup/scaf/commit/ff3645a53b943c847130c4a49afbf7615b0b6a8c))
+
+### Bug Fixes
+
+* Add VIRTUAL_ENV env variable for uv to work after latest upgrade… (fixes [#461](https://github.com/sixfeetup/scaf/issues/461)) ([c0f2c9a](https://github.com/sixfeetup/scaf/commit/c0f2c9aae8bc3f50898e57f613efc18c50b41452))
+* fullstack template url ([c136fdb](https://github.com/sixfeetup/scaf/commit/c136fdb6f61813bceb1b4787968d4411afbbe946))
+
 ## [1.21.0](https://github.com/sixfeetup/scaf/compare/v1.20.0...v1.21.0) (2024-12-27)
 
 ### Features
