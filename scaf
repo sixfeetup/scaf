@@ -13,9 +13,6 @@ fi
 # Scaf challenge script
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 
-# Default repository URL if none is provided
-DEFAULT_REPO_URL="https://github.com/sixfeetup/scaf/"
-
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
   echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
@@ -34,38 +31,52 @@ fi
 # Remove the project_slug from the argument list
 shift
 CLUSTER_SLUG=${PROJECT_SLUG//_/-}
-COOKIECUTTER_SLUG=${PROJECT_SLUG//-/_}
+COPIER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
+REPO_URL=""
 if [ $# -gt 0 ]; then
   LAST_ARG="${@: -1}"
   if [[ $LAST_ARG == -* ]]; then
-    REPO_URL="$DEFAULT_REPO_URL"
-    COOKIECUTTER_OPTIONS="$@"
+    COPIER_OPTIONS="$@"
   else
     REPO_URL="$LAST_ARG"
     # Remove the last argument (the REPO_URL) from the options
-    COOKIECUTTER_OPTIONS="${@:1:$(($#-1))}"
+    COPIER_OPTIONS="${@:1:$(($#-1))}"
   fi
 else
-  REPO_URL="$DEFAULT_REPO_URL"
-  COOKIECUTTER_OPTIONS=""
+  COPIER_OPTIONS=""
 fi
 
-DOCKER_RUN_OPTIONS=""
+# If no repo URL was provided, ask for template selection
+if [ -z "$REPO_URL" ]; then
+  echo "Please choose a template:"
+  echo "1) SFU Full Stack Template"
+  echo "2) AWS Lambda App Template"
+  echo -n "Enter the number corresponding to your choice (1 or 2): "
+  read -r template_choice
 
-# Check if --no-input is in COOKIECUTTER_OPTIONS
-if [[ "$COOKIECUTTER_OPTIONS" != *"--no-input"* ]]; then
-  DOCKER_RUN_OPTIONS="-it"
+  case $template_choice in
+    1)
+      REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
+      ;;
+    2)
+      REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      ;;
+    *)
+      echo "Invalid choice. Using default SFU Full Stack Template."
+      REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      ;;
+  esac
 fi
 
 # Check if --challenge is in scaf cli arguments
 SCAF_CHALLENGE="n"
-if [[ $COOKIECUTTER_OPTIONS == *"--challenge"* ]]; then
+if [[ $COPIER_OPTIONS == *"--challenge"* ]]; then
   SCAF_CHALLENGE="y"
-  # Remove `--challenge` from COOKIECUTTER_OPTIONS as these are carried forward and it is not a
-  # standard cookiecutter option.
-  COOKIECUTTER_OPTIONS=$(echo "${COOKIECUTTER_OPTIONS[@]}" | xargs -n1 | grep -v -- "--challenge" | xargs)
+  # Remove `--challenge` from COPIER_OPTIONS as these are carried forward and it is not a
+  # standard copier option.
+  COPIER_OPTIONS=$(echo "${COPIER_OPTIONS[@]}" | xargs -n1 | grep -v -- "--challenge" | xargs)
 fi
 
 party_popper() {
@@ -216,33 +227,25 @@ else
   echo "Skipping challenge."
 fi
 
-echo "DOCKER_RUN_OPTIONS: $DOCKER_RUN_OPTIONS"
-echo "COOKIECUTTER_OPTIONS: $COOKIECUTTER_OPTIONS"
+echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 # Challenge config shall exist now if SCAF_CHALLENGE is set to "y" at this point
 CHALLENGE_CONFIG=""
 if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  IS_CHALLENGE_MODE="True"
   CHALLENGE_CONFIG=$(cat $CHALLENGE_CONFIG_PATH)
+else
+  IS_CHALLENGE_MODE="False"
 fi
 
-IMAGE_TAG=${IMAGE_TAG:-latest}
-docker run --rm $DOCKER_RUN_OPTIONS -v "$(pwd):/home/scaf/out" \
-  -e HOST_UID="$(id -u)" \
-  -e HOST_GID="$(id -g)" \
-  -e CHALLENGE_CONFIG="$CHALLENGE_CONFIG" \
-  docker.io/sixfeetup/scaf:$IMAGE_TAG \
-  cookiecutter \
-  $COOKIECUTTER_OPTIONS \
-  $REPO_URL \
-  project_slug="$COOKIECUTTER_SLUG" \
-  _challenge="$SCAF_CHALLENGE"
+echo "Creating your project..."
+uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL . --trust -d "is_challange_mode=$IS_CHALLENGE_MODE" -d "is_project_slug=$COPIER_SLUG"
 
-
-# Check if cookiecutter was successful
+# Check if copier was successful
 if [ $? -eq 0 ]; then
   kind create cluster --name $CLUSTER_SLUG
-  cd $COOKIECUTTER_SLUG
+  cd $COPIER_SLUG
   make compile
   echo "Dependencies compiled successfully."
   pwd

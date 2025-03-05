@@ -1,3 +1,22 @@
+# 🚀 EXCITING NEWS! 🚀
+
+**Scaf has evolved from a single template to a template manager!** ✨
+
+With our switch from Cookiecutter to Copier, Scaf now:
+
+- 📥 Installs any template from any GitHub repo
+- 🔄 Updates existing projects installed from Copier templates
+- 🌱 Empowers the community to create diverse app templates
+
+Currently available templates:
+
+- 🏗️ [Six Feet Up Full Stack Template](https://github.com/sixfeetup/scaf-fullstack-temlate.git)
+- 🪶 [Six Feet Up AWS Lambda App Template](https://github.com/sixfeetup/scaf-aws-lambda-app-template.git)
+
+We hope this inspires you to create and share your own templates!
+
+---
+
 <p align="center">
   <img src="{{cookiecutter.project_slug}}/frontend/public/scaf-logo.png" width="250px">
 </p>

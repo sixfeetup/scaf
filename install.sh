@@ -284,6 +284,18 @@ install_tilt() {
     tilt version
 }
 
+install_uv() {
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    if command_exists uv; then
+        echo "🎉 uv installed successfully 🎉"
+        uv --version
+    else
+        echo "🧨 Failed to install uv. 🧨"
+        exit 1
+    fi
+}
+
 install_scaf() {
     # Install/re-install scaf
     if [ -f "$TEMP_DOWNLOAD" ]; then
@@ -318,7 +330,7 @@ check_top_level_dependencies
 [ -n "$DEBUG" ] && echo "Checking Git Config"
 check_git_config
 
-for tool in kubectl kind tilt; do
+for tool in kubectl kind tilt uv; do
     if ! command_exists $tool; then
         echo "$tool is not installed."
         install_$tool
