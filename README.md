@@ -3,12 +3,14 @@
 **Scaf has switched from Cookiecutter to Copier!** ✨
 
 Scaf can now:
+
 - 📥 Install any template from a GitHub repo
 - 🔄 Update existing projects installed from a Copier template
 
 Currently available templates:
-- 🏗️ Six Feet Up Full Stack Template
-- 🪶 Scaf Lite Template
+
+- 🏗️ [Six Feet Up Full Stack Template](https://github.com/sixfeetup/scaf-fullstack-temlate.git)
+- 🪶 [Six Feet Up AWS Lambda App Template](https://github.com/sixfeetup/scaf-aws-lambda-app-template.git)
 
 ---
 

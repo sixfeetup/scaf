@@ -52,7 +52,7 @@ fi
 if [ -z "$REPO_URL" ]; then
   echo "Please choose a template:"
   echo "1) SFU Full Stack Template"
-  echo "2) AWS CLI Template"
+  echo "2) AWS Lambda App Template"
   echo -n "Enter the number corresponding to your choice (1 or 2): "
   read -r template_choice
 
