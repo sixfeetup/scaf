@@ -1,0 +1,20 @@
+# PRECAUTION: avoid production dependencies that aren't in development
+
+-r base.txt
+
+gunicorn
+psycopg2
+uvicorn[standard]
+
+# Django
+# ------------------------------------------------------------------------------
+django-storages[boto3] # https://github.com/jschneier/django-storages
+daphne
+
+{%- if cookiecutter.mail_service == 'Mailgun' %}
+django-anymail[mailgun] # https://github.com/anymail/django-anymail
+{%- elif cookiecutter.mail_service == 'Amazon SES' %}
+django-anymail[amazon_ses] # https://github.com/anymail/django-anymail
+{%- elif cookiecutter.mail_service == 'Other SMTP' %}
+django-anymail # https://github.com/anymail/django-anymail
+{%- endif %}

@@ -1,0 +1,15 @@
+# Test dependencies go here.
+-r base.txt
+
+coverage
+flake8
+django-test-plus
+factory-boy
+django-coverage-plugin
+
+# pytest
+pytest-django
+pytest-cov
+pytest-freezegun
+pytest-mock
+pytest-sugar

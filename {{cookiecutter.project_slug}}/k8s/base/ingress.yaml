@@ -1,0 +1,65 @@
+{% if cookiecutter.create_nextjs_frontend == "y" %}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend-ingress
+  annotations:
+    cert-manager.io/issuer: letsencrypt-staging
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: {{ cookiecutter.project_slug }}.local
+      priority: 10
+      services:
+        - name: frontend
+          port: 3000
+  tls:
+    certResolver: letsencrypt
+---
+{% endif %}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend-ingress
+  annotations:
+    cert-manager.io/issuer: letsencrypt-staging
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: k8s.{{ cookiecutter.project_slug }}.local
+      priority: 10
+      services:
+        - name: backend
+          port: 8000
+  tls:
+    certResolver: letsencrypt
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-to-https-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`)
+      priority: 1
+      middlewares:
+        - name: redirect-to-https
+      services:
+        - kind: TraefikService
+          name: noop@internal
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true

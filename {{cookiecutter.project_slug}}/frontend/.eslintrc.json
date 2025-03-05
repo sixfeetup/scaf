@@ -1,0 +1,67 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
+  ],
+  "plugins": ["jsx-a11y", "unused-imports"],
+  "rules": {
+    "react/jsx-curly-brace-presence": "error",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-unnecessary-condition": "error",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "groups": ["external", "builtin", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always"
+      }
+    ],
+    "object-shorthand": ["error", "properties"],
+    "react/jsx-no-useless-fragment": "error",
+    "require-await": "error",
+    // disallow specific imports
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@apollo/client",
+            "importNames": ["gql"],
+            "message": "Use the @/__generated__/gql to get proper typings!"
+          },
+          {
+            "name": "@apollo/client/core",
+            "importNames": ["gql"],
+            "message": "Use the @/__generated__/gql to get proper typings!"
+          },
+          {
+            "name": "@testing-library/react",
+            "importNames": ["*"],
+            "message": "Use the imports from test-utils instead!"
+          }
+        ]
+      }
+    ]
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  }
+}

@@ -1,0 +1,11 @@
+!sandbox/.env
+!staging/.env
+!prod/.env
+!.env
+controlplane.yaml
+kubeconfig
+talosconfig
+worker.yaml
+id_ed25519
+*_ips.txt
+*.bak.*

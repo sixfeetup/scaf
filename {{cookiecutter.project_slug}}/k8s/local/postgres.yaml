@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          envFrom:
+          - configMapRef:
+              name: app-config
+          - secretRef:
+              name: secrets-config
+          volumeMounts:
+            - name: postgres-volume-mount
+              mountPath: /var/lib/postgresql/data
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - bash
+          #       - "-c"
+          #       - "psql -U$POSTGRES_USER -d$POSTGRES_DB -c 'SELECT 1'"
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 2
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - bash
+          #       - "-c"
+          #       - "psql -U$POSTGRES_USER -d$POSTGRES_DB -c 'SELECT 1'"
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 2
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    tilt.dev/down-policy: keep
+  name: postgres-pvc
+  labels:
+    type: local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi

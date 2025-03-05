@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - port: 8000
+      targetPort: http-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend:latest
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+          ports:
+            - name: http-server
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: secrets-config
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 29
+            periodSeconds: 29
+            timeoutSeconds: 2
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 31
+            periodSeconds: 31
+            timeoutSeconds: 3
+            successThreshold: 1
+      initContainers:
+        - name: check-db-ready
+          image: postgres:16
+          command: [
+              "sh",
+              "-c",
+              "until pg_isready -h $(POSTGRES_HOST);
+              do echo waiting for postgres; sleep 2; done;",
+            ]
+        - name: backend-migration
+          image: backend:latest
+          command: ["python", "manage.py", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: secrets-config

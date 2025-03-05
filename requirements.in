@@ -1,4 +1,4 @@
-copier
+cookiecutter>=1.7.3
 sh
 binaryornot
 

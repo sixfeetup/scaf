@@ -1,0 +1,19 @@
+version: '3'
+
+dotenv: ['.env', '{{ "{{.ENV}}" }}/.env']
+
+includes:
+  argocd: ./argocd.yaml
+{%- if cookiecutter.operating_system == "talos" %}
+  talos: ./talos.yaml
+{%- elif cookiecutter.operating_system == "k3s" %}
+  k3s: ./k3s.yaml
+{%- endif %}
+
+tasks:
+  default:
+    desc: |
+      List all available tasks in the Taskfile.
+    cmds:
+      - task --list
+
