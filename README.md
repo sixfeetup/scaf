@@ -18,7 +18,7 @@ We hope this inspires you to create and share your own templates!
 ---
 
 <p align="center">
-  <img src="{{cookiecutter.project_slug}}/frontend/public/scaf-logo.png" width="250px">
+  <img src="scaf-logo.png" width="250px">
 </p>
 
 **scaf** provides developers and DevOps engineers with a complete blueprint for
