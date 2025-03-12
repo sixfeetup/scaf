@@ -143,19 +143,17 @@ When making changes to scaf, keep the following in mind:
 
 ### Testing
 
-To test the cookiecutter portion of Scaf, run the `./test-scaf.sh` script.
+To test the copier portion of Scaf, run the `./test-scaf.sh` script.
 
 If you are not using the Nix development environment, create a virtual environment and
-install black, isort and cookiecutter before running `./test-scaf.sh`.
+install black, isort and copier before running `./test-scaf.sh`.
 
 Running `./test-scaf.sh -h` shows the usage instructions:
 
 ```shell
-Usage: ./test-scaf.sh [-b <branch_name>] [-o <output_folder>] [-c <config_file>] [-h]
-  -b <branch_name>    Optional: Specify the branch to test (default is local checkout)
-  -o <output_folder>  Optional: Specify the output folder (default is /tmp/scaf-test)
-  -c <config_file>    Optional: Specify the config file (default is ./test-configs/nextjs-django-github.yaml)
-  -h                  Show this help message
+Usage: ./test-scaf.sh -t <template_folder> [-o <output_folder>] [-d <test_data>] [-h]
+  -t <template_folder> Required: Specify the source folder for the template
+  -o <output_folder>   Optional: Specify the output folder (default is /tmp/scaf-test)
+  -d <test_data>       Optional: Specify a preset answers data file
+  -h                   Show this help message
 ```
-
-Feel free to add more useful test configurations to `./test-configs/`.
