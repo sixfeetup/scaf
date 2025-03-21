@@ -33,3 +33,54 @@ jobs:
         
         REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
         $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL
+
+    - name: Push Generated Project to GitHub
+      run: |
+        cd myproject
+        git init
+        git remote add origin https://x-access-token:${{ secrets.SIXPACK_PAT }}@github.com/sixfeetup/sixpack-test.git
+        git fetch origin
+
+        BRANCH="test-scaf"
+
+        if git ls-remote --heads origin $BRANCH | grep -q "$BRANCH"; then
+          echo "Branch '$BRANCH' exists. Checking out..."
+          git checkout $BRANCH
+        else
+          echo "Branch '$BRANCH' does not exist. Creating..."
+          git checkout -b $BRANCH
+        fi
+
+        git add .
+        git commit -m "Initial commit with scaf full stack template"
+        git push -u origin $BRANCH --force
+
+    - name: Install jq
+      run: sudo apt-get update && sudo apt-get install -y jq
+
+    - name: Check latest workflow status
+      run: |
+        echo "Checking workflow run status for '$BRANCH' branch..."
+
+        while true; do
+          response=$(curl -s -H "Authorization: token ${{ secrets.SIXPACK_PAT }}" \
+            https://api.github.com/repos/sixfeetup/sixpack-test/actions/runs?branch=$BRANCH&per_page=1)
+
+          status=$(echo "$response" | jq -r '.workflow_runs[0].status')
+          conclusion=$(echo "$response" | jq -r '.workflow_runs[0].conclusion')
+
+          if [[ "$status" != "queued" && "$status" != "in_progress" ]]; then
+            break
+          fi
+
+          echo "Workflow is still running. Retrying in 1 minute..."
+          sleep 60
+        done
+
+        if [[ "$conclusion" != "success" ]]; then
+          echo "❌ Latest workflow on '$BRANCH' branch failed!"
+          exit 1
+        fi
+
+        echo "✅ Workflow completed successfully!"
+
