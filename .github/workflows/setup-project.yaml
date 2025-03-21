@@ -37,8 +37,7 @@ jobs:
     - name: Push Generated Project to GitHub
       run: |
         cd myproject
-        git init
-        git remote add origin https://x-access-token:${{ secrets.SIXPACK_PAT }}@github.com/sixfeetup/sixpack-test.git
+        git remote set-url origin https://x-access-token:${{ secrets.SIXPACK_PAT }}@github.com/sixfeetup/sixpack-test.git
         git fetch origin
 
         BRANCH="test-scaf"
