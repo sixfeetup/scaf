@@ -2,9 +2,7 @@ name: Create scaf project
 
 on: [push]
 
-permissions:
-  contents: write
-  actions: read
+permissions: write-all
 
 jobs:
   setup:
