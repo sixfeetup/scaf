@@ -2,6 +2,10 @@ name: Create scaf project
 
 on: [push]
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   setup:
     environment: dev
@@ -37,7 +41,7 @@ jobs:
     - name: Push Generated Project to GitHub
       run: |
         cd myproject
-        git remote set-url origin https://x-access-token:${{ secrets.SIXPACK_PAT }}@github.com/sixfeetup/sixpack-test.git
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sixfeetup/sixpack-test.git
         git fetch origin
 
         BRANCH="test-scaf"
@@ -62,7 +66,7 @@ jobs:
         echo "Checking workflow run status for '$BRANCH' branch..."
 
         while true; do
-          response=$(curl -s -H "Authorization: token ${{ secrets.SIXPACK_PAT }}" \
+          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/sixfeetup/sixpack-test/actions/runs?branch=$BRANCH&per_page=1)
 
           status=$(echo "$response" | jq -r '.workflow_runs[0].status')
