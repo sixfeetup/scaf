@@ -2,7 +2,9 @@ name: Create scaf project
 
 on: [push]
 
-permissions: write-all
+permissions:
+  contents: write
+  actions: read
 
 jobs:
   setup:
@@ -40,7 +42,9 @@ jobs:
       run: |
         cd myproject
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sixfeetup/sixpack-test.git
+        echo "Set origin successfully"
         git fetch origin
+        echo "Fetched from origin successfully"
 
         BRANCH="test-scaf"
 
