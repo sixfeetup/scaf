@@ -40,10 +40,10 @@ jobs:
 
     - name: Push Generated Project to GitHub
       run: |
+        cd myproject
         eval `ssh-agent -s`
         ssh-add - <<< '${{ secrets.SCAF_TEST_SSH_PRIVATE_KEY }}'
         git remote set-url origin git@github.com:sixfeetup/scaf-test.git
-        git fetch origin
 
         BRANCH="test-scaf"
 
