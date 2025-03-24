@@ -55,8 +55,6 @@ jobs:
           git checkout -b $BRANCH
         fi
 
-        git add .
-        git commit -m "Initial commit with scaf full stack template"
         git push -u origin $BRANCH --force
 
     - name: Install jq
