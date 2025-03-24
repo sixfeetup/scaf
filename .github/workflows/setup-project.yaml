@@ -40,13 +40,10 @@ jobs:
 
     - name: Push Generated Project to GitHub
       run: |
-        cd myproject
         eval `ssh-agent -s`
         ssh-add - <<< '${{ secrets.SCAF_TEST_SSH_PRIVATE_KEY }}'
         git remote set-url origin git@github.com:sixfeetup/scaf-test.git
-        echo "Set origin successfully"
         git fetch origin
-        echo "Fetched from origin successfully"
 
         BRANCH="test-scaf"
 
@@ -71,7 +68,7 @@ jobs:
 
         while true; do
           response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/sixfeetup/sixpack-test/actions/runs?branch=$BRANCH&per_page=1)
+            https://api.github.com/repos/sixfeetup/scaf-test/actions/runs?branch=$BRANCH&per_page=1)
 
           status=$(echo "$response" | jq -r '.workflow_runs[0].status')
           conclusion=$(echo "$response" | jq -r '.workflow_runs[0].conclusion')
