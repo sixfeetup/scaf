@@ -41,7 +41,9 @@ jobs:
     - name: Push Generated Project to GitHub
       run: |
         cd myproject
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/sixfeetup/sixpack-test.git
+        eval `ssh-agent -s`
+        ssh-add - <<< '${{ secrets.SCAF_TEST_SSH_PRIVATE_KEY }}'
+        git remote set-url origin git@github.com:sixfeetup/scaf-test.git
         echo "Set origin successfully"
         git fetch origin
         echo "Fetched from origin successfully"
