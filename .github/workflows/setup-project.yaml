@@ -46,6 +46,7 @@ jobs:
         git remote set-url origin git@github.com:sixfeetup/scaf-test.git
 
         BRANCH="test-scaf"
+        git fetch origin
 
         if git ls-remote --heads origin $BRANCH | grep -q "$BRANCH"; then
           echo "Branch '$BRANCH' exists. Checking out..."
