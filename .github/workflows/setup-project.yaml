@@ -45,7 +45,7 @@ jobs:
         ssh-add - <<< '${{ secrets.SCAF_TEST_SSH_PRIVATE_KEY }}'
         git remote set-url origin git@github.com:sixfeetup/scaf-test.git
 
-        BRANCH="test-scaf"
+        BRANCH="master"
         git fetch origin
 
         if git ls-remote --heads origin $BRANCH | grep -q "$BRANCH"; then
@@ -63,7 +63,7 @@ jobs:
 
     - name: Check latest workflow status
       run: |
-        BRANCH="test-scaf"
+        BRANCH="master"
         echo "Checking workflow run status for '$BRANCH' branch..."
 
         while true; do
