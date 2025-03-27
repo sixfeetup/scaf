@@ -10,6 +10,76 @@ else
     exit 1;
 fi
 
+# Uninstall scaf
+if [[ " $* " == *" --uninstall "* ]]; then
+  PREFERRED_BIN_FOLDER="${PREFERRED_BIN_FOLDER:-$HOME/.local/bin}"
+  DESTINATION="$PREFERRED_BIN_FOLDER/scaf"
+
+  if [[ -e "$DESTINATION" ]]; then
+    echo "Uninstalling Scaf..."
+    rm -f "$DESTINATION"
+    echo "Scaf uninstalled successfully."
+  else
+    echo "Scaf is not installed."
+  fi
+  exit 0
+fi
+
+# Upgrade scaf
+if [[ " $* " == *" --upgrade "* ]]; then
+  echo "Upgrading Scaf..."
+  curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
+fi
+
+print_help() {
+  cat << EOF
+Usage: $0 project_slug [OPTIONS] [TEMPLATE]
+
+Scaf - Project scaffolding CLI tool
+
+Arguments:
+  project_slug           The name of your new project (alphanumeric, -, _)
+
+Options:
+  --help, -h             Show this help message and exit
+  --uninstall            Uninstall Scaf CLI from the system
+  --upgrade              Upgrade Scaf to the latest version
+  --challenge            Enable challenge mode (adds authentication flow)
+
+Template:
+  TEMPLATE               (Optional) Template source. Must be one of the following:
+                          - https://github.com/sixfeetup/scaf-fullstack-template.git
+                          - https://github.com/sixfeetup/scaf-aws-lambda-app-template.git
+                          - Or a local path (e.g. ./my-template)
+                          If omitted, you will be prompted to choose.
+
+Advanced Copier Options:
+  --defaults             Use default answers to template questions
+  --vcs-ref <branch>     Use a specific Git branch/tag/commit from the template repo
+
+Examples:
+  $0 my-app
+      # Creates a project named "my-app" and prompts to choose a template interactively.
+
+  $0 my-app https://github.com/sixfeetup/scaf-fullstack-template.git
+      # Creates "my-app" using the Fullstack template directly from GitHub.
+
+  $0 my-app --defaults --vcs-ref main https://github.com/sixfeetup/scaf-aws-lambda-app-template.git
+      # Creates "my-app" using the AWS Lambda template with defaults and from the 'main' branch.
+
+  \$HOME/.local/bin/scaf myproject --defaults --vcs-ref main \$REPO_URL
+      # Example with full path to CLI, using defaults and specific VCS reference.
+      # REPO_URL must be one of the allowed template URLs above.
+
+EOF
+}
+
+# Check for help flag
+if [[ " $* " == *" --help "* ]] || [[ " $* " == *" -h "* ]]; then
+  print_help
+  exit 0
+fi
+
 # Scaf challenge script
 CHALLENGE_CONFIG_PATH=".scaf-challenge.json"
 

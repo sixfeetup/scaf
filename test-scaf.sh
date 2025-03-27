@@ -7,13 +7,38 @@ TEST_CONFIG="./test-configs/nextjs-django-github.yaml"
 
 # Usage function to display help message
 usage() {
-  echo "Usage: $0 [-b <branch_name>] [-o <output_folder>] [-c <config_file>] [-h]"
+  echo "Usage: $0 [--uninstall] [-b <branch_name>] [-o <output_folder>] [-c <config_file>] [-h]"
+  echo "  --uninstall         Optional: Uninstall Scaf"
+  echo "  --upgrade           Optional: Upgrade Scaf"
   echo "  -b <branch_name>    Optional: Specify the branch to test (default is local checkout)"
   echo "  -o <output_folder>  Optional: Specify the output folder (default is /tmp/scaf-test)"
   echo "  -c <config_file>    Optional: Specify the config file (default is $TEST_CONFIG)"
   echo "  -h                  Show this help message"
   exit 0
 }
+
+# Uninstall scaf
+if [[ " $* " == *" --uninstall "* ]]; then
+  PREFERRED_BIN_FOLDER="${PREFERRED_BIN_FOLDER:-$HOME/.local/bin}"
+  DESTINATION="$PREFERRED_BIN_FOLDER/scaf"
+
+  if [[ -e "$DESTINATION" ]]; then
+    echo "Uninstalling Scaf..."
+    rm -f "$DESTINATION"
+    echo "Scaf uninstalled successfully."
+  else
+    echo "Scaf is not installed."
+  fi
+
+  exit 0
+fi
+
+# Upgrade scaf
+if [[ " $* " == *" --upgrade "* ]]; then
+  echo "Upgrading Scaf..."
+  curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
+  exit 0
+fi
 
 # Parse command-line arguments
 while getopts ":b:o:c:h" opt; do
