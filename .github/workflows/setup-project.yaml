@@ -45,17 +45,8 @@ jobs:
         ssh-add - <<< '${{ secrets.SCAF_TEST_SSH_PRIVATE_KEY }}'
         git remote set-url origin git@github.com:sixfeetup/scaf-test.git
 
-        BRANCH="master"
-        git fetch origin
-
-        if git ls-remote --heads origin $BRANCH | grep -q "$BRANCH"; then
-          echo "Branch '$BRANCH' exists. Checking out..."
-          git checkout $BRANCH
-        else
-          echo "Branch '$BRANCH' does not exist. Creating..."
-          git checkout -b $BRANCH
-        fi
-
+        BRANCH="test-scaf"
+        git checkout -b $BRANCH
         git push -u origin $BRANCH --force
 
     - name: Install jq
@@ -63,7 +54,7 @@ jobs:
 
     - name: Check latest workflow status
       run: |
-        BRANCH="master"
+        BRANCH="test-scaf"
         echo "Checking workflow run status for '$BRANCH' branch..."
 
         while true; do
