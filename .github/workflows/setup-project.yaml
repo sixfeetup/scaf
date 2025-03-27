@@ -58,13 +58,18 @@ jobs:
         echo "Checking workflow run status for '$BRANCH' branch..."
 
         while true; do
+          echo "Workflow is running"
           response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/sixfeetup/scaf-test/actions/runs?branch=$BRANCH&per_page=1)
 
           status=$(echo "$response" | jq -r '.workflow_runs[0].status')
           conclusion=$(echo "$response" | jq -r '.workflow_runs[0].conclusion')
 
+          echo "Status: $status"
+          echo "Conclusion: $conclusion"
+
           if [[ "$status" != "queued" && "$status" != "in_progress" ]]; then
+            echo "Workflow isn't completed yet"
             break
           fi
 
