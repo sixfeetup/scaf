@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.23.0](https://github.com/sixfeetup/scaf/compare/v1.22.0...v1.23.0) (2025-04-01)
+
+### Features
+
+* add uninstall, upgrade and help options [#323](https://github.com/sixfeetup/scaf/issues/323), [#324](https://github.com/sixfeetup/scaf/issues/324). [#325](https://github.com/sixfeetup/scaf/issues/325) ([#478](https://github.com/sixfeetup/scaf/issues/478)) ([6bf614e](https://github.com/sixfeetup/scaf/commit/6bf614e6e790d34b6aaae07b7117f9b62404d42f))
+* remove challenge code ([e4847bc](https://github.com/sixfeetup/scaf/commit/e4847bcbce0fce1db33a1200c75d53fd7f8d4654))
+
+### Refactors
+
+* update test script refs [#474](https://github.com/sixfeetup/scaf/issues/474) ([#475](https://github.com/sixfeetup/scaf/issues/475)) ([1eed00f](https://github.com/sixfeetup/scaf/commit/1eed00f8a5138002b815e72ff5e184f81f25ac3c))
+
 ## [1.22.0](https://github.com/sixfeetup/scaf/compare/v1.21.0...v1.22.0) (2025-03-05)
 
 ### Features
