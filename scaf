@@ -121,6 +121,7 @@ if [ -z "$REPO_URL" ]; then
   echo "2) AWS Lambda App Template"
   echo -n "Enter the number corresponding to your choice (1 or 2): "
   read -r template_choice
+  TEMPLATE_CHOICE=$template_choice
 
   case $template_choice in
     1)
@@ -132,6 +133,7 @@ if [ -z "$REPO_URL" ]; then
     *)
       echo "Invalid choice. Using default SFU Full Stack Template."
       REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      TEMPLATE_CHOICE=1
       ;;
   esac
 fi
@@ -152,6 +154,29 @@ party_popper() {
   echo
 }
 
+run_lambda_template_tasks() {
+  cd "$COPIER_SLUG" || exit 1
+  echo "Running AWS SAM build and validate..."
+  if ! command -v sam &>/dev/null; then
+    echo "Error: AWS SAM CLI is not installed. Please install it and try again."
+    exit 1
+  fi
+  sam build
+  sam validate --lint
+  echo "AWS Lambda template setup complete."
+}
+
+if [[ "$SCAF_CHALLENGE" == "y" ]]; then
+  start_challenge_oauthflow
+  if [[ -f "$CHALLENGE_CONFIG_PATH" ]]; then
+    start_challenge_session
+  else
+    # Force skip challenge as it cannot be started without config file
+    SCAF_CHALLENGE="n"
+  fi
+else
+  echo "Skipping challenge."
+fi
 
 echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
@@ -162,15 +187,19 @@ uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL . --trust
 
 # Check if copier was successful
 if [ $? -eq 0 ]; then
-  kind create cluster --name $CLUSTER_SLUG
-  cd $COPIER_SLUG
-  make compile
-  echo "Dependencies compiled successfully."
-  pwd
-  echo "Performing initial commit."
-  git add .
-  git commit -m "Initial commit"
-  party_popper
+  if [ "$TEMPLATE_CHOICE" == "1" ]; then
+    kind create cluster --name $CLUSTER_SLUG
+    cd $COPIER_SLUG
+    make compile
+    echo "Dependencies compiled successfully."
+    pwd
+    echo "Performing initial commit."
+    git add .
+    git commit -m "Initial commit"
+    party_popper
+  else
+    run_lambda_template_tasks
+  fi
 else
   echo "Failed to create project."
   exit 1
