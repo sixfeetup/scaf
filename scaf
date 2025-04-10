@@ -121,7 +121,6 @@ if [ -z "$REPO_URL" ]; then
   echo "2) AWS Lambda App Template"
   echo -n "Enter the number corresponding to your choice (1 or 2): "
   read -r template_choice
-  TEMPLATE_CHOICE=$template_choice
 
   case $template_choice in
     1)
@@ -133,7 +132,6 @@ if [ -z "$REPO_URL" ]; then
     *)
       echo "Invalid choice. Using default SFU Full Stack Template."
       REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
-      TEMPLATE_CHOICE=1
       ;;
   esac
 fi
