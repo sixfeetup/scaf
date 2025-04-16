@@ -136,42 +136,14 @@ if [ -z "$REPO_URL" ]; then
   esac
 fi
 
-
-party_popper() {
-  for i in {1..4}; do
-      echo -ne "\r🎉 POP! 💥"
-      sleep 0.3
-      echo -ne "\r💥 POP! 🎉"
-      sleep 0.3
-  done
-  echo -e "\r🎊 Congrats! Your $PROJECT_SLUG project is ready! 🎉"
-  echo
-  echo "To get started, run:"
-  echo "cd $PROJECT_SLUG"
-  echo "tilt up"
-  echo
-}
-
-
 echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
-
 
 echo "Creating your project..."
 uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL . --trust -d "is_project_slug=$COPIER_SLUG"
 
-# Check if copier was successful
-if [ $? -eq 0 ]; then
-  kind create cluster --name $CLUSTER_SLUG
-  cd $COPIER_SLUG
-  make compile
-  echo "Dependencies compiled successfully."
-  pwd
-  echo "Performing initial commit."
-  git add .
-  git commit -m "Initial commit"
-  party_popper
-else
+# Check if copier command failed
+if [ $? -ne 0 ]; then
   echo "Failed to create project."
   exit 1
 fi
