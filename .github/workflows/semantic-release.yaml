@@ -19,7 +19,7 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-private-key: ${{ secrets.GH_DEPLOY_KEY }}
+          ssh-private-key: ${{ secrets.GA_DEPLOY_KEY }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
