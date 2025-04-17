@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.25.1](https://github.com/sixfeetup/scaf/compare/v1.25.0...v1.25.1) (2025-04-17)
+
+### Bug Fixes
+
+* use content write permission to semantic release workflow ([#488](https://github.com/sixfeetup/scaf/issues/488)) ([3008d12](https://github.com/sixfeetup/scaf/commit/3008d120ba63c472884e50dc679ef4770afa79c4))
+
 ## [1.25.0](https://github.com/sixfeetup/scaf/compare/v1.24.0...v1.25.0) (2025-04-17)
 
 ### Features
