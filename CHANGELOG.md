@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.24.0](https://github.com/sixfeetup/scaf/compare/v1.23.0...v1.24.0) (2025-04-17)
+
+### Features
+
+* move scaf tasks to template repos ([f6bcc5d](https://github.com/sixfeetup/scaf/commit/f6bcc5dc56625ced7a9556ebb9ac66a16c572d58))
+
 ## [1.23.0](https://github.com/sixfeetup/scaf/compare/v1.22.0...v1.23.0) (2025-04-01)
 
 ### Features
