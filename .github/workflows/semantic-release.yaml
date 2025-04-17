@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  issues: write
-
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
@@ -18,8 +14,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.GH_DEPLOY_KEY }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,4 +35,7 @@ jobs:
       - name: Run Semantic Release
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: ${{ github.actor }}
+          GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
+          GIT_COMMITTER_NAME: ${{ github.actor }}
+          GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
