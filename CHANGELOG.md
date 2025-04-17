@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.25.0](https://github.com/sixfeetup/scaf/compare/v1.24.0...v1.25.0) (2025-04-17)
+
+### Features
+
+* configure semantic-release workflow to use GitHub deploy key ([#484](https://github.com/sixfeetup/scaf/issues/484)) ([5a4005e](https://github.com/sixfeetup/scaf/commit/5a4005e909fcc63eb772861d0da76e4392e80057))
+
+### Bug Fixes
+
+* deploy key var name ([#486](https://github.com/sixfeetup/scaf/issues/486)) ([c1b76a6](https://github.com/sixfeetup/scaf/commit/c1b76a63578eb2b8cb6abac9e06f0d380f217483))
+* restore semantic release permissions and GITHUB_TOKEN ([#487](https://github.com/sixfeetup/scaf/issues/487)) ([3a816d4](https://github.com/sixfeetup/scaf/commit/3a816d426918d065fbb23738edf94398e90fdc95))
+
 ## [1.24.0](https://github.com/sixfeetup/scaf/compare/v1.23.0...v1.24.0) (2025-04-17)
 
 ### Features
