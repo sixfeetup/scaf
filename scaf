@@ -29,6 +29,7 @@ fi
 if [[ " $* " == *" --upgrade "* ]]; then
   echo "Upgrading Scaf..."
   curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
+  exit 0
 fi
 
 print_help() {
@@ -131,7 +132,7 @@ if [ -z "$REPO_URL" ]; then
       ;;
     *)
       echo "Invalid choice. Using default SFU Full Stack Template."
-      REPO_URL="https://github.com/sixfeetup/scaf-aws-lambda-app-template.git"
+      REPO_URL="https://github.com/sixfeetup/scaf-fullstack-template.git"
       ;;
   esac
 fi
