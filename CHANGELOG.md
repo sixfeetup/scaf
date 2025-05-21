@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.25.2](https://github.com/sixfeetup/scaf/compare/v1.25.1...v1.25.2) (2025-05-21)
+
+### Bug Fixes
+
+* set default template option correctly ([#501](https://github.com/sixfeetup/scaf/issues/501)) ([07d5a9d](https://github.com/sixfeetup/scaf/commit/07d5a9d5bc5cf5e4d491ddbe7f2adda909f9a70c))
+
 ## [1.25.1](https://github.com/sixfeetup/scaf/compare/v1.25.0...v1.25.1) (2025-04-17)
 
 ### Bug Fixes
