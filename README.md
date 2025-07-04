@@ -1,53 +1,20 @@
-# 🚀 EXCITING NEWS! 🚀
-
-**Scaf has evolved from a single template to a template manager!** ✨
-
-With our switch from Cookiecutter to Copier, Scaf now:
-
-- 📥 Installs any template from any GitHub repo
-- 🔄 Updates existing projects installed from Copier templates
-- 🌱 Empowers the community to create diverse app templates
-
-Currently available templates:
-
-- 🏗️ [Six Feet Up Full Stack Template](https://github.com/sixfeetup/scaf-fullstack-temlate.git)
-- 🪶 [Six Feet Up AWS Lambda App Template](https://github.com/sixfeetup/scaf-aws-lambda-app-template.git)
-
-We hope this inspires you to create and share your own templates!
-
----
-
 <p align="center">
   <img src="scaf-logo.png" width="250px">
 </p>
 
-**scaf** provides developers and DevOps engineers with a complete blueprint for
-a new project and streamlines the development experience with Tilt.
+Usage: scaf project_slug [OPTIONS] [TEMPLATE]
 
-**scaf** generates a new project structure with Kubernetes manifests in
-three Kustomize layers for dev, sandbox, and production. A new project
-contains the following:
+**scaf** is a template manager that simplifies bootstrapping and updating projects.
 
-- Django backend
-- Celery (optional)
-- Next.js frontend (optional)
-  - Strawberry GraphQL (if frontend is chosen)
-  - Apollo Client (if frontend is chosen)
-  - _TODO: REST alternative to GraphQL_
-- Postgres database for local development
-- CloudNativePG deployment for production
-- Redis
-- Mailhog
-- ArgoCD
-- Traefik
-- Certmanger
-- Certificates and Ingress Routes
-- Kube Prometheus Stack
-- Grafana Loki
-- GitHub and Bitbucket pipelines to build and push images, run security,
-  formatting and linting checks
-- Terraform config to set up a k3s cluster on AWS
-- Sentry (optional)
+## Features:
+
+- 📥 Installs any template from any GitHub repo
+- 🔄 Updates existing projects installed from Copier templates
+
+## Currently available templates:
+
+- 🏗️ [Six Feet Up Full Stack Template](https://github.com/sixfeetup/scaf-fullstack-template.git)
+- 🪶 [Six Feet Up AWS Lambda App Template](https://github.com/sixfeetup/scaf-aws-lambda-app-template.git)
 
 ## Installation
 
@@ -57,43 +24,66 @@ Installation is supported on Linux and macOS:
 curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bash
 ```
 
-The installation script will install kubectl, kind, and Tilt if it can't
+The installation script will install kubectl, kind, Tilt and uv if it can't
 be found on your system.
 
 ## Creating a new project using this repo
 
-NB: Before you continue, make sure that you have at least 5 to 10 GB of free
-space available to Docker. Note that Docker Desktop on MacOS has its own
-resource limits separate from the host.
-
 Run `scaf myproject`, answer all the questions, and you'll have your new project!
 
-Inside `myproject/README.md`, you will have more
-documentation explaining how to use and configure your newly created project.
+Refer to the documentation of the template you installed.
 
-## Terraform and AWS
+## Usage
 
-To deploy your project using Terraform and AWS, you can follow the instructions in `terraform/README.md.`  
-Note that you will need:
+```
+Usage: scaf project_slug [OPTIONS] [TEMPLATE]
 
-- an AWS account where you have access to the `OrganizationAccountAccessRole`
-- terraform, and AWS CLI installed and configured
+Scaf - Project scaffolding CLI tool
+
+Arguments:
+  project_slug           The name of your new project (alphanumeric, -, _)
+
+Options:
+  --help, -h             Show this help message and exit
+  --uninstall            Uninstall Scaf CLI from the system
+  --upgrade              Upgrade Scaf to the latest version
+
+Template:
+  TEMPLATE               (Optional) Template source. Must be one of the following:
+                          - https://github.com/sixfeetup/scaf-fullstack-template.git
+                          - https://github.com/sixfeetup/scaf-aws-lambda-app-template.git
+                          - Or a local path (e.g. ./my-template)
+                          If omitted, you will be prompted to choose.
+
+Advanced Copier Options:
+  --defaults             Use default answers to template questions
+  --vcs-ref <branch>     Use a specific Git branch/tag/commit from the template repo
+
+Examples:
+  scaf my-app
+      # Creates a project named "my-app" and prompts to choose a template interactively.
+
+  scaf my-app https://github.com/sixfeetup/scaf-fullstack-template.git
+      # Creates "my-app" using the Fullstack template directly from GitHub.
+
+  scaf my-app --defaults --vcs-ref main https://github.com/sixfeetup/scaf-aws-lambda-app-template.git
+      # Creates "my-app" using the AWS Lambda template with defaults and from the 'main' branch.
+
+  scaf my-app --defaults --vcs-ref main \$REPO_URL
+      # Example with full path to CLI, using defaults and specific VCS reference.
+      # REPO_URL must be one of the allowed template URLs above.
+```
 
 ## Development on Scaf
 
 ### Nix Flake
 
-Scaf provides a Nix Flake to install all the required packages for development.
+scaf provides a Nix Flake to install all the required packages for development.
 The Nix Flake ensures all developers are using the same versions of all packages
 to develop on Scaf in an isolated environment.
 
 Follow the instructions to install
 [Nix](https://nixos.org/download/#download-nix) for your OS.
-
-Nix Flakes are a feature that comes with Nix, but they are considered
-experimental and are not enabled by default in stable releases of Nix. To use
-Nix Flakes, you need to enable them by configuring your Nix installation to
-allow experimental features.
 
 1. Ensure you have a recent version of Nix installed:
 
@@ -133,14 +123,6 @@ Finally, install [Direnv](https://direnv.net/) and run `direnv allow`. The
 direnv configuration in `.envrc` will use the flake to install the required
 packages.
 
-### Django version updates
-
-When making changes to scaf, keep the following in mind:
-
-- update pins in requirements/*.in files but *don't\* commit the compiled requirements.txt
-  files to the repo.
-- update to the latest Python supported by Django. For Django 4.1, this is 3.8, 3.9, and 3.10.
-
 ### Testing
 
 To test the copier portion of Scaf, run the `./test-scaf.sh` script.
@@ -157,3 +139,4 @@ Usage: ./test-scaf.sh -t <template_folder> [-o <output_folder>] [-d <test_data>]
   -d <test_data>       Optional: Specify a preset answers data file
   -h                   Show this help message
 ```
+
