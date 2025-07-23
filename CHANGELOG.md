@@ -1,5 +1,225 @@
 # Changelog
 
+## [1.25.2](https://github.com/sixfeetup/scaf/compare/v1.25.1...v1.25.2) (2025-05-21)
+
+### Bug Fixes
+
+* set default template option correctly ([#501](https://github.com/sixfeetup/scaf/issues/501)) ([07d5a9d](https://github.com/sixfeetup/scaf/commit/07d5a9d5bc5cf5e4d491ddbe7f2adda909f9a70c))
+
+## [1.25.1](https://github.com/sixfeetup/scaf/compare/v1.25.0...v1.25.1) (2025-04-17)
+
+### Bug Fixes
+
+* use content write permission to semantic release workflow ([#488](https://github.com/sixfeetup/scaf/issues/488)) ([3008d12](https://github.com/sixfeetup/scaf/commit/3008d120ba63c472884e50dc679ef4770afa79c4))
+
+## [1.25.0](https://github.com/sixfeetup/scaf/compare/v1.24.0...v1.25.0) (2025-04-17)
+
+### Features
+
+* configure semantic-release workflow to use GitHub deploy key ([#484](https://github.com/sixfeetup/scaf/issues/484)) ([5a4005e](https://github.com/sixfeetup/scaf/commit/5a4005e909fcc63eb772861d0da76e4392e80057))
+
+### Bug Fixes
+
+* deploy key var name ([#486](https://github.com/sixfeetup/scaf/issues/486)) ([c1b76a6](https://github.com/sixfeetup/scaf/commit/c1b76a63578eb2b8cb6abac9e06f0d380f217483))
+* restore semantic release permissions and GITHUB_TOKEN ([#487](https://github.com/sixfeetup/scaf/issues/487)) ([3a816d4](https://github.com/sixfeetup/scaf/commit/3a816d426918d065fbb23738edf94398e90fdc95))
+
+## [1.24.0](https://github.com/sixfeetup/scaf/compare/v1.23.0...v1.24.0) (2025-04-17)
+
+### Features
+
+* move scaf tasks to template repos ([f6bcc5d](https://github.com/sixfeetup/scaf/commit/f6bcc5dc56625ced7a9556ebb9ac66a16c572d58))
+
+## [1.23.0](https://github.com/sixfeetup/scaf/compare/v1.22.0...v1.23.0) (2025-04-01)
+
+### Features
+
+* add uninstall, upgrade and help options [#323](https://github.com/sixfeetup/scaf/issues/323), [#324](https://github.com/sixfeetup/scaf/issues/324). [#325](https://github.com/sixfeetup/scaf/issues/325) ([#478](https://github.com/sixfeetup/scaf/issues/478)) ([6bf614e](https://github.com/sixfeetup/scaf/commit/6bf614e6e790d34b6aaae07b7117f9b62404d42f))
+* remove challenge code ([e4847bc](https://github.com/sixfeetup/scaf/commit/e4847bcbce0fce1db33a1200c75d53fd7f8d4654))
+
+### Refactors
+
+* update test script refs [#474](https://github.com/sixfeetup/scaf/issues/474) ([#475](https://github.com/sixfeetup/scaf/issues/475)) ([1eed00f](https://github.com/sixfeetup/scaf/commit/1eed00f8a5138002b815e72ff5e184f81f25ac3c))
+
+## [1.22.0](https://github.com/sixfeetup/scaf/compare/v1.21.0...v1.22.0) (2025-03-05)
+
+### Features
+
+* Update scaf to use copier and multiple templates (closes [#332](https://github.com/sixfeetup/scaf/issues/332), [#441](https://github.com/sixfeetup/scaf/issues/441), [#443](https://github.com/sixfeetup/scaf/issues/443), [#444](https://github.com/sixfeetup/scaf/issues/444), [#445](https://github.com/sixfeetup/scaf/issues/445)) ([ff3645a](https://github.com/sixfeetup/scaf/commit/ff3645a53b943c847130c4a49afbf7615b0b6a8c))
+
+### Bug Fixes
+
+* Add VIRTUAL_ENV env variable for uv to work after latest upgrade… (fixes [#461](https://github.com/sixfeetup/scaf/issues/461)) ([c0f2c9a](https://github.com/sixfeetup/scaf/commit/c0f2c9aae8bc3f50898e57f613efc18c50b41452))
+* fullstack template url ([c136fdb](https://github.com/sixfeetup/scaf/commit/c136fdb6f61813bceb1b4787968d4411afbbe946))
+
+## [1.21.0](https://github.com/sixfeetup/scaf/compare/v1.20.0...v1.21.0) (2024-12-27)
+
+### Features
+
+* Add k3s as option for kubernetes install. close [#167](https://github.com/sixfeetup/scaf/issues/167) ([e753983](https://github.com/sixfeetup/scaf/commit/e7539836c8011ae3484d8e82ac5a43101e6c95e6))
+
+## [1.20.0](https://github.com/sixfeetup/scaf/compare/v1.19.1...v1.20.0) (2024-12-10)
+
+### Features
+
+* add documentation commands to Makefile ([#431](https://github.com/sixfeetup/scaf/issues/431)) ([824e1d6](https://github.com/sixfeetup/scaf/commit/824e1d66f8ed6bfe8ecdb25dd66191db35db2698))
+
+### Documentation
+
+* add qa markdown page ([#427](https://github.com/sixfeetup/scaf/issues/427)) ([0e8c0fe](https://github.com/sixfeetup/scaf/commit/0e8c0fec2037f551bd577d75ec42548e80bedc3f))
+* reorganize next steps and dependencies sections + fix typos ([#426](https://github.com/sixfeetup/scaf/issues/426)) ([a7e8af6](https://github.com/sixfeetup/scaf/commit/a7e8af6c8993c3361c4269db5c0c4c71030dfa97))
+
+## [1.19.1](https://github.com/sixfeetup/scaf/compare/v1.19.0...v1.19.1) (2024-11-20)
+
+### Bug Fixes
+
+* close readiness conneciton ([#423](https://github.com/sixfeetup/scaf/issues/423)) ([eee9948](https://github.com/sixfeetup/scaf/commit/eee9948738570fc4c7d680f85b43ee23dd6370dd))
+
+## [1.19.0](https://github.com/sixfeetup/scaf/compare/v1.18.0...v1.19.0) (2024-11-08)
+
+### Features
+
+* enable prometheus metrics retention for 90 days ([#401](https://github.com/sixfeetup/scaf/issues/401)) ([dc36f45](https://github.com/sixfeetup/scaf/commit/dc36f45c9157f0d5680cf7bdf1f9a3390f2b2b8c))
+
+## [1.18.0](https://github.com/sixfeetup/scaf/compare/v1.17.2...v1.18.0) (2024-11-01)
+
+### Features
+
+* Gfranxman/345 ensure latest version of rsync ([#400](https://github.com/sixfeetup/scaf/issues/400)) ([8dbc784](https://github.com/sixfeetup/scaf/commit/8dbc784b8e3cfac363d36592103bde49c4d9ed55))
+
+## [1.17.2](https://github.com/sixfeetup/scaf/compare/v1.17.1...v1.17.2) (2024-10-30)
+
+### Bug Fixes
+
+* Do not change the ownership of the bind mounted directory ([#414](https://github.com/sixfeetup/scaf/issues/414)) ([2b4469e](https://github.com/sixfeetup/scaf/commit/2b4469e669ffefdf0370d688c727db14ae7f995e)), closes [#413](https://github.com/sixfeetup/scaf/issues/413)
+
+### Documentation
+
+* change readme structure ([#369](https://github.com/sixfeetup/scaf/issues/369)) ([abd3b64](https://github.com/sixfeetup/scaf/commit/abd3b649852e7bccced5d5fbc38147e4a3f4280a)), closes [#365](https://github.com/sixfeetup/scaf/issues/365)
+
+## [1.17.1](https://github.com/sixfeetup/scaf/compare/v1.17.0...v1.17.1) (2024-10-11)
+
+### Bug Fixes
+
+* updating tests in install.sh to detect missing preferred bin folder. ([#404](https://github.com/sixfeetup/scaf/issues/404)) ([e694307](https://github.com/sixfeetup/scaf/commit/e694307e18357461e7bacffe157916573e8eac48)), closes [#403](https://github.com/sixfeetup/scaf/issues/403)
+
+## [1.17.0](https://github.com/sixfeetup/scaf/compare/v1.16.1...v1.17.0) (2024-10-05)
+
+### Features
+
+* deploy apps with ArgoCD ([6938661](https://github.com/sixfeetup/scaf/commit/69386611ee96ec2e0278fbf57717db10bc484c7e))
+
+## [1.16.1](https://github.com/sixfeetup/scaf/compare/v1.16.0...v1.16.1) (2024-09-25)
+
+### Bug Fixes
+
+* entrypoint.sh: Reorder commands so UID and GID checks work ([#395](https://github.com/sixfeetup/scaf/issues/395)) ([bd8e647](https://github.com/sixfeetup/scaf/commit/bd8e6470260a087ea639ad52eb735d7065fe6f88))
+
+## [1.16.0](https://github.com/sixfeetup/scaf/compare/v1.15.1...v1.16.0) (2024-09-23)
+
+### Features
+
+* update text references to refer to Scaf instead of Sixie ([#393](https://github.com/sixfeetup/scaf/issues/393)) ([5288cf0](https://github.com/sixfeetup/scaf/commit/5288cf0ac843d7c474e6e16232b65795581f198f))
+
+## [1.15.1](https://github.com/sixfeetup/scaf/compare/v1.15.0...v1.15.1) (2024-09-21)
+
+### Bug Fixes
+
+* check for python commands, fallback to python3 refs [#386](https://github.com/sixfeetup/scaf/issues/386) ([#389](https://github.com/sixfeetup/scaf/issues/389)) ([7510477](https://github.com/sixfeetup/scaf/commit/7510477414c60b35a517c1416137164e98e7a5d8))
+
+## [1.15.0](https://github.com/sixfeetup/scaf/compare/v1.14.0...v1.15.0) (2024-09-21)
+
+### Features
+
+* added local registry support and improved setup (close [#353](https://github.com/sixfeetup/scaf/issues/353)) ([32de8c7](https://github.com/sixfeetup/scaf/commit/32de8c76b260f81774e087dc221c237767a0049a))
+* Gfranxman/313 prefer dotlocalbin as install location ([#342](https://github.com/sixfeetup/scaf/issues/342)) ([dbb3556](https://github.com/sixfeetup/scaf/commit/dbb3556e7258a57e5105f80063f95f3222d3fd6a))
+* implement s3 storage for static and media files on production ([#339](https://github.com/sixfeetup/scaf/issues/339)) ([76afd23](https://github.com/sixfeetup/scaf/commit/76afd23da1aa0867422249584a3156f43b7b974e))
+* implement scaf challenge for session recording ([#379](https://github.com/sixfeetup/scaf/issues/379)) ([0c091af](https://github.com/sixfeetup/scaf/commit/0c091afbd574632350f2c4cdb43420fadb8eb317))
+* **install.sh:** force re-download of Scaf on each install ([#338](https://github.com/sixfeetup/scaf/issues/338)) ([f7ef3e3](https://github.com/sixfeetup/scaf/commit/f7ef3e3ac0876c70f4c6f3e1f34a41386321e9a3))
+* op inject secrets (close [#368](https://github.com/sixfeetup/scaf/issues/368)) ([58090b5](https://github.com/sixfeetup/scaf/commit/58090b56f65f35cb2c68258f0aa4f3aaf8509417))
+* reorder environment variables in k8s django config ([#350](https://github.com/sixfeetup/scaf/issues/350)) ([f2cb234](https://github.com/sixfeetup/scaf/commit/f2cb2349666ecd46f24145c49b5f42bbc189c9b4))
+* script to test cookiecutter part of Scaf ([952e276](https://github.com/sixfeetup/scaf/commit/952e276852afe84cdbfca062da65fcae6cad6bc8))
+
+### Bug Fixes
+
+* Fixes frontend tests ([#363](https://github.com/sixfeetup/scaf/issues/363)) ([4a2a5b2](https://github.com/sixfeetup/scaf/commit/4a2a5b254891fd4b1688499d17240aa93356ce81))
+* mailhog port config (closes [#249](https://github.com/sixfeetup/scaf/issues/249)) ([cea1602](https://github.com/sixfeetup/scaf/commit/cea1602d99e5a03e63fc8cffcc842844bf648897))
+* Specify the full container path, including the host. ([#309](https://github.com/sixfeetup/scaf/issues/309)) ([2fa7276](https://github.com/sixfeetup/scaf/commit/2fa727672fc6b8ab2a0c40550f63cf27ba3b859c)), closes [#308](https://github.com/sixfeetup/scaf/issues/308)
+* Update logo ([#373](https://github.com/sixfeetup/scaf/issues/373)) ([afe2d84](https://github.com/sixfeetup/scaf/commit/afe2d849ad6db3ca05d812d1da12c02a9f127b96))
+* use GitHub token for semantic release workflow ([b5eef60](https://github.com/sixfeetup/scaf/commit/b5eef607dbc4b7bad9a6037bb8bc30dd81c100d2))
+
+### Documentation
+
+* add disk space warning to README ([#385](https://github.com/sixfeetup/scaf/issues/385)) ([4262b2d](https://github.com/sixfeetup/scaf/commit/4262b2d0868edf3dd1b22a6aef5aac78ae203afb))
+* update related to optional GraphQL ([#366](https://github.com/sixfeetup/scaf/issues/366)) ([92bfc8d](https://github.com/sixfeetup/scaf/commit/92bfc8d61f53d9845a3d7e952c96225b22e95a3d)), closes [#290](https://github.com/sixfeetup/scaf/issues/290)
+
+## [1.14.0](https://github.com/sixfeetup/scaf/compare/v1.13.2...v1.14.0) (2024-09-04)
+
+### Features
+
+* update docker build-push-action to v5 and utilize github's ([#352](https://github.com/sixfeetup/scaf/issues/352)) ([cf0b2e4](https://github.com/sixfeetup/scaf/commit/cf0b2e4d0a47c6d584bcc4d76dac40bf7c538175))
+
+## [1.13.2](https://github.com/sixfeetup/scaf/compare/v1.13.1...v1.13.2) (2024-08-28)
+
+### Bug Fixes
+
+* local.txt should include stuff from base ([#361](https://github.com/sixfeetup/scaf/issues/361)) ([33fbac5](https://github.com/sixfeetup/scaf/commit/33fbac5d63ff2e2fd79a8f0495eb5bc4488fd759))
+
+## [1.13.1](https://github.com/sixfeetup/scaf/compare/v1.13.0...v1.13.1) (2024-08-28)
+
+### Bug Fixes
+
+* move flower to its own deployment refs [#89](https://github.com/sixfeetup/scaf/issues/89) ([#105](https://github.com/sixfeetup/scaf/issues/105)) ([8ff7033](https://github.com/sixfeetup/scaf/commit/8ff7033f115c4a79792c1cf0883798ef3d792c3a))
+
+## [1.13.0](https://github.com/sixfeetup/scaf/compare/v1.12.0...v1.13.0) (2024-08-27)
+
+### Features
+
+* add automatic git remote configuration ([#336](https://github.com/sixfeetup/scaf/issues/336)) ([23e39af](https://github.com/sixfeetup/scaf/commit/23e39af0ef5bd0eaf2f808d4204d1a1cfde73e18))
+* add function to check for necessary dependencies in install.sh ([#320](https://github.com/sixfeetup/scaf/issues/320)) ([4da9d4f](https://github.com/sixfeetup/scaf/commit/4da9d4fb6b9e23cf6ca3ae2720698d224c44cc66))
+* add party_popper function to enhance project initiation experience ([#340](https://github.com/sixfeetup/scaf/issues/340)) ([61da47b](https://github.com/sixfeetup/scaf/commit/61da47bf8939e8824e413af5e30669138c2c0e24))
+* added make setup target ([#359](https://github.com/sixfeetup/scaf/issues/359)) ([31a835b](https://github.com/sixfeetup/scaf/commit/31a835bf5815351fe35938c232c438c0deb5e6f1))
+* allow hyphens and underscores in project slugs ([#341](https://github.com/sixfeetup/scaf/issues/341)) ([2d51499](https://github.com/sixfeetup/scaf/commit/2d51499dbcf09ecaf79e73a19d6bb8d4e1425392))
+* improve installation script to handle preferred bin folder ([#321](https://github.com/sixfeetup/scaf/issues/321)) ([0ed6ac1](https://github.com/sixfeetup/scaf/commit/0ed6ac1dab2b419a5eda1219292f24149530729f))
+
+## [1.12.0](https://github.com/sixfeetup/scaf/compare/v1.11.0...v1.12.0) (2024-07-29)
+
+### Features
+
+* add compilation step after cluster creation ([027dfb2](https://github.com/sixfeetup/scaf/commit/027dfb22e1126c10781cc1b28f2569cab81a9a4a))
+
+## [1.11.0](https://github.com/sixfeetup/scaf/compare/v1.10.0...v1.11.0) (2024-07-27)
+
+### Features
+
+* simplify config options ([4b2f31e](https://github.com/sixfeetup/scaf/commit/4b2f31e1d00c5cfec9a7f4ae1ba310a89709958a))
+
+## [1.10.0](https://github.com/sixfeetup/scaf/compare/v1.9.0...v1.10.0) (2024-07-26)
+
+### Features
+
+* upgrade django and python to latest stable versions ([116f41b](https://github.com/sixfeetup/scaf/commit/116f41b4ef827fe088e4ef4884eaf921a742288b))
+
+### Documentation
+
+* use repo_url variable for git clone example ([#288](https://github.com/sixfeetup/scaf/issues/288)) ([e12e06f](https://github.com/sixfeetup/scaf/commit/e12e06ffd5e0c44ad58a59367fc971ab65cb0df1))
+
+## [1.9.0](https://github.com/sixfeetup/scaf/compare/v1.8.1...v1.9.0) (2024-07-23)
+
+### Features
+
+* added support for debuggers, with initial support for pycharm (close [#277](https://github.com/sixfeetup/scaf/issues/277)) ([c2392cb](https://github.com/sixfeetup/scaf/commit/c2392cb63c8d960f8f89b38171465039ed26a9ae))
+
+### Documentation
+
+* Make the generated README more contributor oriented ([#230](https://github.com/sixfeetup/scaf/issues/230)) ([3b3e63d](https://github.com/sixfeetup/scaf/commit/3b3e63df7655b070c50265f7f5e6a87aa56acacc))
+
+## [1.8.1](https://github.com/sixfeetup/scaf/compare/v1.8.0...v1.8.1) (2024-07-09)
+
+### Bug Fixes
+
+* add missing semantic-release-replace-plugin ([4f99fa2](https://github.com/sixfeetup/scaf/commit/4f99fa28ee82402b11807a97aff2ae28ebe3a4fe))
+* semantic release not updating version in package.json ([70cea4b](https://github.com/sixfeetup/scaf/commit/70cea4b82c8ff55eaa8e918eb2c97021ab908b01))
+
 ## [1.8.0](https://github.com/sixfeetup/scaf/compare/v1.7.1...v1.8.0) (2024-07-08)
 
 ### Features

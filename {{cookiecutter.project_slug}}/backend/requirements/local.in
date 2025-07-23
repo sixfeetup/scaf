@@ -1,7 +1,0 @@
-# Local development dependencies go here
-django-debug-toolbar~=3.2.0
-# django-extensions==3.2.0
-ipdb
-pip-tools
-pipdeptree
-Werkzeug>=2.0

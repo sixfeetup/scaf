@@ -3,43 +3,33 @@ name: Create scaf project
 on: [push]
 
 jobs:
-  build-and-push:
-    environment: dev
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: sixfeetup/scaf:${{ github.sha }}
-
   setup:
     environment: dev
-    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
     - name: Install Requirements
       shell: bash
       run: |
+        sudo apt-get update && sudo apt-get install --only-upgrade curl
+        sudo apt-get update && sudo apt-get install --only-upgrade make
+        sudo apt-get update && sudo apt-get install --only-upgrade python3       
         INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
         export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
+        git config --global init.defaultBranch dev
+        git config --global user.email "setup-project--install@example.com"
+        git config --global user.name "CI CD install deps"
         echo "Downloading install script from $INSTALL_URL"
-        curl -sSL $INSTALL_URL | sh
+        rm -f $HOME/.local/bin/scaf
+        echo "Installing scaf from $INSTALL_URL"
+        curl -sSL $INSTALL_URL | DEBUG=True bash
 
     - name: Create Project with Scaf
       shell: bash
       run: |
-        IMAGE_TAG=$GITHUB_SHA
-        echo "Running scaf with sixfeetup/scaf:$IMAGE_TAG"
-        /usr/local/bin/scaf myproject --no-input
-
+        git config --global init.defaultBranch dev
+        git config --global user.email "setup-project--create@example.com"
+        git config --global user.name "CI CD Setup Project"
+        
+        REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
+        $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL

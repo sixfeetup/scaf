@@ -1,11 +1,11 @@
-cookiecutter>=1.7.3
+copier
 sh
 binaryornot
 
 # Code quality
 # ------------------------------------------------------------------------------
 typing-extensions==4.3.0
-black==22.1.0
+black==24.3.0
 isort==5.10.1
 flake8
 flake8-isort

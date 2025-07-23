@@ -2,7 +2,7 @@
   description = "Scaf dev environment.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs";
 
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -16,7 +16,7 @@
       in {
         devShells.default = pkgs.mkShell {
           buildInputs = [
-            pkgs.cookiecutter
+            pkgs.copier
             pkgs.nodejs
             pkgs.nix-prefetch-git
             pkgs.python3
@@ -24,6 +24,7 @@
             pkgs.python3.pkgs.diagrams
             pkgs.python3.pkgs.isort
             pkgs.python3.pkgs.pip-tools
+            pkgs.python3.pkgs.uv
           ];
           shellHook = ''
             echo "Scaf dev environment shell hook"
