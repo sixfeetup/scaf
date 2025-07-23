@@ -65,7 +65,7 @@ stdenv.mkDerivation rec {
     makeWrapper $out/bin/scaf.sh $out/bin/scaf \
       --set PATH ${lib.makeBinPath [
         pkgs.python3
-        pkgs.python3.pkgs.cookiecutter
+        pkgs.python3.pkgs.copier
       ]}
   '';
 
