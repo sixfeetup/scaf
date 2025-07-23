@@ -141,7 +141,7 @@ echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 echo "Creating your project..."
-uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL . --trust -d "is_project_slug=$COPIER_SLUG"
+uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
 
 # Check if copier command failed
 if [ $? -ne 0 ]; then
