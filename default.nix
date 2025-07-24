@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
     owner = "sixfeetup";
     repo = "scaf";
     rev = "v${version}";
-    sha256 = "1qgd8wy25vfnwi6hg1dkaary1897qgfwhz8jgbjspsidh7bzlmd1";
+    sha256 = "1mzqscic3wd1750215dqyl5qs57a2b86d1qkqbpy9hhc8nxpb250";
   };
 
   nativeBuildInputs = [
