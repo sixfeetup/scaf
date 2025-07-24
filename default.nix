@@ -15,6 +15,7 @@ let
   runtimeDeps = with pkgs; [
     awscli2
     argocd
+    coreutils
     envsubst
     go-task
     jq
