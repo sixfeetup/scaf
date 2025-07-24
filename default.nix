@@ -11,13 +11,35 @@ let
       email = "info@sixfeetup.com";
     };
   };
+
+  runtimeDeps = with pkgs; [
+    awscli2
+    argocd
+    envsubst
+    go-task
+    jq
+    kind
+    kubectl
+    kubernetes-helm
+    kubeseal
+    opentofu
+    podman
+    podman-compose
+    python3
+    python3.pkgs.black
+    python3.pkgs.copier
+    python3.pkgs.isort
+    python3.pkgs.pip-tools
+    tilt
+    uv
+  ];
 in
 
 stdenv.mkDerivation rec {
   pname = "scaf";
   version = scafVersion;
 
-  src = ./scaf;
+  src = ./.;
 
   nativeBuildInputs = [
     makeWrapper
@@ -25,30 +47,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     pkgs.python3
-    pkgs.python3.pkgs.cookiecutter
   ];
 
-  propagatedBuildInputs = [
-    pkgs.awscli2
-    pkgs.argocd
-    pkgs.envsubst
-    pkgs.go-task
-    pkgs.jq
-    pkgs.kind
-    pkgs.kubectl
-    pkgs.kubernetes-helm
-    pkgs.kubeseal
-    pkgs.opentofu
-    pkgs.podman
-    pkgs.podman-compose
-    pkgs.python3
-    pkgs.python3.pkgs.black
-    pkgs.python3.pkgs.cookiecutter
-    pkgs.python3.pkgs.isort
-    pkgs.python3.pkgs.pip-tools
-    pkgs.tilt
-    pkgs.uv
-  ];
+  propagatedBuildInputs = runtimeDeps;
 
   buildPhase = ''
     echo "No build necessary"
@@ -56,13 +57,12 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m 755 ${src} $out/bin/scaf.sh
+    install -m 755 ./scaf $out/bin/scaf
 
-    makeWrapper $out/bin/scaf.sh $out/bin/scaf \
-      --set PATH ${lib.makeBinPath [
-        pkgs.python3
-        pkgs.python3.pkgs.copier
-      ]}
+    makeWrapper $out/bin/scaf $out/bin/scaf-wrapped \
+      --set PATH ${lib.makeBinPath runtimeDeps}
+    
+    mv $out/bin/scaf-wrapped $out/bin/scaf
   '';
 
   meta = with pkgs.lib; {
