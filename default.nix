@@ -58,12 +58,12 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m 755 ./scaf $out/bin/scaf
+    # Install the original script with an internal name
+    install -m 755 ./scaf $out/bin/.scaf-unwrapped
 
-    makeWrapper $out/bin/scaf $out/bin/scaf-wrapped \
+    # Wrap the internal script to create the final executable
+    makeWrapper $out/bin/.scaf-unwrapped $out/bin/scaf \
       --set PATH ${lib.makeBinPath runtimeDeps}
-    
-    mv $out/bin/scaf-wrapped $out/bin/scaf
   '';
 
   meta = with pkgs.lib; {
