@@ -34,8 +34,10 @@ stdenv.mkDerivation rec {
   ];
 
   propagatedBuildInputs = [
+    pkgs.awscli2
     pkgs.argocd
     pkgs.envsubst
+    pkgs.go-task
     pkgs.jq
     pkgs.kind
     pkgs.kubectl
@@ -50,6 +52,7 @@ stdenv.mkDerivation rec {
     pkgs.python3.pkgs.isort
     pkgs.python3.pkgs.pip-tools
     pkgs.tilt
+    pkgs.uv
   ];
 
   buildPhase = ''
