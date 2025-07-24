@@ -16,6 +16,7 @@ let
     awscli2
     argocd
     coreutils
+    copier
     envsubst
     go-task
     jq
@@ -28,7 +29,6 @@ let
     podman-compose
     python3
     python3.pkgs.black
-    python3.pkgs.copier
     python3.pkgs.isort
     python3.pkgs.pip-tools
     talosctl
