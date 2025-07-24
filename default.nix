@@ -30,6 +30,7 @@ let
     python3.pkgs.copier
     python3.pkgs.isort
     python3.pkgs.pip-tools
+    talosctl
     tilt
     uv
   ];
