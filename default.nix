@@ -17,6 +17,8 @@ stdenv.mkDerivation rec {
   pname = "scaf";
   version = scafVersion;
 
+  src = ./scaf;
+
   nativeBuildInputs = [
     makeWrapper
   ];
@@ -54,7 +56,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m 755 ./scaf $out/bin/scaf.sh
+    install -m 755 ${src} $out/bin/scaf.sh
 
     makeWrapper $out/bin/scaf.sh $out/bin/scaf \
       --set PATH ${lib.makeBinPath [
