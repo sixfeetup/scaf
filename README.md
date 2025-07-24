@@ -25,6 +25,26 @@ curl -sSL https://raw.githubusercontent.com/sixfeetup/scaf/main/install.sh | bas
 The installation script will install kubectl, kind, Tilt and uv if it can't be
 found on your system.
 
+### Nix
+
+If you are a Nix user, you can install `scaf` using the following commands.
+
+#### Permanent Installation
+
+To install `scaf` into your user profile so it is available in all your shell sessions, run:
+
+```bash
+nix-env -if https://github.com/sixfeetup/scaf/archive/v1.25.3.zip
+```
+
+#### Temporary Shell
+
+To use `scaf` in a temporary shell session without modifying your user profile, run:
+
+```bash
+nix-shell -p "(with import <nixpkgs> {}; callPackage (builtins.fetchTarball https://github.com/sixfeetup/scaf/archive/v1.25.3.zip) {})"
+```
+
 ## Creating a new project using this repo
 
 Run `scaf myproject`, answer all the questions, and you'll have your new

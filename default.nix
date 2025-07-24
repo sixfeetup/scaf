@@ -68,7 +68,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with pkgs.lib; {
-    description = "Scaf provides developers and DevOps engineers with a complete blueprint for a new project using Kubernetes";
+    description = "scaf is a template manager that simplifies bootstrapping and updating projects";
     homepage = "https://github.com/sixfeetup/scaf";
     license = licenses.mit;
     maintainers = [ maintainers.sixfeetup ];
