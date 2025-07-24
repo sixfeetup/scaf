@@ -1,9 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  lib = pkgs.lib;
-  stdenv = pkgs.stdenv;
-  makeWrapper = pkgs.makeWrapper;
+  inherit(pkgs) lib stdenv makeWrapper;
 
   packageJson = builtins.fromJSON (builtins.readFile ./package.json);
   scafVersion = packageJson.version;
