@@ -17,13 +17,6 @@ stdenv.mkDerivation rec {
   pname = "scaf";
   version = scafVersion;
 
-  src = pkgs.fetchFromGitHub {
-    owner = "sixfeetup";
-    repo = "scaf";
-    rev = "v${version}";
-    sha256 = "1mzqscic3wd1750215dqyl5qs57a2b86d1qkqbpy9hhc8nxpb250";
-  };
-
   nativeBuildInputs = [
     makeWrapper
   ];
@@ -61,7 +54,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m 755 ${src}/scaf $out/bin/scaf.sh
+    install -m 755 ./scaf $out/bin/scaf.sh
 
     makeWrapper $out/bin/scaf.sh $out/bin/scaf \
       --set PATH ${lib.makeBinPath [
