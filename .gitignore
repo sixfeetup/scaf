@@ -385,6 +385,5 @@ dist
 
 .direnv
 
-# scaf challenge
-.scaf-challenge.json
-.aider*
+# nix-build output
+result

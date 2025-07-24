@@ -82,7 +82,7 @@ fi
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 project_slug [OPTIONS] [TEMPLATE]"
+  echo "Usage: scaf project_slug [OPTIONS] [TEMPLATE]"
   exit 1
 fi
 

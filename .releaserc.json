@@ -61,6 +61,14 @@
         "replacements": [
           {
             "files": [
+              "README.md"
+            ],
+            "from": "scaf\\/archive\\/v[0-9.]*.zip",
+            "to": "scaf/archive/v${nextRelease.version}.zip",
+            "countMatches": true
+          },
+          {
+            "files": [
               "package.json"
             ],
             "from": "\"version\": \".*\"",
