@@ -20,6 +20,7 @@ let
     envsubst
     git
     go-task
+    gnumake
     jq
     kind
     kubectl
