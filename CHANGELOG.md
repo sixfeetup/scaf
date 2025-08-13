@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.25.3](https://github.com/sixfeetup/scaf/compare/v1.25.2...v1.25.3) (2025-07-23)
+
+### Bug Fixes
+
+* set copier output dir to $PROJECT_SLUG ([#515](https://github.com/sixfeetup/scaf/issues/515)) ([df6a417](https://github.com/sixfeetup/scaf/commit/df6a417cbc0f07b22a0a786750d710c30512e4c6))
+
+### Documentation
+
+* update docs to reflect copier refactor ([#510](https://github.com/sixfeetup/scaf/issues/510)) ([fe8c704](https://github.com/sixfeetup/scaf/commit/fe8c704cdd0681dbfe280fb04e996402ced8b969))
+
 ## [1.25.2](https://github.com/sixfeetup/scaf/compare/v1.25.1...v1.25.2) (2025-05-21)
 
 ### Bug Fixes
