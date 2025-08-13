@@ -18,6 +18,7 @@ let
     coreutils
     copier
     envsubst
+    git
     go-task
     jq
     kind
