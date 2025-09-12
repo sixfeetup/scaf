@@ -18,6 +18,7 @@ let
     black
     coreutils
     copier
+    docker
     envsubst
     git
     go-task
@@ -30,8 +31,6 @@ let
     kubeseal
     nodejs
     opentofu
-    podman
-    podman-compose
     python3
     ruff
     talosctl
