@@ -26,6 +26,7 @@ let
     kubectl
     kubernetes-helm
     kubeseal
+    nodejs
     opentofu
     podman
     podman-compose
