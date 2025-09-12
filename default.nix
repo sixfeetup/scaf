@@ -15,12 +15,14 @@ let
   runtimeDeps = with pkgs; [
     awscli2
     argocd
+    black
     coreutils
     copier
     envsubst
     git
     go-task
     gnumake
+    isort
     jq
     kind
     kubectl
@@ -31,9 +33,7 @@ let
     podman
     podman-compose
     python3
-    python3.pkgs.black
-    python3.pkgs.isort
-    python3.pkgs.pip-tools
+    ruff
     talosctl
     tilt
     uv
