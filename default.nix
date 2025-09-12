@@ -15,6 +15,7 @@ let
   runtimeDeps = with pkgs; [
     awscli2
     argocd
+    bashInteractive
     black
     coreutils
     copier
