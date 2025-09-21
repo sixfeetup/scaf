@@ -71,10 +71,12 @@ EOF
 }
 
 # Check for help flag
-if [[ " $* " == *" --help "* ]] || [[ " $* " == *" -h "* ]]; then
-  print_help
-  exit 0
-fi
+for arg in "$@"; do
+  if [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
+    print_help
+    exit 0
+  fi
+done
 
 # Ensure at least one argument is provided (for project_slug)
 if [ $# -lt 1 ]; then
