@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  inherit(pkgs) lib stdenv makeWrapper;
+  inherit(pkgs) stdenv writeShellApplication;
 
   packageJson = builtins.fromJSON (builtins.readFile ./package.json);
   scafVersion = packageJson.version;
@@ -12,32 +12,6 @@ let
     };
   };
 
-  runtimeDeps = with pkgs; [
-    awscli2
-    argocd
-    bashInteractive
-    black
-    coreutils
-    copier
-    docker
-    envsubst
-    git
-    go-task
-    gnumake
-    isort
-    jq
-    kind
-    kubectl
-    kubernetes-helm
-    kubeseal
-    nodejs
-    opentofu
-    python3
-    ruff
-    talosctl
-    tilt
-    uv
-  ];
 in
 
 stdenv.mkDerivation rec {
@@ -46,29 +20,53 @@ stdenv.mkDerivation rec {
 
   src = ./.;
 
-  nativeBuildInputs = [
-    makeWrapper
-  ];
-
-  buildInputs = [
-    pkgs.python3
-  ];
-
-  propagatedBuildInputs = runtimeDeps;
-
   buildPhase = ''
     echo "No build necessary"
   '';
 
+  doCheck = true;
+  checkInputs = with pkgs; [ shellcheck ];
+  checkPhase = ''
+    shellcheck ./scaf
+  '';
+
   installPhase = ''
     mkdir -p $out/bin
-    # Install the original script with an internal name
-    install -m 755 ./scaf $out/bin/.scaf-unwrapped
-
-    # Wrap the internal script to create the final executable
-    makeWrapper $out/bin/.scaf-unwrapped $out/bin/scaf \
-      --set PATH ${lib.makeBinPath runtimeDeps}
+    cp ${scaf}/bin/scaf $out/bin/scaf
   '';
+
+  scaf = writeShellApplication {
+    name = pname;
+
+    text = ./scaf;
+
+    runtimeInputs = with pkgs; [
+      awscli2
+      argocd
+      bashInteractive
+      black
+      coreutils
+      copier
+      docker
+      envsubst
+      git
+      go-task
+      gnumake
+      isort
+      jq
+      kind
+      kubectl
+      kubernetes-helm
+      kubeseal
+      nodejs
+      opentofu
+      python3
+      ruff
+      talosctl
+      tilt
+      uv
+    ];
+  };
 
   meta = with pkgs.lib; {
     description = "scaf is a template manager that simplifies bootstrapping and updating projects";
