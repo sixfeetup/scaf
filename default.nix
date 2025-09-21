@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
   scaf = writeShellApplication {
     name = pname;
 
-    text = ./scaf;
+    text = builtins.readFile ./scaf;
 
     runtimeInputs = with pkgs; [
       awscli2
