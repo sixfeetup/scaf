@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-# set python command
-if command -v python &>/dev/null; then
-    PYTHON_CMD=python
-elif command -v python3 &>/dev/null; then
-    PYTHON_CMD=python3
-else
+# Check python is available
+if ! command -v python3 &>/dev/null && ! command -v python &>/dev/null; then
     echo "Missing python3 command. Please install python3."
     exit 1;
 fi
@@ -97,22 +93,25 @@ fi
 
 # Remove the project_slug from the argument list
 shift
-CLUSTER_SLUG=${PROJECT_SLUG//_/-}
 COPIER_SLUG=${PROJECT_SLUG//-/_}
 
 # Assume the last argument is the template URL unless it starts with a dash
 REPO_URL=""
+COPIER_OPTIONS=()
+
 if [ $# -gt 0 ]; then
-  LAST_ARG="${@: -1}"
-  if [[ $LAST_ARG == -* ]]; then
-    COPIER_OPTIONS="$@"
+  # Check if the last argument looks like an option (starts with -)
+  if [[ ${!#} == -* ]]; then
+    # All arguments are options
+    COPIER_OPTIONS=("$@")
   else
-    REPO_URL="$LAST_ARG"
-    # Remove the last argument (the REPO_URL) from the options
-    COPIER_OPTIONS="${@:1:$(($#-1))}"
+    # Last argument is the repo URL, everything else are options
+    REPO_URL="${!#}"
+    # Copy all arguments except the last one
+    for ((i=1; i<$#; i++)); do
+      COPIER_OPTIONS+=("${!i}")
+    done
   fi
-else
-  COPIER_OPTIONS=""
 fi
 
 # If no repo URL was provided, ask for template selection
@@ -137,20 +136,21 @@ if [ -z "$REPO_URL" ]; then
   esac
 fi
 
-echo "COPIER_OPTIONS: $COPIER_OPTIONS"
+echo "COPIER_OPTIONS: ${COPIER_OPTIONS[*]}"
 echo "REPO_URL: $REPO_URL"
 
 echo "Creating your project..."
 
 # Check if copier, black, and isort are all available directly, otherwise fall back to uv
 if command -v copier &>/dev/null && command -v black &>/dev/null && command -v isort &>/dev/null; then
-    copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
+    copier copy "${COPIER_OPTIONS[@]}" "$REPO_URL" "$PROJECT_SLUG" --trust -d "is_project_slug=$COPIER_SLUG"
 else
-    uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
+    uv run --with isort,black,copier copier copy "${COPIER_OPTIONS[@]}" "$REPO_URL" "$PROJECT_SLUG" --trust -d "is_project_slug=$COPIER_SLUG"
 fi
 
 # Check if copier command failed
-if [ $? -ne 0 ]; then
+copier_exit_code=$?
+if [ $copier_exit_code -ne 0 ]; then
   echo "Failed to create project."
   exit 1
 fi
