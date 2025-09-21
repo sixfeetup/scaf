@@ -141,7 +141,13 @@ echo "COPIER_OPTIONS: $COPIER_OPTIONS"
 echo "REPO_URL: $REPO_URL"
 
 echo "Creating your project..."
-uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
+
+# Check if copier, black, and isort are all available directly, otherwise fall back to uv
+if command -v copier &>/dev/null && command -v black &>/dev/null && command -v isort &>/dev/null; then
+    copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
+else
+    uv run --with isort,black,copier copier copy $COPIER_OPTIONS $REPO_URL $PROJECT_SLUG --trust -d "is_project_slug=$COPIER_SLUG"
+fi
 
 # Check if copier command failed
 if [ $? -ne 0 ]; then
