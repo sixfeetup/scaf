@@ -25,6 +25,7 @@
             pkgs.python3.pkgs.isort
             pkgs.python3.pkgs.pip-tools
             pkgs.python3.pkgs.uv
+            pkgs.shellcheck
           ];
           shellHook = ''
             echo "Scaf dev environment shell hook"
