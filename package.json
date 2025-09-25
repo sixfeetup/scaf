@@ -1,6 +1,6 @@
 {
   "name": "scaf",
-  "version": "1.25.3",
+  "version": "1.26.0",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",

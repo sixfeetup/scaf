@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.0](https://github.com/sixfeetup/scaf/compare/v1.25.3...v1.26.0) (2025-09-25)
+
+### Features
+
+* add nix package ([#516](https://github.com/sixfeetup/scaf/issues/516)) ([169bf30](https://github.com/sixfeetup/scaf/commit/169bf301d6b2b6b41ec2af5670fba90506637135))
+
 ## [1.25.3](https://github.com/sixfeetup/scaf/compare/v1.25.2...v1.25.3) (2025-07-23)
 
 ### Bug Fixes
