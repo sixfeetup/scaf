@@ -8,28 +8,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install Requirements
-      shell: bash
-      run: |
-        sudo apt-get update && sudo apt-get install --only-upgrade curl
-        sudo apt-get update && sudo apt-get install --only-upgrade make
-        sudo apt-get update && sudo apt-get install --only-upgrade python3       
-        INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
-        export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
-        git config --global init.defaultBranch dev
-        git config --global user.email "setup-project--install@example.com"
-        git config --global user.name "CI CD install deps"
-        echo "Downloading install script from $INSTALL_URL"
-        rm -f $HOME/.local/bin/scaf
-        echo "Installing scaf from $INSTALL_URL"
-        curl -sSL $INSTALL_URL | DEBUG=True bash
+      - name: Install Requirements
+        shell: bash
+        run: |
+          sudo apt-get update && sudo apt-get install --only-upgrade curl
+          sudo apt-get update && sudo apt-get install --only-upgrade make
+          sudo apt-get update && sudo apt-get install --only-upgrade python3       
+          INSTALL_URL="https://raw.githubusercontent.com/sixfeetup/scaf/$GITHUB_REF_NAME/install.sh"
+          export SCAF_SCRIPT_BRANCH=$GITHUB_REF_NAME
+          git config --global init.defaultBranch dev
+          git config --global user.email "setup-project--install@example.com"
+          git config --global user.name "CI CD install deps"
+          echo "Downloading install script from $INSTALL_URL"
+          rm -f $HOME/.local/bin/scaf
+          echo "Installing scaf from $INSTALL_URL"
+          curl -sSL $INSTALL_URL | DEBUG=True bash
 
-    - name: Create Project with Scaf
-      shell: bash
-      run: |
-        git config --global init.defaultBranch dev
-        git config --global user.email "setup-project--create@example.com"
-        git config --global user.name "CI CD Setup Project"
-        
-        REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
-        $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL
+      - name: Create Project with Scaf
+        shell: bash
+        run: |
+          git config --global init.defaultBranch dev
+          git config --global user.email "setup-project--create@example.com"
+          git config --global user.name "CI CD Setup Project"
+
+          REPO_URL="https://github.com/sixfeetup/scaf-fullstack-temlate.git"
+          $HOME/.local/bin/scaf myproject --defaults --vcs-ref main $REPO_URL
+
+  test-nix-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-25.05
+
+      - name: Build scaf with Nix
+        run: nix-build
+
+      - name: Test scaf installation
+        run: |
+          # Test that the binary exists and is executable
+          ls -la result/bin/scaf
+          file result/bin/scaf
+
+          # Test help command
+          result/bin/scaf --help
+
+      - name: Test scaf project creation with Nix package
+        run: |
+          git config --global init.defaultBranch main
+          git config --global user.email "nix-test@example.com"
+          git config --global user.name "Nix Test"
+
+          # Create a test project using the Nix-built scaf
+          REPO_URL="https://github.com/sixfeetup/scaf-fullstack-template.git"
+          result/bin/scaf nixtest --defaults --vcs-ref main $REPO_URL
+
+          # Verify the project was created
+          test -d nixtest
+          ls -la nixtest/

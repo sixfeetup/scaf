@@ -18,12 +18,14 @@
           buildInputs = [
             pkgs.copier
             pkgs.nodejs
+            pkgs.nix-prefetch-git
             pkgs.python3
             pkgs.python3.pkgs.black
             pkgs.python3.pkgs.diagrams
             pkgs.python3.pkgs.isort
             pkgs.python3.pkgs.pip-tools
             pkgs.python3.pkgs.uv
+            pkgs.shellcheck
           ];
           shellHook = ''
             echo "Scaf dev environment shell hook"
