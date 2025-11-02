@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.2](https://github.com/sixfeetup/scaf/compare/v1.26.1...v1.26.2) (2025-11-02)
+
+### Bug Fixes
+
+* include README in release assets ([a49f7b1](https://github.com/sixfeetup/scaf/commit/a49f7b1511a3f6a61a7d1b4b94a249e44e80352a))
+
 ## [1.26.1](https://github.com/sixfeetup/scaf/compare/v1.26.0...v1.26.1) (2025-11-02)
 
 ### Bug Fixes

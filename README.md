@@ -34,7 +34,7 @@ If you are a Nix user, you can install `scaf` using the following commands.
 To install `scaf` into your user profile so it is available in all your shell sessions, run:
 
 ```bash
-nix-env -if https://github.com/sixfeetup/scaf/archive/v1.25.3.zip
+nix-env -if https://github.com/sixfeetup/scaf/archive/v1.26.2.zip
 ```
 
 #### Temporary Shell
@@ -42,7 +42,7 @@ nix-env -if https://github.com/sixfeetup/scaf/archive/v1.25.3.zip
 To use `scaf` in a temporary shell session without modifying your user profile, run:
 
 ```bash
-nix-shell -p "(with import <nixpkgs> {}; callPackage (builtins.fetchTarball https://github.com/sixfeetup/scaf/archive/v1.25.3.zip) {})"
+nix-shell -p "(with import <nixpkgs> {}; callPackage (builtins.fetchTarball https://github.com/sixfeetup/scaf/archive/v1.26.2.zip) {})"
 ```
 
 ## Creating a new project using this repo
