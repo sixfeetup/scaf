@@ -63,8 +63,8 @@
             "files": [
               "README.md"
             ],
-            "from": "scaf\\/archive\\/v[0-9.]*.zip",
-            "to": "scaf/archive/v${nextRelease.version}.zip",
+            "from": "https:\\/\\/github\\.com\\/sixfeetup\\/scaf\\/archive\\/v[0-9.]+\\.zip",
+            "to": "https://github.com/sixfeetup/scaf/archive/v${nextRelease.version}.zip",
             "countMatches": true
           },
           {
