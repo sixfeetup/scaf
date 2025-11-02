@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.1](https://github.com/sixfeetup/scaf/compare/v1.26.0...v1.26.1) (2025-11-02)
+
+### Bug Fixes
+
+* update version in downloadable zip archive in README ([ebd800b](https://github.com/sixfeetup/scaf/commit/ebd800bcc35615d7be2acdfa868dc9f03782adbe))
+
 ## [1.26.0](https://github.com/sixfeetup/scaf/compare/v1.25.3...v1.26.0) (2025-09-25)
 
 ### Features
